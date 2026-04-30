@@ -6,6 +6,11 @@
 <title>Benjamin's Notes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})">
+</script>
 <style>
 
 /* ── Reset & Base ─────────────────────────────────────────────────────────── */
@@ -59,7 +64,6 @@ html, body {
   border-bottom: 1px solid rgba(255,255,255,0.08);
   flex-shrink: 0;
 }
-
 .site-logo {
   font-family: 'Playfair Display', serif;
   font-size: 1.1rem;
@@ -68,7 +72,6 @@ html, body {
   color: var(--paper);
   opacity: 0.9;
 }
-
 .breadcrumb {
   display: flex;
   align-items: center;
@@ -79,12 +82,10 @@ html, body {
   letter-spacing: 1.5px;
   flex: 1;
 }
-
 .breadcrumb span { cursor: pointer; transition: color 0.2s; }
 .breadcrumb span:hover { color: rgba(255,255,255,0.75); }
 .breadcrumb .sep { opacity: 0.3; cursor: default; }
 .breadcrumb .current { color: var(--gold); cursor: default; }
-
 .back-btn {
   background: none;
   border: 1px solid rgba(255,255,255,0.15);
@@ -103,7 +104,7 @@ html, body {
   background: rgba(255,255,255,0.05);
 }
 
-/* ── Landing / Navigation pages ──────────────────────────────────────────── */
+/* ── Nav Stage ────────────────────────────────────────────────────────────── */
 .nav-stage {
   flex: 1;
   display: flex;
@@ -112,8 +113,8 @@ html, body {
   justify-content: center;
   padding: 60px 40px;
   position: relative;
+  overflow-y: auto;
 }
-
 .nav-stage::before {
   content: attr(data-symbol);
   position: absolute;
@@ -127,7 +128,6 @@ html, body {
   letter-spacing: -10px;
   user-select: none;
 }
-
 .nav-eyebrow {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.68rem;
@@ -137,7 +137,6 @@ html, body {
   margin-bottom: 18px;
   opacity: 0.85;
 }
-
 .nav-title {
   font-family: 'Playfair Display', serif;
   font-size: clamp(2rem, 6vw, 4rem);
@@ -147,16 +146,14 @@ html, body {
   margin-bottom: 14px;
   color: var(--paper);
 }
-
 .nav-sub {
   color: rgba(255,255,255,0.35);
   font-size: 0.9rem;
-  margin-bottom: 64px;
+  margin-bottom: 48px;
   text-align: center;
   max-width: 420px;
   line-height: 1.7;
 }
-
 .nav-grid {
   display: flex;
   gap: 20px;
@@ -178,7 +175,6 @@ html, body {
   text-align: left;
   overflow: hidden;
 }
-
 .nav-btn::before {
   content: '';
   position: absolute;
@@ -187,14 +183,12 @@ html, body {
   opacity: 0;
   transition: opacity 0.3s;
 }
-
 .nav-btn:hover {
   border-color: rgba(192,57,43,0.6);
   transform: translateY(-3px);
   box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(192,57,43,0.2);
 }
 .nav-btn:hover::before { opacity: 1; }
-
 .nav-btn-label {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.62rem;
@@ -204,7 +198,6 @@ html, body {
   margin-bottom: 10px;
   display: block;
 }
-
 .nav-btn-title {
   font-family: 'Playfair Display', serif;
   font-size: 1.6rem;
@@ -212,7 +205,15 @@ html, body {
   display: block;
   line-height: 1.1;
 }
-
+.nav-btn-desc {
+  display: block;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.4);
+  margin-top: 8px;
+  font-style: italic;
+  line-height: 1.4;
+  max-width: 260px;
+}
 .nav-btn-arrow {
   position: absolute;
   bottom: 20px;
@@ -226,7 +227,6 @@ html, body {
   transform: translateX(4px);
   color: var(--accent);
 }
-
 .nav-btn.coming-soon {
   opacity: 0.4;
   cursor: not-allowed;
@@ -236,7 +236,6 @@ html, body {
   border-color: rgba(255,255,255,0.15);
   box-shadow: none;
 }
-
 .soon-badge {
   display: inline-block;
   background: rgba(255,255,255,0.1);
@@ -248,33 +247,86 @@ html, body {
   margin-top: 10px;
   color: rgba(255,255,255,0.5);
 }
+.nav-btn.chapter { min-width: 260px; padding: 28px 40px; }
+.nav-btn.mode-btn { min-width: 300px; padding: 30px 42px; }
 
-/* Small chapter button variant */
-.nav-btn.chapter {
-  min-width: 280px;
-  padding: 28px 40px;
+/* ── Chapter Grid (Physics I) ─────────────────────────────────────────────── */
+.ch-grid-wrap {
+  width: 100%;
+  max-width: 820px;
+  position: relative;
+  z-index: 1;
 }
+.ch-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+.ch-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--paper);
+  padding: 16px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: left;
+  position: relative;
+}
+.ch-btn:not(:disabled):hover {
+  border-color: rgba(192,57,43,0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+  background: rgba(255,255,255,0.03);
+}
+.ch-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.ch-btn .ch-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: block;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+.ch-btn.active-ch .ch-num { color: var(--gold); }
+.ch-btn.active-ch { border-color: rgba(184,134,11,0.5); }
+.ch-btn .ch-name {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.68rem;
+  opacity: 0.65;
+  line-height: 1.3;
+}
+.ch-btn.active-ch .ch-name { opacity: 0.9; color: var(--gold); }
 
-/* ── Solutions Page ───────────────────────────────────────────────────────── */
-#page-solutions {
+/* ── Solutions Pages ──────────────────────────────────────────────────────── */
+.sol-page {
   background: var(--paper);
   color: var(--ink);
   position: fixed;
   inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
 }
-
-#page-solutions .site-header {
+.sol-page.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.sol-page .site-header {
   background: var(--ink);
   border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
 }
-
 .solutions-wrap {
   overflow-y: auto;
   flex: 1;
   padding-bottom: 80px;
 }
 
-/* ── Solutions content (all the original HTML) ─────────────────────────── */
+/* ── Sol Header ───────────────────────────────────────────────────────────── */
 .sol-header {
   background: var(--ink);
   color: var(--paper);
@@ -284,7 +336,7 @@ html, body {
   overflow: hidden;
 }
 .sol-header::before {
-  content: '∫∂∇∆';
+  content: attr(data-symbol);
   position: absolute;
   right: 60px;
   top: 20px;
@@ -296,7 +348,7 @@ html, body {
 }
 .sol-header h1 {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
   font-weight: 700;
   margin-bottom: 10px;
 }
@@ -306,7 +358,19 @@ html, body {
   max-width: 560px;
   line-height: 1.7;
 }
+.sol-header .mode-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  color: var(--gold);
+  border: 1px solid rgba(184,134,11,0.4);
+  padding: 4px 10px;
+  border-radius: 3px;
+  margin-bottom: 14px;
+}
 
+/* ── TOC ──────────────────────────────────────────────────────────────────── */
 .toc-wrap {
   max-width: 880px;
   margin: 44px auto 0;
@@ -333,7 +397,6 @@ html, body {
   border-radius: 4px;
   padding: 10px 12px;
   text-align: center;
-  text-decoration: none;
   color: var(--ink);
   transition: all 0.18s;
   font-size: 0.78rem;
@@ -351,13 +414,12 @@ html, body {
 }
 .toc-item:hover .toc-num { color: #ff8080; }
 
+/* ── Problem Cards ────────────────────────────────────────────────────────── */
 .sol-main {
   max-width: 880px;
   margin: 44px auto;
   padding: 0 36px;
 }
-
-/* Problem cards */
 .problem-card {
   background: white;
   border: 1px solid var(--rule);
@@ -396,7 +458,7 @@ html, body {
   gap: 20px;
 }
 
-/* Section boxes */
+/* ── Section Boxes ────────────────────────────────────────────────────────── */
 .sec {
   border-radius: 4px;
   padding: 16px 20px;
@@ -422,10 +484,16 @@ html, body {
 .sec p { font-size: 0.92rem; line-height: 1.75; margin-bottom: 7px; }
 .sec p:last-child { margin-bottom: 0; }
 
+.prob-stmt { background: #f5f0e8; border-left: 4px solid var(--gold); }
+.prob-stmt .sec-label { color: var(--gold); }
 .think  { background: var(--math-bg); }
 .think  .sec-label { color: var(--gold); }
 .assume { background: var(--step-bg); }
 .assume .sec-label { color: #2980b9; }
+.given-sec { background: var(--step-bg); }
+.given-sec .sec-label { color: #2980b9; }
+.formula-sec { background: var(--int-bg); border-left: 4px solid #27ae60; }
+.formula-sec .sec-label { color: #27ae60; }
 .derive { background: #fefefe; border: 1px solid var(--rule); }
 .derive .sec-label { color: #8e44ad; }
 .answer { background: var(--ans-bg); border-left: 4px solid var(--accent); }
@@ -433,18 +501,29 @@ html, body {
 .intuit { background: var(--int-bg); border-left: 4px solid #27ae60; }
 .intuit .sec-label { color: #27ae60; }
 
+/* ── Math & Calc Blocks ───────────────────────────────────────────────────── */
+.math-display {
+  background: rgba(0,0,0,0.04);
+  border-radius: 4px;
+  padding: 14px 18px;
+  margin: 10px 0;
+  overflow-x: auto;
+  text-align: center;
+}
 .math-block {
   background: rgba(0,0,0,0.042);
   border-radius: 4px;
   padding: 12px 15px;
   margin: 9px 0;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.83rem;
+  font-size: 0.82rem;
   color: var(--code-col);
-  line-height: 1.9;
+  line-height: 2;
   overflow-x: auto;
   white-space: pre;
 }
+
+/* ── Answer Section ───────────────────────────────────────────────────────── */
 .ans-val {
   font-family: 'Playfair Display', serif;
   font-size: 1.55rem;
@@ -455,6 +534,40 @@ html, body {
 .ans-sub { font-size: 0.78rem; color: #999; }
 .ans-row { display: flex; gap: 28px; flex-wrap: wrap; }
 
+/* ── KaTeX override for light pages ──────────────────────────────────────── */
+.katex { font-size: 1em; }
+.math-display .katex-display { margin: 0; }
+
+/* ── Coming Soon Page ─────────────────────────────────────────────────────── */
+.coming-soon-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 60px;
+}
+.coming-soon-icon {
+  font-size: 4rem;
+  opacity: 0.2;
+  font-family: 'Playfair Display', serif;
+}
+.coming-soon-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  opacity: 0.5;
+}
+.coming-soon-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  color: var(--gold);
+  opacity: 0.6;
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
 .sol-footer {
   text-align: center;
   padding: 36px;
@@ -463,6 +576,7 @@ html, body {
   border-top: 1px solid var(--rule);
   max-width: 880px;
   margin: 0 auto;
+  line-height: 1.9;
 }
 
 /* ── Animations ───────────────────────────────────────────────────────────── */
@@ -470,19 +584,20 @@ html, body {
   from { opacity: 0; transform: translateY(22px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 .page.active .nav-eyebrow { animation: fadeUp 0.5s 0.05s both; }
 .page.active .nav-title   { animation: fadeUp 0.5s 0.12s both; }
 .page.active .nav-sub     { animation: fadeUp 0.5s 0.18s both; }
 .page.active .nav-grid    { animation: fadeUp 0.5s 0.25s both; }
+.page.active .ch-grid-wrap { animation: fadeUp 0.5s 0.25s both; }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .site-header { padding: 18px 24px; }
   .sol-header  { padding: 36px 28px 32px; }
   .sol-main    { padding: 0 18px; }
   .toc-wrap    { padding: 0 18px; }
   .nav-btn     { min-width: 160px; padding: 28px 32px; }
-  .nav-btn-title { font-size: 1.3rem; }
+  .nav-btn.mode-btn { min-width: 260px; }
+  .ch-grid     { grid-template-columns: repeat(3, 1fr); }
 }
 </style>
 </head>
@@ -496,12 +611,10 @@ html, body {
       <span class="current">HOME</span>
     </div>
   </header>
-
   <div class="nav-stage" data-symbol="∂">
     <div class="nav-eyebrow">select a subject</div>
     <h1 class="nav-title">What are we<br>studying today?</h1>
     <p class="nav-sub">Course notes, problem sets, and derivations — explained the way a mathematician actually thinks.</p>
-
     <div class="nav-grid">
       <button class="nav-btn" onclick="go('page-physics')">
         <span class="nav-btn-label">subject</span>
@@ -528,12 +641,10 @@ html, body {
       <span class="current">PHYSICS</span>
     </div>
   </header>
-
   <div class="nav-stage" data-symbol="F">
     <div class="nav-eyebrow">select a course</div>
     <h1 class="nav-title">Physics</h1>
     <p class="nav-sub">From mechanics to thermodynamics — all the derivations your textbook skipped.</p>
-
     <div class="nav-grid">
       <button class="nav-btn" onclick="go('page-physics1')">
         <span class="nav-btn-label">course</span>
@@ -562,46 +673,524 @@ html, body {
       <span class="current">PHYSICS I</span>
     </div>
   </header>
-
   <div class="nav-stage" data-symbol="ρ">
     <div class="nav-eyebrow">select a chapter</div>
     <h1 class="nav-title">Physics I</h1>
-    <p class="nav-sub">Chapter solutions written for the mathematician's brain — every answer derived from first principles.</p>
+    <p class="nav-sub">Choose a chapter below. Notes, homework solutions, and exam prep — all derived from first principles.</p>
+    <div class="ch-grid-wrap">
+      <div class="ch-grid">
+        <button class="ch-btn" disabled><span class="ch-num">1</span><span class="ch-name">Measurement</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">2</span><span class="ch-name">Kinematics 1D</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">3</span><span class="ch-name">Vectors</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">4</span><span class="ch-name">Motion 2D &amp; 3D</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">5</span><span class="ch-name">Newton's Laws</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">6</span><span class="ch-name">Friction &amp; Drag</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">7</span><span class="ch-name">Work &amp; Energy</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">8</span><span class="ch-name">Potential Energy</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">9</span><span class="ch-name">Center of Mass</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">10</span><span class="ch-name">Rotation</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">11</span><span class="ch-name">Torque &amp; Angular Mom.</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">12</span><span class="ch-name">Equilibrium</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">13</span><span class="ch-name">Gravitation</span></button>
+        <button class="ch-btn active-ch" onclick="go('page-ch14')"><span class="ch-num">14</span><span class="ch-name">Fluid Mechanics</span></button>
+        <button class="ch-btn" disabled><span class="ch-num">15</span><span class="ch-name">Oscillations</span></button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- ══════════════════════════ PAGE: CHAPTER 14 ════════════════════════════ -->
+<div class="page" id="page-ch14">
+  <header class="site-header">
+    <button class="back-btn" onclick="go('page-physics1')">← BACK</button>
+    <div class="breadcrumb">
+      <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
+      <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
+      <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
+      <span class="current">CH. 14</span>
+    </div>
+  </header>
+  <div class="nav-stage" data-symbol="∇">
+    <div class="nav-eyebrow">chapter 14 — fluid mechanics</div>
+    <h1 class="nav-title">What would<br>you like?</h1>
+    <p class="nav-sub">Choose your resource type below. Each is crafted for a different purpose.</p>
     <div class="nav-grid">
       <button class="nav-btn chapter coming-soon" disabled>
-        <span class="nav-btn-label">chapter</span>
-        <span class="nav-btn-title">Ch. 1 – 13</span>
+        <span class="nav-btn-label">resource</span>
+        <span class="nav-btn-title">Chapter 14<br>Notes</span>
         <span class="soon-badge">COMING SOON</span>
         <span class="nav-btn-arrow">→</span>
       </button>
-      <button class="nav-btn chapter" onclick="go('page-solutions')">
-        <span class="nav-btn-label">chapter</span>
-        <span class="nav-btn-title">Ch. 14<br>Fluid Mechanics</span>
+      <button class="nav-btn chapter" onclick="go('page-ch14-hw')">
+        <span class="nav-btn-label">resource</span>
+        <span class="nav-btn-title">Chapter 14<br>Homework Solutions</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
+      <button class="nav-btn chapter coming-soon" disabled>
+        <span class="nav-btn-label">resource</span>
+        <span class="nav-btn-title">Exam III<br>Solutions</span>
+        <span class="soon-badge">COMING SOON</span>
         <span class="nav-btn-arrow">→</span>
       </button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════ PAGE: SOLUTIONS ═════════════════════════════ -->
-<div class="page" id="page-solutions">
-  <header class="site-header" style="position:sticky;top:0;z-index:100;">
-    <button class="back-btn" onclick="go('page-physics1')">← BACK</button>
+<!-- ══════════════════════════ PAGE: CH14 HW — MODE SELECT ════════════════ -->
+<div class="page" id="page-ch14-hw">
+  <header class="site-header">
+    <button class="back-btn" onclick="go('page-ch14')">← BACK</button>
     <div class="breadcrumb">
-      <span onclick="go('page-home')">HOME</span>
-      <span class="sep">/</span>
-      <span onclick="go('page-physics')">PHYSICS</span>
-      <span class="sep">/</span>
-      <span onclick="go('page-physics1')">PHYSICS I</span>
-      <span class="sep">/</span>
-      <span class="current">CH. 14</span>
+      <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
+      <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
+      <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
+      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
+      <span class="current">HW SOLUTIONS</span>
     </div>
   </header>
+  <div class="nav-stage" data-symbol="∫">
+    <div class="nav-eyebrow">choose your lens</div>
+    <h1 class="nav-title">Chapter 14 Fluids<br>Homework Solutions</h1>
+    <p class="nav-sub">The same 10 problems, solved three different ways. Choose how deep you want to go.</p>
+    <div class="nav-grid" style="flex-direction:column;align-items:center;gap:14px;">
+      <button class="nav-btn mode-btn" onclick="go('page-ch14-hw-simple')">
+        <span class="nav-btn-label">mode 1</span>
+        <span class="nav-btn-title">Simple Physics I</span>
+        <span class="nav-btn-desc">Identify the formula, plug in the numbers, get the answer. Classic Physics I approach.</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
+      <button class="nav-btn mode-btn" onclick="go('page-ch14-hw-math')">
+        <span class="nav-btn-label">mode 2</span>
+        <span class="nav-btn-title">A Mathematician's Way</span>
+        <span class="nav-btn-desc">Every problem as an integral or ODE. Calculus, divergence theorem, first integrals — the full story.</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
+      <button class="nav-btn mode-btn coming-soon" disabled>
+        <span class="nav-btn-label">mode 3</span>
+        <span class="nav-btn-title">Pure Derivation</span>
+        <span class="nav-btn-desc">Built from axioms. No formulas assumed — everything proven from first principles.</span>
+        <span class="soon-badge">COMING SOON</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+</div>
 
-  <div class="solutions-wrap">
+<!-- ══════════════════════════ PAGE: SIMPLE PHYSICS I SOLUTIONS ═══════════ -->
+<div class="sol-page" id="page-ch14-hw-simple">
+  <header class="site-header" style="position:sticky;top:0;z-index:100;">
+    <button class="back-btn" onclick="goSol('page-ch14-hw')">← BACK</button>
+    <div class="breadcrumb">
+      <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
+      <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
+      <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
+      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
+      <span onclick="go('page-ch14-hw')">HW</span><span class="sep">/</span>
+      <span class="current">SIMPLE</span>
+    </div>
+  </header>
+  <div class="solutions-wrap" id="simple-wrap">
 
-    <div class="sol-header">
+    <div class="sol-header" data-symbol="F=ma">
+      <div class="mode-badge">MODE 1 — SIMPLE PHYSICS I</div>
+      <h1>Chapter 14: Fluid Mechanics</h1>
+      <p>Identify the relevant formula, substitute the given values, and compute. This is the standard Physics I approach — direct, efficient, and clear.</p>
+    </div>
+
+    <div class="toc-wrap">
+      <div class="toc-label">Jump to Problem</div>
+      <div class="toc-grid">
+        <div class="toc-item" onclick="scrollToProb('sp1')"><span class="toc-num">1</span>Nail Force</div>
+        <div class="toc-item" onclick="scrollToProb('sp2')"><span class="toc-num">2</span>Gas Tank</div>
+        <div class="toc-item" onclick="scrollToProb('sp3')"><span class="toc-num">3</span>Manometer</div>
+        <div class="toc-item" onclick="scrollToProb('sp4')"><span class="toc-num">4</span>Breathing</div>
+        <div class="toc-item" onclick="scrollToProb('sp5')"><span class="toc-num">5</span>Ice Buoyancy</div>
+        <div class="toc-item" onclick="scrollToProb('sp6')"><span class="toc-num">6</span>Cube Equil.</div>
+        <div class="toc-item" onclick="scrollToProb('sp7')"><span class="toc-num">7</span>Blood Flow</div>
+        <div class="toc-item" onclick="scrollToProb('sp8')"><span class="toc-num">8</span>Air Duct</div>
+        <div class="toc-item" onclick="scrollToProb('sp9')"><span class="toc-num">9</span>Pitot Tube</div>
+        <div class="toc-item" onclick="scrollToProb('sp10')"><span class="toc-num">10</span>Sump Pump</div>
+      </div>
+    </div>
+
+    <div class="sol-main">
+
+      <!-- ── SP1 ── -->
+      <div class="problem-card" id="sp1">
+        <div class="prob-head"><div class="prob-num">1</div><div class="prob-title">Force on a Circular Nail Tip</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>Nail tips exert tremendous pressures when they are hit by a hammer because they exert a large force over a small area. What force, in newtons, must be exerted on a nail with a circular tip of diameter $d = 1.17\text{ mm}$ to create a pressure of $P = 3.17 \times 10^9\text{ Pa}$?</p>
+          </div>
+          <div class="sec given-sec">
+            <div class="sec-label">Given</div>
+            <p>$d = 1.17\text{ mm} = 1.17 \times 10^{-3}\text{ m}$</p>
+            <p>$P = 3.17 \times 10^9\text{ Pa}$</p>
+          </div>
+          <div class="sec formula-sec">
+            <div class="sec-label">Formula</div>
+            <p>Pressure equals force divided by area. For a circular tip, the area is $A = \pi r^2$ where $r = d/2$:</p>
+            <div class="math-display">$$P = \frac{F}{A} \quad\Longrightarrow\quad F = P \cdot A = P \cdot \pi\!\left(\frac{d}{2}\right)^{\!2}$$</div>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">Step-by-Step</div>
+            <p><strong>Step 1 — Find the radius:</strong></p>
+            <div class="math-display">$$r = \frac{d}{2} = \frac{1.17 \times 10^{-3}}{2} = 5.85 \times 10^{-4}\text{ m}$$</div>
+            <p><strong>Step 2 — Calculate the area:</strong></p>
+            <div class="math-display">$$A = \pi r^2 = \pi(5.85 \times 10^{-4})^2 = 1.0752 \times 10^{-6}\text{ m}^2$$</div>
+            <p><strong>Step 3 — Solve for force:</strong></p>
+            <div class="math-display">$$F = P \cdot A = (3.17 \times 10^9)(1.0752 \times 10^{-6}) = 3408\text{ N}$$</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">Answer</div>
+            <div class="ans-val">F = 3408 N</div>
+            <div class="ans-sub">≈ 3.41 kN — the tiny area amplifies the force into enormous pressure</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SP2 ── -->
+      <div class="problem-card" id="sp2">
+        <div class="prob-head"><div class="prob-num">2</div><div class="prob-title">Hydrostatic Load on a Gas Tank</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>Consider a $0.505\text{ m}$-wide by $0.89\text{ m}$-long gas tank that can hold $49\text{ kg}$ of gasoline. <strong>Part (a):</strong> What pressure, in N/m², is exerted on the bottom of the gas tank by the weight of the gasoline when it is full? <strong>Part (b):</strong> What is the ratio of atmospheric pressure to that pressure?</p>
+          </div>
+          <div class="sec given-sec">
+            <div class="sec-label">Given</div>
+            <p>Width $w = 0.505\text{ m}$, Length $l = 0.89\text{ m}$, Mass $m = 49\text{ kg}$</p>
+            <p>$P_0 = 1.013 \times 10^5\text{ Pa}$, $g = 9.8\text{ m/s}^2$</p>
+          </div>
+          <div class="sec formula-sec">
+            <div class="sec-label">Formula</div>
+            <div class="math-display">$$P = \frac{F}{A} = \frac{mg}{w \cdot l}$$</div>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">Step-by-Step</div>
+            <p><strong>Part (a) — Pressure from the gasoline:</strong></p>
+            <div class="math-display">$$A = (0.505)(0.89) = 0.4495\text{ m}^2$$</div>
+            <div class="math-display">$$P = \frac{mg}{A} = \frac{(49)(9.8)}{0.4495} = \frac{480.2}{0.4495} = 1068\text{ Pa}$$</div>
+            <p><strong>Part (b) — Ratio of atmospheric to gasoline pressure:</strong></p>
+            <div class="math-display">$$\frac{P_0}{P} = \frac{101{,}325}{1068} = 94.9$$</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">Answers</div>
+            <div class="ans-row">
+              <div><div class="ans-val">P = 1068 Pa</div><div class="ans-sub">Part (a)</div></div>
+              <div><div class="ans-val">P₀/P = 94.9</div><div class="ans-sub">Part (b) — atmosphere is ~95× stronger</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SP3 ── -->
+      <div class="problem-card" id="sp3">
+        <div class="prob-head"><div class="prob-num">3</div><div class="prob-title">Mercury Manometer — Jar of Peanuts</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>A manometer filled with mercury measures the pressure inside a sealed jar of peanuts. The mercury level on the side open to the air is $9.3\text{ cm}$ <em>lower</em> than on the side connected to the jar. The density of mercury is $13.5\text{ g/cm}^3$. <strong>Part (a):</strong> Find the gauge pressure in the jar (Pa). <strong>Part (b):</strong> Find the absolute pressure in the jar (Pa).</p>
+          </div>
+          <div class="sec given-sec">
+            <div class="sec-label">Given</div>
+            <p>$h = 9.3\text{ cm} = 0.093\text{ m}$ (height difference)</p>
+            <p>$\rho_{Hg} = 13.5\text{ g/cm}^3 = 13{,}500\text{ kg/m}^3$</p>
+            <p>Open side is <em>lower</em> → jar is below atmospheric pressure → gauge pressure is negative</p>
+          </div>
+          <div class="sec formula-sec">
+            <div class="sec-label">Formula</div>
+            <p>The pressure difference due to a fluid column of height $h$:</p>
+            <div class="math-display">$$P_g = -\rho g h \quad(\text{negative because jar} < P_{atm})$$</div>
+            <div class="math-display">$$P_{abs} = P_{atm} + P_g$$</div>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">Step-by-Step</div>
+            <p><strong>Part (a) — Gauge pressure:</strong></p>
+            <div class="math-display">$$P_g = -\rho g h = -(13{,}500)(9.8)(0.093) = -12{,}304\text{ Pa}$$</div>
+            <p><strong>Part (b) — Absolute pressure:</strong></p>
+            <div class="math-display">$$P_{abs} = 101{,}325 + (-12{,}304) = 89{,}021\text{ Pa}$$</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">Answers</div>
+            <div class="ans-row">
+              <div><div class="ans-val">Pᵍ = −12,304 Pa</div><div class="ans-sub">Part (a) — vacuum-sealed jar is below atmospheric</div></div>
+              <div><div class="ans-val">Pₐᵦₛ = 89,021 Pa</div><div class="ans-sub">Part (b)</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SP4 ── -->
+      <div class="problem-card" id="sp4">
+        <div class="prob-head"><div class="prob-num">4</div><div class="prob-title">Breathing Through a Reed Underwater</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>In movies, heroes hide underwater and breathe through a hollow reed. In practice, you cannot inhale if your lungs are more than $60.0\text{ cm}$ below the surface due to water pressure on your chest. What is the maximum negative gauge pressure, in cm H₂O, you can create in your lungs on dry land, given that you can achieve only $-3.15\text{ cm H}_2\text{O}$ of pressure when your lungs are $60.0\text{ cm}$ below the surface?</p>
+          </div>
+          <div class="sec given-sec">
+            <div class="sec-label">Given</div>
+            <p>Depth of lungs: $d = 60.0\text{ cm H}_2\text{O}$ of external water pressure</p>
+            <p>Pressure achievable by lungs at that depth: $-3.15\text{ cm H}_2\text{O}$ (relative to water outside)</p>
+          </div>
+          <div class="sec formula-sec">
+            <div class="sec-label">Key Concept</div>
+            <p>To breathe at depth $d$, your lungs must overcome <strong>both</strong> the water column pressure <em>and</em> create the breathing pressure depression. Pressures add as scalars:</p>
+            <div class="math-display">$$P_{required} = -(P_{water} + |P_{breathing}|)$$</div>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">Step-by-Step</div>
+            <p>The water at 60 cm depth pushes $+60\text{ cm H}_2\text{O}$ inward on the chest. Your lungs must create enough negative pressure to overcome this AND still draw air in (the $-3.15$ cm H₂O breathing threshold):</p>
+            <div class="math-display">$$P = -(60.0 + 3.15) = -63.15\text{ cm H}_2\text{O}$$</div>
+            <p>Your lungs can only produce $-3.15\text{ cm H}_2\text{O}$ of effort — far short of the required $-63.15\text{ cm H}_2\text{O}$. This is why breathing through a reed at 60 cm depth is physically impossible.</p>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">Answer</div>
+            <div class="ans-val">P = −63.15 cm H₂O</div>
+            <div class="ans-sub">Required pressure — impossible, since lungs max out at only −3.15 cm H₂O</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SP5 ── -->
+      <div class="problem-card" id="sp5">
+        <div class="prob-head"><div class="prob-num">5</div><div class="prob-title">Fraction of Ice Submerged in Freshwater</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>The fraction of ice submerged in water depends only on the densities of ice and water. Assume the density of ice is $\rho_{ice} = 910.9\text{ kg/m}^3$. What fraction of an ice block is submerged when it floats in freshwater ($\rho_w = 1000\text{ kg/m}^3$)?</p>
+          </div>
+          <div class="sec given-sec">
+            <div class="sec-label">Given</div>
+            <p>$\rho_{ice} = 910.9\text{ kg/m}^3$, $\quad \rho_{water} = 1000\text{ kg/m}^3$</p>
+          </div>
+          <div class="sec formula-sec">
+            <div class="sec-label">Formula — Archimedes' Principle</div>
+            <p>For a floating object, buoyant force equals weight:</p>
+            <div class="math-display">$$\rho_w \cdot V_{sub} \cdot g = \rho_{ice} \cdot V_{total} \cdot g$$</div>
+            <p>Dividing both sides by $\rho_w \cdot V_{total} \cdot g$:</p>
+            <div class="math-display">$$f = \frac{V_{sub}}{V_{total}} = \frac{\rho_{ice}}{\rho_w}$$</div>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">Step-by-Step</div>
+            <div class="math-display">$$f = \frac{\rho_{ice}}{\rho_w} = \frac{910.9}{1000} = 0.9109$$</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">Answer</div>
+            <div class="ans-val">f = 0.9109</div>
+            <div class="ans-sub">91.09% is submerged — only the top ~9% peeks above the water</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SP6 ── -->
+      <div class="problem-card" id="sp6">
+        <div class="prob-head"><div class="prob-num">6</div><div class="prob-title">Half-Submerged Cube on a String</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>A cube with edge length $L = 0.13\text{ m}$ and density $\rho_c = 3.9 \times 10^3\text{ kg/m}^3$ is exactly half submerged in a liquid of density $\rho_l = 0.81 \times 10^3\text{ kg/m}^3$, suspended by a taut string. Find: <strong>(c)</strong> the weight $W$, <strong>(e)</strong> the buoyant force $F_b$, <strong>(g)</strong> the tension $T$. <strong>(h)</strong> If the block is submerged more, what happens to $T$?</p>
+          </div>
+          <div class="sec given-sec">
+            <div class="sec-label">Given</div>
+            <p>$L = 0.13\text{ m}$, $\rho_c = 3900\text{ kg/m}^3$, $\rho_l = 810\text{ kg/m}^3$</p>
+            <p>Half submerged: $V_{sub} = L^3/2$; $g = 9.8\text{ m/s}^2$</p>
+          </div>
+          <div class="sec formula-sec">
+            <div class="sec-label">Formulas</div>
+            <div class="math-display">$$W = \rho_c g L^3 \qquad F_b = \rho_l g \frac{L^3}{2} \qquad T = W - F_b$$</div>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">Step-by-Step</div>
+            <p><strong>Weight (c):</strong></p>
+            <div class="math-display">$$W = \rho_c g L^3 = (3900)(9.8)(0.13)^3 = (3900)(9.8)(0.002197) = 83.97\text{ N}$$</div>
+            <p><strong>Buoyant Force (e):</strong></p>
+            <div class="math-display">$$F_b = \rho_l g \frac{L^3}{2} = (810)(9.8)\frac{0.002197}{2} = (810)(9.8)(0.001099) = 8.72\text{ N}$$</div>
+            <p><strong>Tension (g):</strong></p>
+            <div class="math-display">$$T = W - F_b = 83.97 - 8.72 = 75.25\text{ N}$$</div>
+            <p><strong>Part (h):</strong> More submersion → larger $V_{sub}$ → larger $F_b$ → $T = W - F_b$ <strong>decreases</strong>.</p>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">Answers</div>
+            <div class="ans-row">
+              <div><div class="ans-val">W = 83.97 N</div><div class="ans-sub">Part (c)</div></div>
+              <div><div class="ans-val">Fb = 8.72 N</div><div class="ans-sub">Part (e)</div></div>
+              <div><div class="ans-val">T = 75.25 N</div><div class="ans-sub">Part (g)</div></div>
+            </div>
+            <p style="margin-top:12px;font-size:0.85rem;color:#666;">(h) Tension <strong>decreases</strong> if submerged more.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SP7 ── -->
+      <div class="problem-card" id="sp7">
+        <div class="prob-head"><div class="prob-num">7</div><div class="prob-title">Blood Flow Through an Artery</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>Blood is flowing through an artery of radius $r = 2.3\text{ mm}$ at a speed of $v = 42\text{ cm/s}$. <strong>Part (a):</strong> Determine the flow rate $Q$ in cm³/s. <strong>Part (b):</strong> Determine the volume $V$ that passes through the artery in $30.0\text{ s}$.</p>
+          </div>
+          <div class="sec given-sec">
+            <div class="sec-label">Given</div>
+            <p>$r = 2.3\text{ mm} = 0.23\text{ cm}$, $\quad v = 42\text{ cm/s}$, $\quad t = 30.0\text{ s}$</p>
+          </div>
+          <div class="sec formula-sec">
+            <div class="sec-label">Formulas</div>
+            <div class="math-display">$$Q = A \cdot v = \pi r^2 v \qquad V = Q \cdot t$$</div>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">Step-by-Step</div>
+            <p><strong>Part (a) — Flow rate:</strong></p>
+            <div class="math-display">$$A = \pi(0.23)^2 = \pi(0.0529) = 0.1662\text{ cm}^2$$</div>
+            <div class="math-display">$$Q = Av = (0.1662)(42) = 6.98\text{ cm}^3/\text{s}$$</div>
+            <p><strong>Part (b) — Volume in 30 s:</strong></p>
+            <div class="math-display">$$V = Q \cdot t = (6.98)(30.0) = 209.4\text{ cm}^3$$</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">Answers</div>
+            <div class="ans-row">
+              <div><div class="ans-val">Q = 6.98 cm³/s</div><div class="ans-sub">Part (a)</div></div>
+              <div><div class="ans-val">V = 209.4 cm³</div><div class="ans-sub">Part (b)</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SP8 ── -->
+      <div class="problem-card" id="sp8">
+        <div class="prob-head"><div class="prob-num">8</div><div class="prob-title">Air Speed in a Heating Duct</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>The main intake air duct of a forced-air heater is $0.305\text{ m}$ in diameter. The house interior is $12\text{ m} \times 19.5\text{ m} \times 2.8\text{ m}$. What is the average air speed in the duct if it cycles the entire house volume every $15\text{ min}$?</p>
+          </div>
+          <div class="sec given-sec">
+            <div class="sec-label">Given</div>
+            <p>$d = 0.305\text{ m}$; house: $12 \times 19.5 \times 2.8\text{ m}^3$; time: $15\text{ min} = 900\text{ s}$</p>
+          </div>
+          <div class="sec formula-sec">
+            <div class="sec-label">Formula — Continuity</div>
+            <p>Volume flow rate must equal the house volume divided by cycle time. Then $v = Q/A$:</p>
+            <div class="math-display">$$Q = \frac{V_{house}}{t} \qquad v = \frac{Q}{A_{duct}}$$</div>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">Step-by-Step</div>
+            <div class="math-display">$$V_{house} = 12 \times 19.5 \times 2.8 = 655.2\text{ m}^3$$</div>
+            <div class="math-display">$$Q = \frac{655.2}{900} = 0.728\text{ m}^3/\text{s}$$</div>
+            <div class="math-display">$$A_{duct} = \pi\!\left(\frac{0.305}{2}\right)^{\!2} = \pi(0.1525)^2 = 0.07306\text{ m}^2$$</div>
+            <div class="math-display">$$v = \frac{Q}{A} = \frac{0.728}{0.07306} = 9.96\text{ m/s}$$</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">Answer</div>
+            <div class="ans-val">v = 9.96 m/s</div>
+            <div class="ans-sub">≈ 36 km/h inside the duct</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SP9 ── -->
+      <div class="problem-card" id="sp9">
+        <div class="prob-head"><div class="prob-num">9</div><div class="prob-title">Pitot Tube — Airspeed from Stagnation Pressure</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>A pitot tube measures airspeed using a mercury manometer with height $h = 0.195\text{ m}$. The density of mercury is $13.6 \times 10^3\text{ kg/m}^3$ and the density of air is $1.29\text{ kg/m}^3$. Calculate the velocity of the moving air.</p>
+          </div>
+          <div class="sec given-sec">
+            <div class="sec-label">Given</div>
+            <p>$h = 0.195\text{ m}$, $\rho_{Hg} = 13{,}600\text{ kg/m}^3$, $\rho_{air} = 1.29\text{ kg/m}^3$</p>
+          </div>
+          <div class="sec formula-sec">
+            <div class="sec-label">Formula — Bernoulli's Equation</div>
+            <p>At the stagnation point all kinetic energy converts to pressure. The manometer reads the pressure difference:</p>
+            <div class="math-display">$$\Delta P = \rho_{Hg}\, g\, h \qquad \Delta P = \tfrac{1}{2}\rho_{air}\, v^2$$</div>
+            <div class="math-display">$$v = \sqrt{\frac{2\,\Delta P}{\rho_{air}}}$$</div>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">Step-by-Step</div>
+            <div class="math-display">$$\Delta P = (13{,}600)(9.8)(0.195) = 25{,}989.6\text{ Pa}$$</div>
+            <div class="math-display">$$v = \sqrt{\frac{2 \times 25{,}989.6}{1.29}} = \sqrt{40{,}294} = 200.7\text{ m/s}$$</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">Answer</div>
+            <div class="ans-val">v = 200.7 m/s</div>
+            <div class="ans-sub">≈ 723 km/h — mercury amplifies tiny pressure differences into readable heights</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SP10 ── -->
+      <div class="problem-card" id="sp10">
+        <div class="prob-head"><div class="prob-num">10</div><div class="prob-title">Sump Pump — Bernoulli with Elevation &amp; Diameter Change</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>A sump pump operates at flow rate $Q = 0.599\text{ L/s}$ with output pressure $P_1 = 1.62 \times 10^5\text{ Pa}$. The narrow pipe has diameter $d = 2.63\text{ cm}$. <strong>Part (a):</strong> Water rises to $H = 2.09\text{ m}$; find the pressure at the top (same diameter). <strong>Part (b):</strong> The pipe widens to $D = 6.11\text{ cm}$ and drops $h = 0.51\text{ m}$; find the pressure in the wider section.</p>
+          </div>
+          <div class="sec given-sec">
+            <div class="sec-label">Given</div>
+            <p>$Q = 0.599\text{ L/s} = 5.99 \times 10^{-4}\text{ m}^3/\text{s}$</p>
+            <p>$P_1 = 1.62 \times 10^5\text{ Pa}$, $d = 2.63\text{ cm}$, $H = 2.09\text{ m}$, $h = 0.51\text{ m}$, $D = 6.11\text{ cm}$</p>
+          </div>
+          <div class="sec formula-sec">
+            <div class="sec-label">Formula — Bernoulli's Equation</div>
+            <div class="math-display">$$P_1 + \tfrac{1}{2}\rho v_1^2 + \rho g z_1 = P_2 + \tfrac{1}{2}\rho v_2^2 + \rho g z_2$$</div>
+            <p>Speed at any cross-section from continuity: $v = Q/A$.</p>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">Step-by-Step</div>
+            <p><strong>Find v₁ (narrow pipe):</strong></p>
+            <div class="math-display">$$A_1 = \pi(0.01315)^2 = 5.43 \times 10^{-4}\text{ m}^2 \qquad v_1 = \frac{Q}{A_1} = \frac{5.99\times10^{-4}}{5.43\times10^{-4}} = 1.103\text{ m/s}$$</div>
+            <p><strong>Part (a) — same diameter, so $v_2 = v_1$; KE terms cancel:</strong></p>
+            <div class="math-display">$$P_2 = P_1 - \rho g H = 162{,}000 - (1000)(9.8)(2.09) = 162{,}000 - 20{,}482 = 141{,}518\text{ Pa}$$</div>
+            <p><strong>Part (b) — wider pipe, continuity gives $v_3$:</strong></p>
+            <div class="math-display">$$A_3 = \pi(0.03055)^2 = 2.932\times10^{-3}\text{ m}^2 \qquad v_3 = \frac{5.99\times10^{-4}}{2.932\times10^{-3}} = 0.2043\text{ m/s}$$</div>
+            <div class="math-display">$$z_3 = H - h = 2.09 - 0.51 = 1.58\text{ m}$$</div>
+            <div class="math-display">$$P_3 = P_1 + \tfrac{1}{2}\rho(v_1^2 - v_3^2) - \rho g z_3$$</div>
+            <div class="math-block">= 162,000 + ½(1000)(1.103² − 0.204²) − (1000)(9.8)(1.58)
+= 162,000 + 500(1.217 − 0.0416) − 15,484
+= 162,000 + 587.7 − 15,484
+= 147,104 Pa</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">Answers</div>
+            <div class="ans-row">
+              <div><div class="ans-val">P₂ = 141,518 Pa</div><div class="ans-sub">Part (a) — pressure drops as water rises</div></div>
+              <div><div class="ans-val">P₃ = 147,104 Pa</div><div class="ans-sub">Part (b) — wider pipe recovers some pressure</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sol-main simple -->
+
+    <div class="sol-footer">
+      The Physics I method: find the formula, identify knowns and unknowns, substitute, compute.<br>
+      For the mathematical foundation behind each step, try <em>A Mathematician's Way</em>.
+    </div>
+  </div><!-- /simple-wrap -->
+</div><!-- /page-ch14-hw-simple -->
+
+
+<!-- ══════════════════════════ PAGE: MATHEMATICIAN'S SOLUTIONS ═════════════ -->
+<div class="sol-page" id="page-ch14-hw-math">
+  <header class="site-header" style="position:sticky;top:0;z-index:100;">
+    <button class="back-btn" onclick="goSol('page-ch14-hw')">← BACK</button>
+    <div class="breadcrumb">
+      <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
+      <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
+      <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
+      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
+      <span onclick="go('page-ch14-hw')">HW</span><span class="sep">/</span>
+      <span class="current">MATHEMATICIAN'S WAY</span>
+    </div>
+  </header>
+  <div class="solutions-wrap" id="math-wrap">
+
+    <div class="sol-header" data-symbol="∫∂∇∆">
+      <div class="mode-badge">MODE 2 — A MATHEMATICIAN'S WAY</div>
       <h1>Fluid Mechanics — A Mathematician's Lens</h1>
       <p>Every physics problem is secretly a calculus problem in disguise. Here's how to see it that way for all 10 problems.</p>
     </div>
@@ -609,46 +1198,47 @@ html, body {
     <div class="toc-wrap">
       <div class="toc-label">Problems</div>
       <div class="toc-grid">
-        <div class="toc-item" onclick="scrollTo('p1')"><span class="toc-num">1</span>Nail Force</div>
-        <div class="toc-item" onclick="scrollTo('p2')"><span class="toc-num">2</span>Gas Tank</div>
-        <div class="toc-item" onclick="scrollTo('p3')"><span class="toc-num">3</span>Manometer</div>
-        <div class="toc-item" onclick="scrollTo('p4')"><span class="toc-num">4</span>Breathing</div>
-        <div class="toc-item" onclick="scrollTo('p5')"><span class="toc-num">5</span>Ice Buoyancy</div>
-        <div class="toc-item" onclick="scrollTo('p6')"><span class="toc-num">6</span>Cube Equil.</div>
-        <div class="toc-item" onclick="scrollTo('p7')"><span class="toc-num">7</span>Blood Flow</div>
-        <div class="toc-item" onclick="scrollTo('p8')"><span class="toc-num">8</span>Air Duct</div>
-        <div class="toc-item" onclick="scrollTo('p9')"><span class="toc-num">9</span>Pitot Tube</div>
-        <div class="toc-item" onclick="scrollTo('p10')"><span class="toc-num">10</span>Sump Pump</div>
+        <div class="toc-item" onclick="scrollToProb('mp1')"><span class="toc-num">1</span>Nail Force</div>
+        <div class="toc-item" onclick="scrollToProb('mp2')"><span class="toc-num">2</span>Gas Tank</div>
+        <div class="toc-item" onclick="scrollToProb('mp3')"><span class="toc-num">3</span>Manometer</div>
+        <div class="toc-item" onclick="scrollToProb('mp4')"><span class="toc-num">4</span>Breathing</div>
+        <div class="toc-item" onclick="scrollToProb('mp5')"><span class="toc-num">5</span>Ice Buoyancy</div>
+        <div class="toc-item" onclick="scrollToProb('mp6')"><span class="toc-num">6</span>Cube Equil.</div>
+        <div class="toc-item" onclick="scrollToProb('mp7')"><span class="toc-num">7</span>Blood Flow</div>
+        <div class="toc-item" onclick="scrollToProb('mp8')"><span class="toc-num">8</span>Air Duct</div>
+        <div class="toc-item" onclick="scrollToProb('mp9')"><span class="toc-num">9</span>Pitot Tube</div>
+        <div class="toc-item" onclick="scrollToProb('mp10')"><span class="toc-num">10</span>Sump Pump</div>
       </div>
     </div>
 
     <div class="sol-main">
 
-      <!-- ── Problem 1 ── -->
-      <div class="problem-card" id="p1">
-        <div class="prob-head">
-          <div class="prob-num">1</div>
-          <div class="prob-title">Force on a Circular Nail Tip<br>— Uniform Pressure on a Disk</div>
-        </div>
+      <!-- ── MP1 ── -->
+      <div class="problem-card" id="mp1">
+        <div class="prob-head"><div class="prob-num">1</div><div class="prob-title">Force on a Circular Nail Tip<br>— Uniform Pressure on a Disk</div></div>
         <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>Nail tips exert tremendous pressures when they are hit by a hammer because they exert a large force over a small area. What force, in newtons, must be exerted on a nail with a circular tip of diameter $d = 1.17\text{ mm}$ to create a pressure of $P = 3.17 \times 10^9\text{ Pa}$?</p>
+          </div>
           <div class="sec think">
             <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>You see the word <em>pressure</em> and immediately think: pressure is a scalar field. More precisely, P = dF/dA — the instantaneous rate at which normal force accumulates per unit area. The question gives you P and asks for F. A mathematician's instinct: <strong>integrate P over the domain A</strong> to recover F.</p>
+            <p>You see the word <em>pressure</em> and immediately think: pressure is a scalar field. More precisely, $P = dF/dA$ — the instantaneous rate at which normal force accumulates per unit area. The question gives you $P$ and asks for $F$. A mathematician's instinct: <strong>integrate $P$ over the domain $A$</strong> to recover $F$.</p>
           </div>
           <div class="sec assume">
             <div class="sec-label">② Starting Assumptions</div>
-            <p><strong>A1:</strong> Pressure is spatially uniform across the tip — P(x,y) = P₀ = const. P factors out of the integral completely.</p>
-            <p><strong>A2:</strong> Domain is a closed disk D of diameter d = 1.17 mm, so radius r = d/2 = 5.85×10⁻⁴ m.</p>
+            <p><strong>A1:</strong> Pressure is spatially uniform across the tip — $P(x,y) = P_0 = \text{const}$. $P$ factors out of the integral completely.</p>
+            <p><strong>A2:</strong> Domain is a closed disk $D$ of diameter $d = 1.17\text{ mm}$, so radius $r = d/2 = 5.85\times10^{-4}\text{ m}$.</p>
             <p><strong>A3:</strong> Force is purely normal (perpendicular) to the area — no shear.</p>
           </div>
           <div class="sec derive">
             <div class="sec-label">③ Calculus Derivation</div>
             <p>Pressure as a surface integral, then factor out the constant:</p>
-            <div class="math-block">F = ∬_D P(x,y) dA  =  P₀ · ∬_D dA  =  P₀ · Area(D)</div>
+            <div class="math-display">$$F = \iint_D P(x,y)\,dA = P_0 \cdot \iint_D dA = P_0 \cdot \text{Area}(D)$$</div>
             <p>Area of a disk in polar coordinates:</p>
-            <div class="math-block">Area(D) = ∫₀²π ∫₀ʳ ρ dρ dθ  =  ∫₀²π [ρ²/2]₀ʳ dθ  =  πr²</div>
-            <p>Plug in:</p>
-            <div class="math-block">r = 1.17×10⁻³/2 = 5.85×10⁻⁴ m
+            <div class="math-display">$$\text{Area}(D) = \int_0^{2\pi}\!\int_0^r \rho\,d\rho\,d\theta = \int_0^{2\pi}\!\left[\frac{\rho^2}{2}\right]_0^r\!d\theta = \pi r^2$$</div>
+            <p>Plug in numerically:</p>
+            <div class="math-block">r = 1.17×10⁻³ / 2 = 5.85×10⁻⁴ m
 A = π(5.85×10⁻⁴)² = 1.0752×10⁻⁶ m²
 F = 3.17×10⁹ × 1.0752×10⁻⁶ = 3408 N</div>
           </div>
@@ -659,35 +1249,34 @@ F = 3.17×10⁹ × 1.0752×10⁻⁶ = 3408 N</div>
           </div>
           <div class="sec intuit">
             <div class="sec-label">⑤ Intuition</div>
-            <p>Fix total force F and shrink area A → 0: pressure F/A blows up. This is exactly why nails work — concentrate force onto a tiny area to achieve enormous local pressure with modest total force. The integral says "add up all the little dF = P·dA contributions across the whole surface."</p>
+            <p>Fix total force $F$ and shrink area $A \to 0$: pressure $F/A$ blows up. This is exactly why nails work — concentrate force onto a tiny area to achieve enormous local pressure with modest total force. The integral says "add up all the little $dF = P\,dA$ contributions across the whole surface."</p>
           </div>
         </div>
       </div>
 
-      <!-- ── Problem 2 ── -->
-      <div class="problem-card" id="p2">
-        <div class="prob-head">
-          <div class="prob-num">2</div>
-          <div class="prob-title">Hydrostatic Load on a Gas Tank<br>— Weight as a Surface Force</div>
-        </div>
+      <!-- ── MP2 ── -->
+      <div class="problem-card" id="mp2">
+        <div class="prob-head"><div class="prob-num">2</div><div class="prob-title">Hydrostatic Load on a Gas Tank<br>— Weight as a Surface Force</div></div>
         <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>Consider a $0.505\text{ m}$-wide by $0.89\text{ m}$-long gas tank that can hold $49\text{ kg}$ of gasoline. <strong>Part (a):</strong> What pressure in N/m² is exerted on the bottom by the weight of the gasoline when full? <strong>Part (b):</strong> What is the ratio of atmospheric pressure to this pressure?</p>
+          </div>
           <div class="sec think">
             <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>You see "mass m, area A, find pressure." Gravity is a body force (ρg per unit volume). A mathematician asks: <em>what is the force density acting on the bottom face?</em> P = F/A, where F comes from Newton: F = mg.</p>
+            <p>You see "mass $m$, area $A$, find pressure." Gravity is a body force ($\rho g$ per unit volume). A mathematician asks: <em>what is the force density acting on the bottom face?</em> $P = F/A$, where $F$ comes from Newton: $F = mg$.</p>
           </div>
           <div class="sec assume">
             <div class="sec-label">② Starting Assumptions</div>
             <p><strong>A1:</strong> Gasoline in static equilibrium — only gravity and the bottom reaction force.</p>
-            <p><strong>A2:</strong> Bottom face is flat rectangular: 0.505 m × 0.89 m.</p>
+            <p><strong>A2:</strong> Bottom face is flat rectangular: $0.505\text{ m} \times 0.89\text{ m}$.</p>
             <p><strong>A3:</strong> Pressure from gas is uniform across the bottom (lumped mass model).</p>
           </div>
           <div class="sec derive">
             <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-block">∑F = 0  →  F_reaction = mg = 49 × 9.8 = 480.2 N
-
-F = ∬_B P dA = P · (0.505)(0.89)  →  P = mg / A
-
-P = 480.2 / 0.44945 = 1068.4 Pa
+            <div class="math-display">$$\sum F = 0 \;\Rightarrow\; F_\text{reaction} = mg = (49)(9.8) = 480.2\text{ N}$$</div>
+            <div class="math-display">$$F = \iint_B P\,dA = P \cdot (0.505)(0.89) \;\Rightarrow\; P = \frac{mg}{A}$$</div>
+            <div class="math-block">P = 480.2 / 0.44945 = 1068.4 Pa
 
 Ratio:  R = P_atm / P = 101325 / 1068.4 = 94.84</div>
           </div>
@@ -705,79 +1294,73 @@ Ratio:  R = P_atm / P = 101325 / 1068.4 = 94.84</div>
         </div>
       </div>
 
-      <!-- ── Problem 3 ── -->
-      <div class="problem-card" id="p3">
-        <div class="prob-head">
-          <div class="prob-num">3</div>
-          <div class="prob-title">Differential Manometry<br>— Integrating the Hydrostatic Gradient</div>
-        </div>
+      <!-- ── MP3 ── -->
+      <div class="problem-card" id="mp3">
+        <div class="prob-head"><div class="prob-num">3</div><div class="prob-title">Differential Manometry<br>— Integrating the Hydrostatic Gradient</div></div>
         <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>A mercury manometer measures pressure inside a sealed jar of peanuts. The mercury level on the open side is $9.3\text{ cm}$ <em>lower</em> than on the jar side ($\rho_{Hg} = 13.5\text{ g/cm}^3$). Find the gauge pressure and the absolute pressure in the jar.</p>
+          </div>
           <div class="sec think">
             <div class="sec-label">① How a Mathematician Reads This</div>
             <p>This is a <em>boundary value problem for a first-order ODE</em>. The pressure field in a static fluid satisfies a differential equation. You're given a height difference and asked for a pressure difference — literally: integrate the pressure gradient equation.</p>
           </div>
           <div class="sec assume">
             <div class="sec-label">② Starting Assumptions</div>
-            <p><strong>A1:</strong> Mercury is incompressible and static: ρ = 13,500 kg/m³ constant.</p>
-            <p><strong>A2:</strong> Only body force is gravity, in the −ẑ direction.</p>
+            <p><strong>A1:</strong> Mercury is incompressible and static: $\rho = 13{,}500\text{ kg/m}^3$ constant.</p>
+            <p><strong>A2:</strong> Only body force is gravity, in the $-\hat{z}$ direction.</p>
             <p><strong>A3:</strong> Open side mercury is 9.3 cm <em>lower</em> than the jar side → jar is below atmospheric pressure.</p>
           </div>
           <div class="sec derive">
             <div class="sec-label">③ Calculus Derivation</div>
             <p>Euler's static equation → 1D ODE → integrate:</p>
-            <div class="math-block">∇P = ρg⃗   →   dP/dz = -ρg   (z upward positive)
+            <div class="math-display">$$\nabla P = \rho\vec{g} \;\Rightarrow\; \frac{dP}{dz} = -\rho g \quad (z\text{ upward positive})$$</div>
+            <p>Integrate from jar ($z_1$) to open side ($z_2 = z_1 - h$):</p>
+            <div class="math-display">$$\int dP = \int(-\rho g)\,dz \;\Rightarrow\; P_\text{atm} - P_\text{jar} = \rho g h$$</div>
+            <div class="math-block">P_g = P_jar − P_atm = −ρgh
+   = −(13500)(9.8)(0.093) = −12,303.9 Pa
 
-Integrate from jar (z₁) to open side (z₂ = z₁ - h):
-∫ dP = ∫ (-ρg) dz
-
-P_atm - P_jar = -ρg(-h) = ρgh
-P_g = P_jar - P_atm = -ρgh
-
-P_g = -(13500)(9.8)(0.093) = -12,303.9 Pa
-P_abs = 101325 - 12303.9 = 89,021.1 Pa</div>
+P_abs = 101325 − 12304 = 89,021.1 Pa</div>
           </div>
           <div class="sec answer">
             <div class="sec-label">④ Answers</div>
             <div class="ans-row">
-              <div><div class="ans-val">P_g = −12,304 Pa</div><div class="ans-sub">Part (a)</div></div>
-              <div><div class="ans-val">P_abs = 89,021 Pa</div><div class="ans-sub">Part (b)</div></div>
+              <div><div class="ans-val">Pᵍ = −12,304 Pa</div><div class="ans-sub">Part (a)</div></div>
+              <div><div class="ans-val">Pₐᵦₛ = 89,021 Pa</div><div class="ans-sub">Part (b)</div></div>
             </div>
           </div>
           <div class="sec intuit">
             <div class="sec-label">⑤ Intuition</div>
-            <p>dP/dz = −ρg means: going <em>up</em> in elevation, pressure <em>decreases</em>. Mercury higher on the jar side means the jar is pulling mercury up — it must be at below-atmospheric pressure. Integrating accumulates the weight of the fluid column between the two levels.</p>
+            <p>$dP/dz = -\rho g$ means: going <em>up</em> in elevation, pressure <em>decreases</em>. Mercury higher on the jar side means the jar is pulling mercury up — it must be at below-atmospheric pressure. Integrating accumulates the weight of the fluid column between the two levels.</p>
           </div>
         </div>
       </div>
 
-      <!-- ── Problem 4 ── -->
-      <div class="problem-card" id="p4">
-        <div class="prob-head">
-          <div class="prob-num">4</div>
-          <div class="prob-title">Physiological Pressure Limits<br>— Additive Pressure Scalars</div>
-        </div>
+      <!-- ── MP4 ── -->
+      <div class="problem-card" id="mp4">
+        <div class="prob-head"><div class="prob-num">4</div><div class="prob-title">Physiological Pressure Limits<br>— Additive Pressure Scalars</div></div>
         <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>Heroes in movies breathe through a hollow reed while hiding underwater. You cannot inhale if your lungs are more than $60.0\text{ cm}$ below the surface. What is the maximum negative gauge pressure (in cm H₂O) you can create in your lungs on dry land, given that you can achieve $-3.15\text{ cm H}_2\text{O}$ with lungs $60.0\text{ cm}$ below the surface?</p>
+          </div>
           <div class="sec think">
             <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>This is a <em>constraint satisfaction problem</em>. Two pressure systems whose algebraic sum must equal zero for the person to inhale. Find the required value of one variable given the constraint. Think of it as: P_lungs + P_water = 0.</p>
+            <p>This is a <em>constraint satisfaction problem</em>. Two pressure systems whose algebraic sum must equal zero for the person to inhale. Find the required value of one variable given the constraint. Think of it as: $P_\text{lungs} + P_\text{water} = 0$.</p>
           </div>
           <div class="sec assume">
             <div class="sec-label">② Starting Assumptions</div>
-            <p><strong>A1:</strong> For inhalation: lung pressure must equal surface air pressure → zero net ΔP across the lung boundary.</p>
-            <p><strong>A2:</strong> Pressure is additive: P_chest = P_water_column + P_lung_gauge. Units: cm H₂O.</p>
-            <p><strong>A3:</strong> Max negative lung pressure on dry land: P_lung,max = −3.15 cm H₂O.</p>
+            <p><strong>A1:</strong> For inhalation: lung pressure must equal surface air pressure → zero net $\Delta P$ across the lung boundary.</p>
+            <p><strong>A2:</strong> Pressure is additive: $P_\text{chest} = P_\text{water column} + P_\text{lung gauge}$. Units: cm H₂O.</p>
+            <p><strong>A3:</strong> Max negative lung pressure relative to local outside at depth: $P_\text{lung,max} = -3.15\text{ cm H}_2\text{O}$.</p>
           </div>
           <div class="sec derive">
             <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-block">P_ext(z) = +z  cm H₂O gauge  (z = depth in cm)
-At z = 60 cm:  P_ext = +60 cm H₂O
-
-Required lung pressure to inhale against this:
-P_required = -(P_water + |P_lung,max,dry|)
-           = -(60 + 3.15)
-           = -63.15 cm H₂O
-
-Achievable maximum: -3.15 cm H₂O  →  impossible.</div>
+            <div class="math-display">$$P_\text{ext}(z) = +z \;\text{cm H}_2\text{O (gauge)}, \quad z = \text{depth in cm}$$</div>
+            <div class="math-display">$$\text{At } z = 60\text{ cm}: \quad P_\text{ext} = +60\text{ cm H}_2\text{O}$$</div>
+            <p>Required lung pressure relative to surface atmosphere to inhale:</p>
+            <div class="math-display">$$P_\text{required} = -(P_\text{water} + |P_\text{lung,max}|) = -(60 + 3.15) = -63.15\text{ cm H}_2\text{O}$$</div>
           </div>
           <div class="sec answer">
             <div class="sec-label">④ Answer</div>
@@ -791,32 +1374,30 @@ Achievable maximum: -3.15 cm H₂O  →  impossible.</div>
         </div>
       </div>
 
-      <!-- ── Problem 5 ── -->
-      <div class="problem-card" id="p5">
-        <div class="prob-head">
-          <div class="prob-num">5</div>
-          <div class="prob-title">Buoyancy Fraction of Ice<br>— Equilibrium as a Fixed-Point Equation</div>
-        </div>
+      <!-- ── MP5 ── -->
+      <div class="problem-card" id="mp5">
+        <div class="prob-head"><div class="prob-num">5</div><div class="prob-title">Buoyancy Fraction of Ice<br>— Equilibrium as a Fixed-Point Equation</div></div>
         <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>The fraction of ice submerged in water depends only on density. Assume $\rho_\text{ice} = 910.9\text{ kg/m}^3$ and freshwater $\rho_w = 1000\text{ kg/m}^3$. What fraction of ice is submerged when it floats?</p>
+          </div>
           <div class="sec think">
             <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>You want a ratio: f = V_sub / V_total. Write the equilibrium condition as an equation in f, solve symbolically, then substitute numbers. No arithmetic until the algebra is done.</p>
+            <p>You want a ratio: $f = V_\text{sub}/V_\text{total}$. Write the equilibrium condition as an equation in $f$, solve symbolically, then substitute numbers. No arithmetic until the algebra is done.</p>
           </div>
           <div class="sec assume">
             <div class="sec-label">② Starting Assumptions</div>
-            <p><strong>A1:</strong> Static equilibrium: ∑F = 0 vertically.</p>
-            <p><strong>A2:</strong> Archimedes: F_b = ρ_w · V_sub · g (weight of displaced fluid).</p>
-            <p><strong>A3:</strong> ρ_ice = 910.9 kg/m³, ρ_water = 1000 kg/m³.</p>
+            <p><strong>A1:</strong> Static equilibrium: $\sum F = 0$ vertically.</p>
+            <p><strong>A2:</strong> Archimedes: $F_b = \rho_w \cdot V_\text{sub} \cdot g$ (weight of displaced fluid).</p>
+            <p><strong>A3:</strong> $\rho_\text{ice} = 910.9\text{ kg/m}^3$, $\rho_w = 1000\text{ kg/m}^3$.</p>
           </div>
           <div class="sec derive">
             <div class="sec-label">③ Calculus Derivation</div>
-            <p>Archimedes follows from integrating pressure over the submerged surface (divergence theorem: ∮P n̂ dA = ρgV_sub). Then:</p>
-            <div class="math-block">F_b = W
-ρ_w · V_sub · g = ρ_i · V_total · g
-
-Cancel g, divide by (ρ_w · V_total):
-
-f = V_sub / V_total = ρ_i / ρ_w = 910.9 / 1000 = 0.9109</div>
+            <p>Archimedes follows from integrating pressure over the submerged surface (divergence theorem: $\oint P\hat{n}\,dA = \rho g V_\text{sub}$). Then:</p>
+            <div class="math-display">$$F_b = W \;\Rightarrow\; \rho_w V_\text{sub} g = \rho_i V_\text{total} g$$</div>
+            <p>Cancel $g$, divide by $(\rho_w \cdot V_\text{total})$:</p>
+            <div class="math-display">$$f = \frac{V_\text{sub}}{V_\text{total}} = \frac{\rho_i}{\rho_w} = \frac{910.9}{1000} = 0.9109$$</div>
           </div>
           <div class="sec answer">
             <div class="sec-label">④ Answer</div>
@@ -825,37 +1406,38 @@ f = V_sub / V_total = ρ_i / ρ_w = 910.9 / 1000 = 0.9109</div>
           </div>
           <div class="sec intuit">
             <div class="sec-label">⑤ Intuition</div>
-            <p>g and V_total cancel completely — the fraction submerged depends <em>only</em> on the density ratio. Ice is 91% as dense as water, so it displaces 91% of its own volume. This is why the iceberg rule is universal regardless of size.</p>
+            <p>$g$ and $V_\text{total}$ cancel completely — the fraction submerged depends <em>only</em> on the density ratio. Ice is 91% as dense as water, so it displaces 91% of its own volume. This is why the iceberg rule is universal regardless of size.</p>
           </div>
         </div>
       </div>
 
-      <!-- ── Problem 6 ── -->
-      <div class="problem-card" id="p6">
-        <div class="prob-head">
-          <div class="prob-num">6</div>
-          <div class="prob-title">Static Equilibrium of a Suspended Cube<br>— Three-Force Balance</div>
-        </div>
+      <!-- ── MP6 ── -->
+      <div class="problem-card" id="mp6">
+        <div class="prob-head"><div class="prob-num">6</div><div class="prob-title">Static Equilibrium of a Suspended Cube<br>— Three-Force Balance</div></div>
         <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>A cube with edge length $L = 0.13\text{ m}$ and density $\rho_c = 3.9\times10^3\text{ kg/m}^3$ is exactly half submerged in a liquid of density $\rho_l = 0.81\times10^3\text{ kg/m}^3$, suspended by a taut string. Find: <strong>(c)</strong> weight $W$ in N, <strong>(e)</strong> buoyant force $F_b$ in N, <strong>(g)</strong> tension $T$ in N, <strong>(h)</strong> what happens to $T$ if submerged more?</p>
+          </div>
           <div class="sec think">
             <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>∑F = 0 is a linear equation in {W, F_b, T}. Parameterize each force symbolically in terms of (ρ_c, ρ_l, L, g), reduce to one scalar equation, solve. Since all forces are collinear (vertical), it's a one-dimensional problem.</p>
+            <p>$\sum F = 0$ is a linear equation in $\{W, F_b, T\}$. Parameterize each force symbolically in terms of $(\rho_c, \rho_l, L, g)$, reduce to one scalar equation, solve. Since all forces are collinear (vertical), it's a one-dimensional problem.</p>
           </div>
           <div class="sec assume">
             <div class="sec-label">② Starting Assumptions</div>
-            <p><strong>A1:</strong> Static equilibrium → T + F_b = W (upward positive).</p>
-            <p><strong>A2:</strong> Exactly half submerged: V_sub = L³/2.</p>
-            <p><strong>A3:</strong> L = 0.13 m, ρ_c = 3900 kg/m³, ρ_l = 810 kg/m³, g = 9.8 m/s².</p>
+            <p><strong>A1:</strong> Static equilibrium → $T + F_b = W$ (upward positive).</p>
+            <p><strong>A2:</strong> Exactly half submerged: $V_\text{sub} = L^3/2$.</p>
+            <p><strong>A3:</strong> $L = 0.13\text{ m}$, $\rho_c = 3900\text{ kg/m}^3$, $\rho_l = 810\text{ kg/m}^3$, $g = 9.8\text{ m/s}^2$.</p>
           </div>
           <div class="sec derive">
             <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-block">W = ∭_cube ρ_c g dV = ρ_c g L³
-  = (3900)(9.8)(0.13)³ = 83.97 N
+            <div class="math-display">$$W = \iiint_\text{cube} \rho_c g\,dV = \rho_c g L^3$$</div>
+            <div class="math-display">$$F_b = \rho_l g \frac{L^3}{2} \qquad \sum F = 0 \;\Rightarrow\; T = W - F_b$$</div>
+            <div class="math-block">W = (3900)(9.8)(0.13)³ = (3900)(9.8)(0.002197) = 83.97 N
 
-F_b = ρ_l g (L³/2)
-  = (810)(9.8)(0.002197/2) = 8.72 N
+F_b = (810)(9.8)(0.002197/2) = (810)(9.8)(0.001099) = 8.72 N
 
-∑F = 0  →  T = W - F_b = 83.97 - 8.72 = 75.25 N
+T = 83.97 − 8.72 = 75.25 N
 
 Part (h): more submersion → V_sub↑ → F_b↑ → T↓  (decreases)</div>
           </div>
@@ -863,40 +1445,42 @@ Part (h): more submersion → V_sub↑ → F_b↑ → T↓  (decreases)</div>
             <div class="sec-label">④ Answers</div>
             <div class="ans-row">
               <div><div class="ans-val">W = 83.97 N</div><div class="ans-sub">Part (c)</div></div>
-              <div><div class="ans-val">F_b = 8.72 N</div><div class="ans-sub">Part (e)</div></div>
+              <div><div class="ans-val">Fb = 8.72 N</div><div class="ans-sub">Part (e)</div></div>
               <div><div class="ans-val">T = 75.25 N</div><div class="ans-sub">Part (g)</div></div>
             </div>
           </div>
           <div class="sec intuit">
             <div class="sec-label">⑤ Intuition</div>
-            <p>Tension is what's "left over" after buoyancy partially supports the cube. If ρ_c = ρ_l, the cube floats freely and T = 0. Deeper submersion → more displaced fluid → more buoyancy → string relaxes.</p>
+            <p>Tension is what's "left over" after buoyancy partially supports the cube. If $\rho_c = \rho_l$, the cube floats freely and $T = 0$. Deeper submersion → more displaced fluid → more buoyancy → string relaxes.</p>
           </div>
         </div>
       </div>
 
-      <!-- ── Problem 7 ── -->
-      <div class="problem-card" id="p7">
-        <div class="prob-head">
-          <div class="prob-num">7</div>
-          <div class="prob-title">Arterial Blood Flow<br>— Flux Integral over a Circular Cross-Section</div>
-        </div>
+      <!-- ── MP7 ── -->
+      <div class="problem-card" id="mp7">
+        <div class="prob-head"><div class="prob-num">7</div><div class="prob-title">Arterial Blood Flow<br>— Flux Integral over a Circular Cross-Section</div></div>
         <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>Blood flows through an artery of radius $r = 2.3\text{ mm}$ at speed $v = 42\text{ cm/s}$. <strong>Part (a):</strong> Find the flow rate $Q$ (cm³/s). <strong>Part (b):</strong> Find the volume $V$ passing through in $30.0\text{ s}$.</p>
+          </div>
           <div class="sec think">
             <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>Flow rate Q is a flux integral: Q = ∬_A v⃗ · n̂ dA. What velocity field is assumed, and what is the domain A? Once Q is known, volume = ∫Q dt.</p>
+            <p>Flow rate $Q$ is a flux integral: $Q = \iint_A \vec{v} \cdot \hat{n}\,dA$. What velocity field is assumed, and what is the domain $A$? Once $Q$ is known, volume $= \int Q\,dt$.</p>
           </div>
           <div class="sec assume">
             <div class="sec-label">② Starting Assumptions</div>
-            <p><strong>A1:</strong> Plug flow — v is uniform across the cross-section.</p>
-            <p><strong>A2:</strong> Cross-section is a disk of radius r = 0.23 cm.</p>
-            <p><strong>A3:</strong> Q is constant over 30 s, so V = Q·t (no integration).</p>
+            <p><strong>A1:</strong> Plug flow — $v$ is uniform across the cross-section.</p>
+            <p><strong>A2:</strong> Cross-section is a disk of radius $r = 0.23\text{ cm}$.</p>
+            <p><strong>A3:</strong> $Q$ is constant over 30 s, so $V = Q \cdot t$ (no further integration).</p>
           </div>
           <div class="sec derive">
             <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-block">Q = ∬_D v⃗ · n̂ dA  =  v · ∬_D dA  =  v · πr²
-  = 42 × π(0.23)² = 42 × 0.16619 = 6.980 cm³/s
+            <div class="math-display">$$Q = \iint_D \vec{v}\cdot\hat{n}\,dA = v\cdot\iint_D dA = v \cdot \pi r^2$$</div>
+            <div class="math-display">$$V = \int_0^{30} Q\,dt = Q \cdot 30$$</div>
+            <div class="math-block">Q = 42 × π(0.23)² = 42 × 0.16619 = 6.980 cm³/s
 
-V = ∫₀³⁰ Q dt = Q · 30 = 6.980 × 30 = 209.4 cm³</div>
+V = 6.980 × 30 = 209.4 cm³</div>
           </div>
           <div class="sec answer">
             <div class="sec-label">④ Answers</div>
@@ -907,33 +1491,33 @@ V = ∫₀³⁰ Q dt = Q · 30 = 6.980 × 30 = 209.4 cm³</div>
           </div>
           <div class="sec intuit">
             <div class="sec-label">⑤ Intuition</div>
-            <p>Q = A·v: in one second, all the blood in a cylinder of length v and cross-section A passes through. Volume = how many such cylinders pass in time t? Exactly Q·t of them.</p>
+            <p>$Q = A \cdot v$: in one second, all the blood in a cylinder of length $v$ and cross-section $A$ passes through. Volume = how many such cylinders pass in time $t$? Exactly $Q \cdot t$ of them.</p>
           </div>
         </div>
       </div>
 
-      <!-- ── Problem 8 ── -->
-      <div class="problem-card" id="p8">
-        <div class="prob-head">
-          <div class="prob-num">8</div>
-          <div class="prob-title">Air Duct Velocity<br>— Continuity / Conservation of Volume</div>
-        </div>
+      <!-- ── MP8 ── -->
+      <div class="problem-card" id="mp8">
+        <div class="prob-head"><div class="prob-num">8</div><div class="prob-title">Air Duct Velocity<br>— Continuity / Conservation of Volume</div></div>
         <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>A forced-air heater has a main duct of diameter $0.305\text{ m}$. The house interior is $12\text{ m} \times 19.5\text{ m} \times 2.8\text{ m}$. What is the average air speed in the duct if it cycles the entire house volume every $15\text{ min}$?</p>
+          </div>
           <div class="sec think">
             <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>This is a conservation law: total volume flux is conserved. You know the total volume that must move per unit time (room volume ÷ cycle time) and the pipe cross-section. Solve for the one unknown velocity: Q_room = Q_duct.</p>
+            <p>This is a conservation law: total volume flux is conserved. You know the total volume that must move per unit time (room volume ÷ cycle time) and the pipe cross-section. Solve for the one unknown velocity: $Q_\text{room} = Q_\text{duct}$.</p>
           </div>
           <div class="sec assume">
             <div class="sec-label">② Starting Assumptions</div>
-            <p><strong>A1:</strong> Air is incompressible (low speed): ∇·v⃗ = 0 → Q_in = Q_out.</p>
-            <p><strong>A2:</strong> House volume 12 × 19.5 × 2.8 m³ exchanged every 15 min = 900 s.</p>
-            <p><strong>A3:</strong> Duct cross-section: disk of diameter 0.305 m.</p>
+            <p><strong>A1:</strong> Air is incompressible (low speed): $\nabla \cdot \vec{v} = 0 \;\Rightarrow\; Q_\text{in} = Q_\text{out}$.</p>
+            <p><strong>A2:</strong> House volume $12 \times 19.5 \times 2.8\text{ m}^3$ exchanged every $15\text{ min} = 900\text{ s}$.</p>
+            <p><strong>A3:</strong> Duct cross-section: disk of diameter $0.305\text{ m}$.</p>
           </div>
           <div class="sec derive">
             <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-block">∮_S v⃗ · n̂ dA = 0  →  Q_in = Q_out = Q
-
-Q = V_room / t = (12 × 19.5 × 2.8) / 900 = 655.2 / 900 = 0.7280 m³/s
+            <div class="math-display">$$\oint_S \vec{v}\cdot\hat{n}\,dA = 0 \;\Rightarrow\; Q_\text{in} = Q_\text{out} = Q$$</div>
+            <div class="math-block">Q = V_room / t = (12 × 19.5 × 2.8) / 900 = 655.2 / 900 = 0.7280 m³/s
 
 A_duct = π(0.305/2)² = π(0.1525)² = 0.07306 m²
 
@@ -946,43 +1530,40 @@ v = Q / A = 0.7280 / 0.07306 = 9.96 m/s</div>
           </div>
           <div class="sec intuit">
             <div class="sec-label">⑤ Intuition</div>
-            <p>Incompressible → can't "store" mass inside. Room sets the demand Q; duct area sets the geometry; velocity adjusts to satisfy both. Narrow duct → same Q → higher speed.</p>
+            <p>Incompressible → can't "store" mass inside. Room sets the demand $Q$; duct area sets the geometry; velocity adjusts to satisfy both. Narrow duct → same $Q$ → higher speed.</p>
           </div>
         </div>
       </div>
 
-      <!-- ── Problem 9 ── -->
-      <div class="problem-card" id="p9">
-        <div class="prob-head">
-          <div class="prob-num">9</div>
-          <div class="prob-title">Pitot Tube Stagnation Pressure<br>— Bernoulli as a First Integral</div>
-        </div>
+      <!-- ── MP9 ── -->
+      <div class="problem-card" id="mp9">
+        <div class="prob-head"><div class="prob-num">9</div><div class="prob-title">Pitot Tube Stagnation Pressure<br>— Bernoulli as a First Integral</div></div>
         <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>A pitot tube measures airspeed using a mercury manometer with height $h = 0.195\text{ m}$. Given $\rho_{Hg} = 13.6\times10^3\text{ kg/m}^3$ and $\rho_{air} = 1.29\text{ kg/m}^3$, calculate the velocity of the moving air.</p>
+          </div>
           <div class="sec think">
             <div class="sec-label">① How a Mathematician Reads This</div>
             <p>Bernoulli's equation is the <em>first integral</em> of Euler's equation along a streamline. Integrate the momentum ODE to get a conserved quantity — total mechanical energy per unit volume. Apply as a two-point boundary condition to find velocity.</p>
           </div>
           <div class="sec assume">
             <div class="sec-label">② Starting Assumptions</div>
-            <p><strong>A1:</strong> Steady, inviscid, incompressible flow; freestream speed v → stagnation v₂ = 0.</p>
-            <p><strong>A2:</strong> No elevation change: z₁ = z₂, so ρgz terms cancel.</p>
-            <p><strong>A3:</strong> Manometer reads ΔP = ρ_Hg · g · h, h = 0.195 m.</p>
+            <p><strong>A1:</strong> Steady, inviscid, incompressible flow; freestream speed $v$ → stagnation $v_2 = 0$.</p>
+            <p><strong>A2:</strong> No elevation change: $z_1 = z_2$, so $\rho g z$ terms cancel.</p>
+            <p><strong>A3:</strong> Manometer reads $\Delta P = \rho_{Hg} \cdot g \cdot h$, $h = 0.195\text{ m}$.</p>
           </div>
           <div class="sec derive">
             <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-block">Euler along streamline (arc length s):
-ρ v dv/ds = -dP/ds - ρg dz/ds
+            <p>Euler along streamline (arc length $s$):</p>
+            <div class="math-display">$$\rho v\frac{dv}{ds} = -\frac{dP}{ds} - \rho g\frac{dz}{ds}$$</div>
+            <p>Rearranging → first integral (conserved along streamline):</p>
+            <div class="math-display">$$\frac{d}{ds}\!\left[\tfrac{1}{2}\rho v^2 + P + \rho gz\right] = 0 \quad \Longrightarrow \quad \tfrac{1}{2}\rho v^2 + P + \rho gz = \text{const}$$</div>
+            <p>Apply point 1 → point 2 ($v_2 = 0$, same height):</p>
+            <div class="math-display">$$\tfrac{1}{2}\rho_\text{air} v^2 + P_1 = P_2 \;\Rightarrow\; \Delta P = \tfrac{1}{2}\rho_\text{air} v^2 \;\Rightarrow\; v = \sqrt{\frac{2\Delta P}{\rho_\text{air}}}$$</div>
+            <div class="math-block">ΔP = ρ_Hg · g · h = (13600)(9.8)(0.195) = 25,989.6 Pa
 
-Rearranging → first integral:
-d/ds [½ρv² + P + ρgz] = 0  →  conserved!
-
-Apply point 1 → point 2 (v₂ = 0, same height):
-½ρ_air v² + P₁ = P₂
-ΔP = ½ρ_air v²
-
-ΔP = ρ_Hg g h = (13600)(9.8)(0.195) = 25,989.6 Pa
-
-v = √(2ΔP / ρ_air) = √(2 × 25989.6 / 1.29) = √40294 = 200.7 m/s</div>
+v = √(2 × 25989.6 / 1.29) = √(40294) = 200.7 m/s</div>
           </div>
           <div class="sec answer">
             <div class="sec-label">④ Answer</div>
@@ -991,45 +1572,45 @@ v = √(2ΔP / ρ_air) = √(2 × 25989.6 / 1.29) = √40294 = 200.7 m/s</div>
           </div>
           <div class="sec intuit">
             <div class="sec-label">⑤ Intuition</div>
-            <p>Slowing fluid to zero at stagnation converts ALL kinetic energy to pressure. Mercury is ~10,000× denser than air — even a tiny ΔP produces a measurable column height, amplifying small pressure signals into readable measurements.</p>
+            <p>Slowing fluid to zero at stagnation converts ALL kinetic energy to pressure. Mercury is ~10,000× denser than air — even a tiny $\Delta P$ produces a measurable column height, amplifying small pressure signals into readable measurements.</p>
           </div>
         </div>
       </div>
 
-      <!-- ── Problem 10 ── -->
-      <div class="problem-card" id="p10">
-        <div class="prob-head">
-          <div class="prob-num">10</div>
-          <div class="prob-title">Sump Pump Energy Conservation<br>— Full Bernoulli with Elevation + Velocity</div>
-        </div>
+      <!-- ── MP10 ── -->
+      <div class="problem-card" id="mp10">
+        <div class="prob-head"><div class="prob-num">10</div><div class="prob-title">Sump Pump Energy Conservation<br>— Full Bernoulli with Elevation + Velocity</div></div>
         <div class="prob-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Problem</div>
+            <p>A sump pump operates at $Q = 0.599\text{ L/s}$ with output pressure $P_1 = 1.62\times10^5\text{ Pa}$ through a pipe of diameter $d = 2.63\text{ cm}$. <strong>Part (a):</strong> Water rises to height $H = 2.09\text{ m}$ in the same-diameter pipe; find the pressure at the top. <strong>Part (b):</strong> The pipe widens to $D = 6.11\text{ cm}$ and drops $h = 0.51\text{ m}$; find the pressure in the wider section.</p>
+          </div>
           <div class="sec think">
             <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>Bernoulli with all three terms varying simultaneously: pressure, velocity (pipe diameter changes → continuity forces velocity change), and elevation. Set the conserved quantity at point 1 (known) equal to the conserved quantity at points 2 and 3 (unknowns). Two equations, two unknowns.</p>
+            <p>Bernoulli with all three terms varying simultaneously: pressure, velocity (pipe diameter changes → continuity forces velocity change), and elevation. Set the conserved quantity at point 1 (known) equal to points 2 and 3 (unknowns). Two equations, two unknowns.</p>
           </div>
           <div class="sec assume">
             <div class="sec-label">② Starting Assumptions</div>
             <p><strong>A1:</strong> Steady, inviscid, incompressible — Bernoulli holds.</p>
-            <p><strong>A2:</strong> Point 1: P₁ = 1.62×10⁵ Pa, d = 2.63 cm, Q = 5.99×10⁻⁴ m³/s, z₁ = 0.</p>
-            <p><strong>A3 (Part a):</strong> Same diameter to point 2 → v₂ = v₁, z₂ = H = 2.09 m.</p>
-            <p><strong>A4 (Part b):</strong> D = 6.11 cm at point 3, z₃ = H − h = 2.09 − 0.51 = 1.58 m.</p>
+            <p><strong>A2:</strong> Point 1: $P_1 = 1.62\times10^5\text{ Pa}$, $d = 2.63\text{ cm}$, $Q = 5.99\times10^{-4}\text{ m}^3/\text{s}$, $z_1 = 0$.</p>
+            <p><strong>A3 (Part a):</strong> Same diameter to point 2 → $v_2 = v_1$, $z_2 = H = 2.09\text{ m}$.</p>
+            <p><strong>A4 (Part b):</strong> $D = 6.11\text{ cm}$ at point 3, $z_3 = H - h = 2.09 - 0.51 = 1.58\text{ m}$.</p>
           </div>
           <div class="sec derive">
             <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-block">Conserved: E = P + ½ρv² + ρgz = constant
-
-v₁ = Q/A₁ = 5.99×10⁻⁴ / π(0.01315)² = 1.103 m/s
+            <div class="math-display">$$P + \tfrac{1}{2}\rho v^2 + \rho gz = \text{const} \quad \text{(Bernoulli conserved quantity)}$$</div>
+            <div class="math-block">v₁ = Q/A₁ = 5.99×10⁻⁴ / π(0.01315)² = 1.103 m/s
 
 ── Part (a): same diameter → v₂ = v₁ → KE terms cancel ──
-P₂ = P₁ - ρg·H = 162000 - (1000)(9.8)(2.09) = 141,518 Pa
+P₂ = P₁ − ρgH = 162000 − (1000)(9.8)(2.09) = 141,518 Pa
 
-── Part (b): wider pipe, continuity ──
+── Part (b): wider pipe, continuity gives v₃ ──
 A₃ = π(0.03055)² = 2.932×10⁻³ m²
 v₃ = Q/A₃ = 5.99×10⁻⁴ / 2.932×10⁻³ = 0.2043 m/s
 
-P₃ = P₁ + ½ρ(v₁² - v₃²) - ρg·z₃
-   = 162000 + 500(1.2166 - 0.04174) - (1000)(9.8)(1.58)
-   = 162000 + 587.4 - 15484
+P₃ = P₁ + ½ρ(v₁² − v₃²) − ρg·z₃
+   = 162000 + 500(1.2166 − 0.04174) − (1000)(9.8)(1.58)
+   = 162000 + 587.4 − 15484
    = 147,103 Pa</div>
           </div>
           <div class="sec answer">
@@ -1046,35 +1627,51 @@ P₃ = P₁ + ½ρ(v₁² - v₃²) - ρg·z₃
         </div>
       </div>
 
-    </div><!-- /sol-main -->
+    </div><!-- /sol-main math -->
 
     <div class="sol-footer">
       All derivations reduce to two ideas:<br>
-      <em>F = ∬P dA</em> (pressure as surface integral) &nbsp;&amp;&nbsp;
-      <em>d/ds[P + ½ρv² + ρgz] = 0</em> (Bernoulli as first integral of momentum).<br>
+      $F = \displaystyle\iint P\,dA$ &nbsp;(pressure as surface integral) &ensp;&amp;&ensp;
+      $\dfrac{d}{ds}\!\left[P + \tfrac{1}{2}\rho v^2 + \rho gz\right] = 0$ &nbsp;(Bernoulli as first integral of momentum).<br>
       Everything else is calculus.
     </div>
 
-  </div><!-- /solutions-wrap -->
-</div><!-- /page-solutions -->
+  </div><!-- /math-wrap -->
+</div><!-- /page-ch14-hw-math -->
+
 
 <script>
 // ── Navigation ─────────────────────────────────────────────────────────────
+
 function go(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Handle nav pages (dark background)
+  const navPages = document.querySelectorAll('.page');
+  const solPages = document.querySelectorAll('.sol-page');
+
+  navPages.forEach(p => p.classList.remove('active'));
+  solPages.forEach(p => p.classList.remove('active'));
+
   const target = document.getElementById(pageId);
   target.classList.add('active');
-  // scroll the solutions page back to top when entering it
-  if (pageId === 'page-solutions') {
-    target.querySelector('.solutions-wrap').scrollTop = 0;
-  }
+
+  // Scroll nav pages back to top
+  const stage = target.querySelector('.nav-stage');
+  if (stage) stage.scrollTop = 0;
 }
 
-function scrollTo(id) {
+function goSol(pageId) {
+  // For going back from a solutions page to a nav page
+  const navPages = document.querySelectorAll('.page');
+  const solPages = document.querySelectorAll('.sol-page');
+  navPages.forEach(p => p.classList.remove('active'));
+  solPages.forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(pageId);
+  target.classList.add('active');
+}
+
+function scrollToProb(id) {
   const el = document.getElementById(id);
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 </script>
 
