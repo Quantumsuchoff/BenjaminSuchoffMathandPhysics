@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benjamin's Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ── Reset & Base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:      #1a1a2e;
+  --paper:    #faf7f2;
+  --accent:   #c0392b;
+  --gold:     #b8860b;
+  --rule:     #d4c9b0;
+  --dim:      #6b6556;
+  --math-bg:  #f0ebe0;
+  --step-bg:  #eef4fb;
+  --ans-bg:   #fdf3f3;
+  --int-bg:   #f3fdf5;
+  --code-col: #2c3e50;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  background: var(--ink);
+  color: var(--paper);
+  overflow-x: hidden;
+}
+
+/* ── Page System ──────────────────────────────────────────────────────────── */
+.page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+  overflow-y: auto;
+}
+.page.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── Shared Nav Header ────────────────────────────────────────────────────── */
+.site-header {
+  padding: 28px 48px 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.site-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--paper);
+  opacity: 0.9;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 1.5px;
+  flex: 1;
+}
+
+.breadcrumb span { cursor: pointer; transition: color 0.2s; }
+.breadcrumb span:hover { color: rgba(255,255,255,0.75); }
+.breadcrumb .sep { opacity: 0.3; cursor: default; }
+.breadcrumb .current { color: var(--gold); cursor: default; }
+
+.back-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.55);
+  padding: 6px 16px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.back-btn:hover {
+  border-color: rgba(255,255,255,0.4);
+  color: var(--paper);
+  background: rgba(255,255,255,0.05);
+}
+
+/* ── Landing / Navigation pages ──────────────────────────────────────────── */
+.nav-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  position: relative;
+}
+
+.nav-stage::before {
+  content: attr(data-symbol);
+  position: absolute;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(120px, 25vw, 260px);
+  color: rgba(255,255,255,0.028);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+  pointer-events: none;
+  letter-spacing: -10px;
+  user-select: none;
+}
+
+.nav-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  opacity: 0.85;
+}
+
+.nav-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.1;
+  margin-bottom: 14px;
+  color: var(--paper);
+}
+
+.nav-sub {
+  color: rgba(255,255,255,0.35);
+  font-size: 0.9rem;
+  margin-bottom: 64px;
+  text-align: center;
+  max-width: 420px;
+  line-height: 1.7;
+}
+
+.nav-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ── Big Nav Buttons ──────────────────────────────────────────────────────── */
+.nav-btn {
+  position: relative;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--paper);
+  padding: 36px 52px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  min-width: 220px;
+  text-align: left;
+  overflow: hidden;
+}
+
+.nav-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.nav-btn:hover {
+  border-color: rgba(192,57,43,0.6);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(192,57,43,0.2);
+}
+.nav-btn:hover::before { opacity: 1; }
+
+.nav-btn-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 2.5px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.nav-btn-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  display: block;
+  line-height: 1.1;
+}
+
+.nav-btn-arrow {
+  position: absolute;
+  bottom: 20px;
+  right: 22px;
+  font-size: 1.1rem;
+  opacity: 0.2;
+  transition: all 0.3s;
+}
+.nav-btn:hover .nav-btn-arrow {
+  opacity: 0.8;
+  transform: translateX(4px);
+  color: var(--accent);
+}
+
+.nav-btn.coming-soon {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.nav-btn.coming-soon:hover {
+  transform: none;
+  border-color: rgba(255,255,255,0.15);
+  box-shadow: none;
+}
+
+.soon-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 1.5px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  margin-top: 10px;
+  color: rgba(255,255,255,0.5);
+}
+
+/* Small chapter button variant */
+.nav-btn.chapter {
+  min-width: 280px;
+  padding: 28px 40px;
+}
+
+/* ── Solutions Page ───────────────────────────────────────────────────────── */
+#page-solutions {
+  background: var(--paper);
+  color: var(--ink);
+  position: fixed;
+  inset: 0;
+}
+
+#page-solutions .site-header {
+  background: var(--ink);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.solutions-wrap {
+  overflow-y: auto;
+  flex: 1;
+  padding-bottom: 80px;
+}
+
+/* ── Solutions content (all the original HTML) ─────────────────────────── */
+.sol-header {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 52px 72px 44px;
+  border-bottom: 6px solid var(--accent);
+  position: relative;
+  overflow: hidden;
+}
+.sol-header::before {
+  content: '∫∂∇∆';
+  position: absolute;
+  right: 60px;
+  top: 20px;
+  font-family: 'Playfair Display', serif;
+  font-size: 90px;
+  opacity: 0.06;
+  letter-spacing: 12px;
+  pointer-events: none;
+}
+.sol-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.sol-header p {
+  font-size: 0.95rem;
+  opacity: 0.55;
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+.toc-wrap {
+  max-width: 880px;
+  margin: 44px auto 0;
+  padding: 0 36px;
+}
+.toc-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+.toc-item {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 10px 12px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.18s;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.toc-item:hover { background: var(--ink); color: var(--paper); }
+.toc-num {
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  color: var(--accent);
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.toc-item:hover .toc-num { color: #ff8080; }
+
+.sol-main {
+  max-width: 880px;
+  margin: 44px auto;
+  padding: 0 36px;
+}
+
+/* Problem cards */
+.problem-card {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  margin-bottom: 44px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+}
+.prob-head {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 18px 30px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.prob-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  min-width: 42px;
+}
+.prob-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  opacity: 0.88;
+  line-height: 1.3;
+}
+.prob-body {
+  padding: 26px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Section boxes */
+.sec {
+  border-radius: 4px;
+  padding: 16px 20px;
+}
+.sec-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 9px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sec-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.18;
+}
+.sec p { font-size: 0.92rem; line-height: 1.75; margin-bottom: 7px; }
+.sec p:last-child { margin-bottom: 0; }
+
+.think  { background: var(--math-bg); }
+.think  .sec-label { color: var(--gold); }
+.assume { background: var(--step-bg); }
+.assume .sec-label { color: #2980b9; }
+.derive { background: #fefefe; border: 1px solid var(--rule); }
+.derive .sec-label { color: #8e44ad; }
+.answer { background: var(--ans-bg); border-left: 4px solid var(--accent); }
+.answer .sec-label { color: var(--accent); }
+.intuit { background: var(--int-bg); border-left: 4px solid #27ae60; }
+.intuit .sec-label { color: #27ae60; }
+
+.math-block {
+  background: rgba(0,0,0,0.042);
+  border-radius: 4px;
+  padding: 12px 15px;
+  margin: 9px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.83rem;
+  color: var(--code-col);
+  line-height: 1.9;
+  overflow-x: auto;
+  white-space: pre;
+}
+.ans-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 6px 0 3px;
+}
+.ans-sub { font-size: 0.78rem; color: #999; }
+.ans-row { display: flex; gap: 28px; flex-wrap: wrap; }
+
+.sol-footer {
+  text-align: center;
+  padding: 36px;
+  color: #bbb;
+  font-size: 0.78rem;
+  border-top: 1px solid var(--rule);
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+/* ── Animations ───────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.page.active .nav-eyebrow { animation: fadeUp 0.5s 0.05s both; }
+.page.active .nav-title   { animation: fadeUp 0.5s 0.12s both; }
+.page.active .nav-sub     { animation: fadeUp 0.5s 0.18s both; }
+.page.active .nav-grid    { animation: fadeUp 0.5s 0.25s both; }
+
+@media (max-width: 600px) {
+  .site-header { padding: 18px 24px; }
+  .sol-header  { padding: 36px 28px 32px; }
+  .sol-main    { padding: 0 18px; }
+  .toc-wrap    { padding: 0 18px; }
+  .nav-btn     { min-width: 160px; padding: 28px 32px; }
+  .nav-btn-title { font-size: 1.3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ PAGE: HOME ══════════════════════════════════ -->
+<div class="page active" id="page-home">
+  <header class="site-header">
+    <div class="site-logo">Benjamin's Notes</div>
+    <div class="breadcrumb">
+      <span class="current">HOME</span>
+    </div>
+  </header>
+
+  <div class="nav-stage" data-symbol="∂">
+    <div class="nav-eyebrow">select a subject</div>
+    <h1 class="nav-title">What are we<br>studying today?</h1>
+    <p class="nav-sub">Course notes, problem sets, and derivations — explained the way a mathematician actually thinks.</p>
+
+    <div class="nav-grid">
+      <button class="nav-btn" onclick="go('page-physics')">
+        <span class="nav-btn-label">subject</span>
+        <span class="nav-btn-title">Physics</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
+      <button class="nav-btn coming-soon" disabled>
+        <span class="nav-btn-label">subject</span>
+        <span class="nav-btn-title">Calculus</span>
+        <span class="soon-badge">COMING SOON</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ PAGE: PHYSICS ═══════════════════════════════ -->
+<div class="page" id="page-physics">
+  <header class="site-header">
+    <button class="back-btn" onclick="go('page-home')">← BACK</button>
+    <div class="breadcrumb">
+      <span onclick="go('page-home')">HOME</span>
+      <span class="sep">/</span>
+      <span class="current">PHYSICS</span>
+    </div>
+  </header>
+
+  <div class="nav-stage" data-symbol="F">
+    <div class="nav-eyebrow">select a course</div>
+    <h1 class="nav-title">Physics</h1>
+    <p class="nav-sub">From mechanics to thermodynamics — all the derivations your textbook skipped.</p>
+
+    <div class="nav-grid">
+      <button class="nav-btn" onclick="go('page-physics1')">
+        <span class="nav-btn-label">course</span>
+        <span class="nav-btn-title">Physics I</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
+      <button class="nav-btn coming-soon" disabled>
+        <span class="nav-btn-label">course</span>
+        <span class="nav-btn-title">Physics II</span>
+        <span class="soon-badge">COMING SOON</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ PAGE: PHYSICS I ═════════════════════════════ -->
+<div class="page" id="page-physics1">
+  <header class="site-header">
+    <button class="back-btn" onclick="go('page-physics')">← BACK</button>
+    <div class="breadcrumb">
+      <span onclick="go('page-home')">HOME</span>
+      <span class="sep">/</span>
+      <span onclick="go('page-physics')">PHYSICS</span>
+      <span class="sep">/</span>
+      <span class="current">PHYSICS I</span>
+    </div>
+  </header>
+
+  <div class="nav-stage" data-symbol="ρ">
+    <div class="nav-eyebrow">select a chapter</div>
+    <h1 class="nav-title">Physics I</h1>
+    <p class="nav-sub">Chapter solutions written for the mathematician's brain — every answer derived from first principles.</p>
+
+    <div class="nav-grid">
+      <button class="nav-btn chapter coming-soon" disabled>
+        <span class="nav-btn-label">chapter</span>
+        <span class="nav-btn-title">Ch. 1 – 13</span>
+        <span class="soon-badge">COMING SOON</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
+      <button class="nav-btn chapter" onclick="go('page-solutions')">
+        <span class="nav-btn-label">chapter</span>
+        <span class="nav-btn-title">Ch. 14<br>Fluid Mechanics</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ PAGE: SOLUTIONS ═════════════════════════════ -->
+<div class="page" id="page-solutions">
+  <header class="site-header" style="position:sticky;top:0;z-index:100;">
+    <button class="back-btn" onclick="go('page-physics1')">← BACK</button>
+    <div class="breadcrumb">
+      <span onclick="go('page-home')">HOME</span>
+      <span class="sep">/</span>
+      <span onclick="go('page-physics')">PHYSICS</span>
+      <span class="sep">/</span>
+      <span onclick="go('page-physics1')">PHYSICS I</span>
+      <span class="sep">/</span>
+      <span class="current">CH. 14</span>
+    </div>
+  </header>
+
+  <div class="solutions-wrap">
+
+    <div class="sol-header">
+      <h1>Fluid Mechanics — A Mathematician's Lens</h1>
+      <p>Every physics problem is secretly a calculus problem in disguise. Here's how to see it that way for all 10 problems.</p>
+    </div>
+
+    <div class="toc-wrap">
+      <div class="toc-label">Problems</div>
+      <div class="toc-grid">
+        <div class="toc-item" onclick="scrollTo('p1')"><span class="toc-num">1</span>Nail Force</div>
+        <div class="toc-item" onclick="scrollTo('p2')"><span class="toc-num">2</span>Gas Tank</div>
+        <div class="toc-item" onclick="scrollTo('p3')"><span class="toc-num">3</span>Manometer</div>
+        <div class="toc-item" onclick="scrollTo('p4')"><span class="toc-num">4</span>Breathing</div>
+        <div class="toc-item" onclick="scrollTo('p5')"><span class="toc-num">5</span>Ice Buoyancy</div>
+        <div class="toc-item" onclick="scrollTo('p6')"><span class="toc-num">6</span>Cube Equil.</div>
+        <div class="toc-item" onclick="scrollTo('p7')"><span class="toc-num">7</span>Blood Flow</div>
+        <div class="toc-item" onclick="scrollTo('p8')"><span class="toc-num">8</span>Air Duct</div>
+        <div class="toc-item" onclick="scrollTo('p9')"><span class="toc-num">9</span>Pitot Tube</div>
+        <div class="toc-item" onclick="scrollTo('p10')"><span class="toc-num">10</span>Sump Pump</div>
+      </div>
+    </div>
+
+    <div class="sol-main">
+
+      <!-- ── Problem 1 ── -->
+      <div class="problem-card" id="p1">
+        <div class="prob-head">
+          <div class="prob-num">1</div>
+          <div class="prob-title">Force on a Circular Nail Tip<br>— Uniform Pressure on a Disk</div>
+        </div>
+        <div class="prob-body">
+          <div class="sec think">
+            <div class="sec-label">① How a Mathematician Reads This</div>
+            <p>You see the word <em>pressure</em> and immediately think: pressure is a scalar field. More precisely, P = dF/dA — the instantaneous rate at which normal force accumulates per unit area. The question gives you P and asks for F. A mathematician's instinct: <strong>integrate P over the domain A</strong> to recover F.</p>
+          </div>
+          <div class="sec assume">
+            <div class="sec-label">② Starting Assumptions</div>
+            <p><strong>A1:</strong> Pressure is spatially uniform across the tip — P(x,y) = P₀ = const. P factors out of the integral completely.</p>
+            <p><strong>A2:</strong> Domain is a closed disk D of diameter d = 1.17 mm, so radius r = d/2 = 5.85×10⁻⁴ m.</p>
+            <p><strong>A3:</strong> Force is purely normal (perpendicular) to the area — no shear.</p>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">③ Calculus Derivation</div>
+            <p>Pressure as a surface integral, then factor out the constant:</p>
+            <div class="math-block">F = ∬_D P(x,y) dA  =  P₀ · ∬_D dA  =  P₀ · Area(D)</div>
+            <p>Area of a disk in polar coordinates:</p>
+            <div class="math-block">Area(D) = ∫₀²π ∫₀ʳ ρ dρ dθ  =  ∫₀²π [ρ²/2]₀ʳ dθ  =  πr²</div>
+            <p>Plug in:</p>
+            <div class="math-block">r = 1.17×10⁻³/2 = 5.85×10⁻⁴ m
+A = π(5.85×10⁻⁴)² = 1.0752×10⁻⁶ m²
+F = 3.17×10⁹ × 1.0752×10⁻⁶ = 3408 N</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">④ Answer</div>
+            <div class="ans-val">F = 3408 N</div>
+            <div class="ans-sub">≈ 3.41 kN — equivalent to supporting ~347 kg</div>
+          </div>
+          <div class="sec intuit">
+            <div class="sec-label">⑤ Intuition</div>
+            <p>Fix total force F and shrink area A → 0: pressure F/A blows up. This is exactly why nails work — concentrate force onto a tiny area to achieve enormous local pressure with modest total force. The integral says "add up all the little dF = P·dA contributions across the whole surface."</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Problem 2 ── -->
+      <div class="problem-card" id="p2">
+        <div class="prob-head">
+          <div class="prob-num">2</div>
+          <div class="prob-title">Hydrostatic Load on a Gas Tank<br>— Weight as a Surface Force</div>
+        </div>
+        <div class="prob-body">
+          <div class="sec think">
+            <div class="sec-label">① How a Mathematician Reads This</div>
+            <p>You see "mass m, area A, find pressure." Gravity is a body force (ρg per unit volume). A mathematician asks: <em>what is the force density acting on the bottom face?</em> P = F/A, where F comes from Newton: F = mg.</p>
+          </div>
+          <div class="sec assume">
+            <div class="sec-label">② Starting Assumptions</div>
+            <p><strong>A1:</strong> Gasoline in static equilibrium — only gravity and the bottom reaction force.</p>
+            <p><strong>A2:</strong> Bottom face is flat rectangular: 0.505 m × 0.89 m.</p>
+            <p><strong>A3:</strong> Pressure from gas is uniform across the bottom (lumped mass model).</p>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-block">∑F = 0  →  F_reaction = mg = 49 × 9.8 = 480.2 N
+
+F = ∬_B P dA = P · (0.505)(0.89)  →  P = mg / A
+
+P = 480.2 / 0.44945 = 1068.4 Pa
+
+Ratio:  R = P_atm / P = 101325 / 1068.4 = 94.84</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">④ Answers</div>
+            <div class="ans-row">
+              <div><div class="ans-val">P = 1068.4 Pa</div><div class="ans-sub">Part (a)</div></div>
+              <div><div class="ans-val">P₀/P = 94.84</div><div class="ans-sub">Part (b)</div></div>
+            </div>
+          </div>
+          <div class="sec intuit">
+            <div class="sec-label">⑤ Intuition</div>
+            <p>Weight distributes uniformly across the bottom. Double the base area (same mass) → pressure halves. The ratio ≈95 is striking: a full tank of gasoline exerts less than 1% of atmospheric pressure. Air pushes on surfaces far harder than gasoline does.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Problem 3 ── -->
+      <div class="problem-card" id="p3">
+        <div class="prob-head">
+          <div class="prob-num">3</div>
+          <div class="prob-title">Differential Manometry<br>— Integrating the Hydrostatic Gradient</div>
+        </div>
+        <div class="prob-body">
+          <div class="sec think">
+            <div class="sec-label">① How a Mathematician Reads This</div>
+            <p>This is a <em>boundary value problem for a first-order ODE</em>. The pressure field in a static fluid satisfies a differential equation. You're given a height difference and asked for a pressure difference — literally: integrate the pressure gradient equation.</p>
+          </div>
+          <div class="sec assume">
+            <div class="sec-label">② Starting Assumptions</div>
+            <p><strong>A1:</strong> Mercury is incompressible and static: ρ = 13,500 kg/m³ constant.</p>
+            <p><strong>A2:</strong> Only body force is gravity, in the −ẑ direction.</p>
+            <p><strong>A3:</strong> Open side mercury is 9.3 cm <em>lower</em> than the jar side → jar is below atmospheric pressure.</p>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">③ Calculus Derivation</div>
+            <p>Euler's static equation → 1D ODE → integrate:</p>
+            <div class="math-block">∇P = ρg⃗   →   dP/dz = -ρg   (z upward positive)
+
+Integrate from jar (z₁) to open side (z₂ = z₁ - h):
+∫ dP = ∫ (-ρg) dz
+
+P_atm - P_jar = -ρg(-h) = ρgh
+P_g = P_jar - P_atm = -ρgh
+
+P_g = -(13500)(9.8)(0.093) = -12,303.9 Pa
+P_abs = 101325 - 12303.9 = 89,021.1 Pa</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">④ Answers</div>
+            <div class="ans-row">
+              <div><div class="ans-val">P_g = −12,304 Pa</div><div class="ans-sub">Part (a)</div></div>
+              <div><div class="ans-val">P_abs = 89,021 Pa</div><div class="ans-sub">Part (b)</div></div>
+            </div>
+          </div>
+          <div class="sec intuit">
+            <div class="sec-label">⑤ Intuition</div>
+            <p>dP/dz = −ρg means: going <em>up</em> in elevation, pressure <em>decreases</em>. Mercury higher on the jar side means the jar is pulling mercury up — it must be at below-atmospheric pressure. Integrating accumulates the weight of the fluid column between the two levels.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Problem 4 ── -->
+      <div class="problem-card" id="p4">
+        <div class="prob-head">
+          <div class="prob-num">4</div>
+          <div class="prob-title">Physiological Pressure Limits<br>— Additive Pressure Scalars</div>
+        </div>
+        <div class="prob-body">
+          <div class="sec think">
+            <div class="sec-label">① How a Mathematician Reads This</div>
+            <p>This is a <em>constraint satisfaction problem</em>. Two pressure systems whose algebraic sum must equal zero for the person to inhale. Find the required value of one variable given the constraint. Think of it as: P_lungs + P_water = 0.</p>
+          </div>
+          <div class="sec assume">
+            <div class="sec-label">② Starting Assumptions</div>
+            <p><strong>A1:</strong> For inhalation: lung pressure must equal surface air pressure → zero net ΔP across the lung boundary.</p>
+            <p><strong>A2:</strong> Pressure is additive: P_chest = P_water_column + P_lung_gauge. Units: cm H₂O.</p>
+            <p><strong>A3:</strong> Max negative lung pressure on dry land: P_lung,max = −3.15 cm H₂O.</p>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-block">P_ext(z) = +z  cm H₂O gauge  (z = depth in cm)
+At z = 60 cm:  P_ext = +60 cm H₂O
+
+Required lung pressure to inhale against this:
+P_required = -(P_water + |P_lung,max,dry|)
+           = -(60 + 3.15)
+           = -63.15 cm H₂O
+
+Achievable maximum: -3.15 cm H₂O  →  impossible.</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">④ Answer</div>
+            <div class="ans-val">P = −63.15 cm H₂O</div>
+            <div class="ans-sub">Required (impossible — physiological limit is only −3.15 cm H₂O)</div>
+          </div>
+          <div class="sec intuit">
+            <div class="sec-label">⑤ Intuition</div>
+            <p>Pressure is additive like scalars. On dry land, lungs fight only atmospheric pressure. Underwater, the water column adds extra force crushing the chest — the lung must overcome both simultaneously. Think of the lung as a spring trying to expand against two opposing forces at once.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Problem 5 ── -->
+      <div class="problem-card" id="p5">
+        <div class="prob-head">
+          <div class="prob-num">5</div>
+          <div class="prob-title">Buoyancy Fraction of Ice<br>— Equilibrium as a Fixed-Point Equation</div>
+        </div>
+        <div class="prob-body">
+          <div class="sec think">
+            <div class="sec-label">① How a Mathematician Reads This</div>
+            <p>You want a ratio: f = V_sub / V_total. Write the equilibrium condition as an equation in f, solve symbolically, then substitute numbers. No arithmetic until the algebra is done.</p>
+          </div>
+          <div class="sec assume">
+            <div class="sec-label">② Starting Assumptions</div>
+            <p><strong>A1:</strong> Static equilibrium: ∑F = 0 vertically.</p>
+            <p><strong>A2:</strong> Archimedes: F_b = ρ_w · V_sub · g (weight of displaced fluid).</p>
+            <p><strong>A3:</strong> ρ_ice = 910.9 kg/m³, ρ_water = 1000 kg/m³.</p>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">③ Calculus Derivation</div>
+            <p>Archimedes follows from integrating pressure over the submerged surface (divergence theorem: ∮P n̂ dA = ρgV_sub). Then:</p>
+            <div class="math-block">F_b = W
+ρ_w · V_sub · g = ρ_i · V_total · g
+
+Cancel g, divide by (ρ_w · V_total):
+
+f = V_sub / V_total = ρ_i / ρ_w = 910.9 / 1000 = 0.9109</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">④ Answer</div>
+            <div class="ans-val">f = 0.9109</div>
+            <div class="ans-sub">91.09% submerged — only ~9% visible above water</div>
+          </div>
+          <div class="sec intuit">
+            <div class="sec-label">⑤ Intuition</div>
+            <p>g and V_total cancel completely — the fraction submerged depends <em>only</em> on the density ratio. Ice is 91% as dense as water, so it displaces 91% of its own volume. This is why the iceberg rule is universal regardless of size.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Problem 6 ── -->
+      <div class="problem-card" id="p6">
+        <div class="prob-head">
+          <div class="prob-num">6</div>
+          <div class="prob-title">Static Equilibrium of a Suspended Cube<br>— Three-Force Balance</div>
+        </div>
+        <div class="prob-body">
+          <div class="sec think">
+            <div class="sec-label">① How a Mathematician Reads This</div>
+            <p>∑F = 0 is a linear equation in {W, F_b, T}. Parameterize each force symbolically in terms of (ρ_c, ρ_l, L, g), reduce to one scalar equation, solve. Since all forces are collinear (vertical), it's a one-dimensional problem.</p>
+          </div>
+          <div class="sec assume">
+            <div class="sec-label">② Starting Assumptions</div>
+            <p><strong>A1:</strong> Static equilibrium → T + F_b = W (upward positive).</p>
+            <p><strong>A2:</strong> Exactly half submerged: V_sub = L³/2.</p>
+            <p><strong>A3:</strong> L = 0.13 m, ρ_c = 3900 kg/m³, ρ_l = 810 kg/m³, g = 9.8 m/s².</p>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-block">W = ∭_cube ρ_c g dV = ρ_c g L³
+  = (3900)(9.8)(0.13)³ = 83.97 N
+
+F_b = ρ_l g (L³/2)
+  = (810)(9.8)(0.002197/2) = 8.72 N
+
+∑F = 0  →  T = W - F_b = 83.97 - 8.72 = 75.25 N
+
+Part (h): more submersion → V_sub↑ → F_b↑ → T↓  (decreases)</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">④ Answers</div>
+            <div class="ans-row">
+              <div><div class="ans-val">W = 83.97 N</div><div class="ans-sub">Part (c)</div></div>
+              <div><div class="ans-val">F_b = 8.72 N</div><div class="ans-sub">Part (e)</div></div>
+              <div><div class="ans-val">T = 75.25 N</div><div class="ans-sub">Part (g)</div></div>
+            </div>
+          </div>
+          <div class="sec intuit">
+            <div class="sec-label">⑤ Intuition</div>
+            <p>Tension is what's "left over" after buoyancy partially supports the cube. If ρ_c = ρ_l, the cube floats freely and T = 0. Deeper submersion → more displaced fluid → more buoyancy → string relaxes.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Problem 7 ── -->
+      <div class="problem-card" id="p7">
+        <div class="prob-head">
+          <div class="prob-num">7</div>
+          <div class="prob-title">Arterial Blood Flow<br>— Flux Integral over a Circular Cross-Section</div>
+        </div>
+        <div class="prob-body">
+          <div class="sec think">
+            <div class="sec-label">① How a Mathematician Reads This</div>
+            <p>Flow rate Q is a flux integral: Q = ∬_A v⃗ · n̂ dA. What velocity field is assumed, and what is the domain A? Once Q is known, volume = ∫Q dt.</p>
+          </div>
+          <div class="sec assume">
+            <div class="sec-label">② Starting Assumptions</div>
+            <p><strong>A1:</strong> Plug flow — v is uniform across the cross-section.</p>
+            <p><strong>A2:</strong> Cross-section is a disk of radius r = 0.23 cm.</p>
+            <p><strong>A3:</strong> Q is constant over 30 s, so V = Q·t (no integration).</p>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-block">Q = ∬_D v⃗ · n̂ dA  =  v · ∬_D dA  =  v · πr²
+  = 42 × π(0.23)² = 42 × 0.16619 = 6.980 cm³/s
+
+V = ∫₀³⁰ Q dt = Q · 30 = 6.980 × 30 = 209.4 cm³</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">④ Answers</div>
+            <div class="ans-row">
+              <div><div class="ans-val">Q = 6.98 cm³/s</div><div class="ans-sub">Part (a)</div></div>
+              <div><div class="ans-val">V = 209.4 cm³</div><div class="ans-sub">Part (b)</div></div>
+            </div>
+          </div>
+          <div class="sec intuit">
+            <div class="sec-label">⑤ Intuition</div>
+            <p>Q = A·v: in one second, all the blood in a cylinder of length v and cross-section A passes through. Volume = how many such cylinders pass in time t? Exactly Q·t of them.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Problem 8 ── -->
+      <div class="problem-card" id="p8">
+        <div class="prob-head">
+          <div class="prob-num">8</div>
+          <div class="prob-title">Air Duct Velocity<br>— Continuity / Conservation of Volume</div>
+        </div>
+        <div class="prob-body">
+          <div class="sec think">
+            <div class="sec-label">① How a Mathematician Reads This</div>
+            <p>This is a conservation law: total volume flux is conserved. You know the total volume that must move per unit time (room volume ÷ cycle time) and the pipe cross-section. Solve for the one unknown velocity: Q_room = Q_duct.</p>
+          </div>
+          <div class="sec assume">
+            <div class="sec-label">② Starting Assumptions</div>
+            <p><strong>A1:</strong> Air is incompressible (low speed): ∇·v⃗ = 0 → Q_in = Q_out.</p>
+            <p><strong>A2:</strong> House volume 12 × 19.5 × 2.8 m³ exchanged every 15 min = 900 s.</p>
+            <p><strong>A3:</strong> Duct cross-section: disk of diameter 0.305 m.</p>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-block">∮_S v⃗ · n̂ dA = 0  →  Q_in = Q_out = Q
+
+Q = V_room / t = (12 × 19.5 × 2.8) / 900 = 655.2 / 900 = 0.7280 m³/s
+
+A_duct = π(0.305/2)² = π(0.1525)² = 0.07306 m²
+
+v = Q / A = 0.7280 / 0.07306 = 9.96 m/s</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">④ Answer</div>
+            <div class="ans-val">v = 9.96 m/s</div>
+            <div class="ans-sub">≈ 36 km/h inside the duct</div>
+          </div>
+          <div class="sec intuit">
+            <div class="sec-label">⑤ Intuition</div>
+            <p>Incompressible → can't "store" mass inside. Room sets the demand Q; duct area sets the geometry; velocity adjusts to satisfy both. Narrow duct → same Q → higher speed.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Problem 9 ── -->
+      <div class="problem-card" id="p9">
+        <div class="prob-head">
+          <div class="prob-num">9</div>
+          <div class="prob-title">Pitot Tube Stagnation Pressure<br>— Bernoulli as a First Integral</div>
+        </div>
+        <div class="prob-body">
+          <div class="sec think">
+            <div class="sec-label">① How a Mathematician Reads This</div>
+            <p>Bernoulli's equation is the <em>first integral</em> of Euler's equation along a streamline. Integrate the momentum ODE to get a conserved quantity — total mechanical energy per unit volume. Apply as a two-point boundary condition to find velocity.</p>
+          </div>
+          <div class="sec assume">
+            <div class="sec-label">② Starting Assumptions</div>
+            <p><strong>A1:</strong> Steady, inviscid, incompressible flow; freestream speed v → stagnation v₂ = 0.</p>
+            <p><strong>A2:</strong> No elevation change: z₁ = z₂, so ρgz terms cancel.</p>
+            <p><strong>A3:</strong> Manometer reads ΔP = ρ_Hg · g · h, h = 0.195 m.</p>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-block">Euler along streamline (arc length s):
+ρ v dv/ds = -dP/ds - ρg dz/ds
+
+Rearranging → first integral:
+d/ds [½ρv² + P + ρgz] = 0  →  conserved!
+
+Apply point 1 → point 2 (v₂ = 0, same height):
+½ρ_air v² + P₁ = P₂
+ΔP = ½ρ_air v²
+
+ΔP = ρ_Hg g h = (13600)(9.8)(0.195) = 25,989.6 Pa
+
+v = √(2ΔP / ρ_air) = √(2 × 25989.6 / 1.29) = √40294 = 200.7 m/s</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">④ Answer</div>
+            <div class="ans-val">v = 200.7 m/s</div>
+            <div class="ans-sub">≈ 723 km/h</div>
+          </div>
+          <div class="sec intuit">
+            <div class="sec-label">⑤ Intuition</div>
+            <p>Slowing fluid to zero at stagnation converts ALL kinetic energy to pressure. Mercury is ~10,000× denser than air — even a tiny ΔP produces a measurable column height, amplifying small pressure signals into readable measurements.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Problem 10 ── -->
+      <div class="problem-card" id="p10">
+        <div class="prob-head">
+          <div class="prob-num">10</div>
+          <div class="prob-title">Sump Pump Energy Conservation<br>— Full Bernoulli with Elevation + Velocity</div>
+        </div>
+        <div class="prob-body">
+          <div class="sec think">
+            <div class="sec-label">① How a Mathematician Reads This</div>
+            <p>Bernoulli with all three terms varying simultaneously: pressure, velocity (pipe diameter changes → continuity forces velocity change), and elevation. Set the conserved quantity at point 1 (known) equal to the conserved quantity at points 2 and 3 (unknowns). Two equations, two unknowns.</p>
+          </div>
+          <div class="sec assume">
+            <div class="sec-label">② Starting Assumptions</div>
+            <p><strong>A1:</strong> Steady, inviscid, incompressible — Bernoulli holds.</p>
+            <p><strong>A2:</strong> Point 1: P₁ = 1.62×10⁵ Pa, d = 2.63 cm, Q = 5.99×10⁻⁴ m³/s, z₁ = 0.</p>
+            <p><strong>A3 (Part a):</strong> Same diameter to point 2 → v₂ = v₁, z₂ = H = 2.09 m.</p>
+            <p><strong>A4 (Part b):</strong> D = 6.11 cm at point 3, z₃ = H − h = 2.09 − 0.51 = 1.58 m.</p>
+          </div>
+          <div class="sec derive">
+            <div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-block">Conserved: E = P + ½ρv² + ρgz = constant
+
+v₁ = Q/A₁ = 5.99×10⁻⁴ / π(0.01315)² = 1.103 m/s
+
+── Part (a): same diameter → v₂ = v₁ → KE terms cancel ──
+P₂ = P₁ - ρg·H = 162000 - (1000)(9.8)(2.09) = 141,518 Pa
+
+── Part (b): wider pipe, continuity ──
+A₃ = π(0.03055)² = 2.932×10⁻³ m²
+v₃ = Q/A₃ = 5.99×10⁻⁴ / 2.932×10⁻³ = 0.2043 m/s
+
+P₃ = P₁ + ½ρ(v₁² - v₃²) - ρg·z₃
+   = 162000 + 500(1.2166 - 0.04174) - (1000)(9.8)(1.58)
+   = 162000 + 587.4 - 15484
+   = 147,103 Pa</div>
+          </div>
+          <div class="sec answer">
+            <div class="sec-label">④ Answers</div>
+            <div class="ans-row">
+              <div><div class="ans-val">P₂ = 141,518 Pa</div><div class="ans-sub">Part (a)</div></div>
+              <div><div class="ans-val">P₃ = 147,103 Pa</div><div class="ans-sub">Part (b)</div></div>
+            </div>
+          </div>
+          <div class="sec intuit">
+            <div class="sec-label">⑤ Intuition</div>
+            <p>Bernoulli = work-energy theorem integrated: pressure + kinetic + potential = const. Going uphill (Part a): potential rises → pressure drops. Wider pipe (Part b): fluid slows (continuity) → kinetic energy drops → converts back to pressure, partially compensating the elevation loss. This is the Venturi effect in reverse.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sol-main -->
+
+    <div class="sol-footer">
+      All derivations reduce to two ideas:<br>
+      <em>F = ∬P dA</em> (pressure as surface integral) &nbsp;&amp;&nbsp;
+      <em>d/ds[P + ½ρv² + ρgz] = 0</em> (Bernoulli as first integral of momentum).<br>
+      Everything else is calculus.
+    </div>
+
+  </div><!-- /solutions-wrap -->
+</div><!-- /page-solutions -->
+
+<script>
+// ── Navigation ─────────────────────────────────────────────────────────────
+function go(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(pageId);
+  target.classList.add('active');
+  // scroll the solutions page back to top when entering it
+  if (pageId === 'page-solutions') {
+    target.querySelector('.solutions-wrap').scrollTop = 0;
+  }
+}
+
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+</script>
+
+</body>
+</html>
