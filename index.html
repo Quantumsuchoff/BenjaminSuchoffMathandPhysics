@@ -32,6 +32,11 @@
   --derive-accent:#6c3fb5;
   --bc-bg:    #fff8f0;
   --bc-accent:#d35400;
+  --sop-p1:   #f0e8ff;
+  --sop-p1-a: #7c3aed;
+  --sop-p2:   #e8f5e9;
+  --sop-p2-a: #1a7a4a;
+  --sop-p3:   #f5f5f5;
 }
 
 html, body {
@@ -155,7 +160,7 @@ html, body {
   font-size: 0.9rem;
   margin-bottom: 48px;
   text-align: center;
-  max-width: 420px;
+  max-width: 520px;
   line-height: 1.7;
 }
 .nav-grid {
@@ -254,6 +259,30 @@ html, body {
 .nav-btn.chapter { min-width: 260px; padding: 28px 40px; }
 .nav-btn.mode-btn { min-width: 300px; padding: 30px 42px; }
 
+/* ── SOP highlight button ─────────────────────────────────────────────────── */
+.nav-btn.sop-btn {
+  border-color: rgba(124, 58, 237, 0.45);
+  background: rgba(124, 58, 237, 0.06);
+}
+.nav-btn.sop-btn .nav-btn-label { color: #a78bfa; }
+.nav-btn.sop-btn:hover {
+  border-color: rgba(124, 58, 237, 0.85);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,58,237,0.35);
+}
+.nav-btn.sop-btn:hover .nav-btn-arrow { color: #a78bfa; }
+
+/* SOP mode button highlight */
+.nav-btn.sop-mode-btn {
+  border-color: rgba(124,58,237,0.4);
+  background: rgba(124,58,237,0.05);
+}
+.nav-btn.sop-mode-btn .nav-btn-label { color: #a78bfa; }
+.nav-btn.sop-mode-btn:hover {
+  border-color: rgba(124,58,237,0.8);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,58,237,0.3);
+}
+.nav-btn.sop-mode-btn:hover .nav-btn-arrow { color: #a78bfa; }
+
 /* ── Chapter Grid (Physics I) ─────────────────────────────────────────────── */
 .ch-grid-wrap {
   width: 100%;
@@ -339,6 +368,7 @@ html, body {
   position: relative;
   overflow: hidden;
 }
+.sol-header.sop-header { border-bottom-color: var(--sop-p1-a); }
 .sol-header::before {
   content: attr(data-symbol);
   position: absolute;
@@ -372,6 +402,10 @@ html, body {
   padding: 4px 10px;
   border-radius: 3px;
   margin-bottom: 14px;
+}
+.sol-header .mode-badge.sop-badge {
+  color: #a78bfa;
+  border-color: rgba(124,58,237,0.4);
 }
 
 /* ── TOC ──────────────────────────────────────────────────────────────────── */
@@ -515,6 +549,150 @@ html, body {
 .eval-sec { background: #fafafa; border: 1px solid #ddd; }
 .eval-sec .sec-label { color: #333; }
 
+/* ── SOP Section Boxes ────────────────────────────────────────────────────── */
+.sop-p1-sec { background: var(--sop-p1); border-left: 4px solid var(--sop-p1-a); }
+.sop-p1-sec .sec-label { color: var(--sop-p1-a); }
+.sop-p2-sec { background: var(--sop-p2); border-left: 4px solid var(--sop-p2-a); }
+.sop-p2-sec .sec-label { color: var(--sop-p2-a); }
+.sop-p3-sec { background: var(--sop-p3); border: 1px solid #d0d0d0; }
+.sop-p3-sec .sec-label { color: #444; }
+.sop-answer { background: #fff3f3; border-left: 4px solid var(--accent); }
+.sop-answer .sec-label { color: var(--accent); }
+
+/* ── SOP Page special ─────────────────────────────────────────────────────── */
+.sop-card {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  margin-bottom: 32px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+}
+.sop-card-head {
+  background: linear-gradient(135deg, var(--sop-p1-a) 0%, #4c1d95 100%);
+  color: white;
+  padding: 18px 30px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.sop-card-head-icon {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  opacity: 0.85;
+  line-height: 1;
+}
+.sop-card-head-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.sop-card-head-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  opacity: 0.65;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+.sop-card-body {
+  padding: 26px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sop-instance-box {
+  border-radius: 4px;
+  padding: 18px 20px;
+  margin: 4px 0;
+}
+.sop-instance-box.inst-a { background: #eef4fb; border-left: 4px solid #2980b9; }
+.sop-instance-box.inst-b { background: var(--int-bg); border-left: 4px solid #1a7a4a; }
+.sop-instance-box.inst-c { background: #fff8f0; border-left: 4px solid #d35400; }
+.sop-instance-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sop-instance-label::after { content:''; flex:1; height:1px; background:currentColor; opacity:0.18; }
+.inst-a .sop-instance-label { color: #2980b9; }
+.inst-b .sop-instance-label { color: #1a7a4a; }
+.inst-c .sop-instance-label { color: #d35400; }
+.sop-instance-box p { font-size: 0.9rem; line-height: 1.7; margin-bottom: 5px; }
+.sop-instance-box p:last-child { margin-bottom: 0; }
+
+.sop-convergence {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-top: 10px;
+  text-align: center;
+}
+.sop-convergence-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.sop-table-wrap { overflow-x: auto; margin-top: 4px; }
+.sop-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.sop-table th {
+  background: var(--ink);
+  color: var(--gold);
+  padding: 11px 16px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.sop-table td {
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+.sop-table tr:nth-child(even) td { background: #f5f0e8; }
+.sop-table td:first-child { font-style: italic; color: #444; }
+.sop-table td:nth-child(2) { font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--sop-p1-a); font-weight:600; }
+.sop-table td:nth-child(3) { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:#555; }
+
+.sop-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 4px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 2px;
+  color: var(--sop-p1-a);
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+.sop-divider::before, .sop-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--sop-p1-a);
+  opacity: 0.25;
+}
+
 /* ── Math & Calc Blocks ───────────────────────────────────────────────────── */
 .math-display {
   background: rgba(0,0,0,0.04);
@@ -548,38 +726,9 @@ html, body {
 .ans-sub { font-size: 0.78rem; color: #999; }
 .ans-row { display: flex; gap: 28px; flex-wrap: wrap; }
 
-/* ── KaTeX override for light pages ──────────────────────────────────────── */
+/* ── KaTeX override ───────────────────────────────────────────────────────── */
 .katex { font-size: 1em; }
 .math-display .katex-display { margin: 0; }
-
-/* ── Coming Soon Page ─────────────────────────────────────────────────────── */
-.coming-soon-stage {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 60px;
-}
-.coming-soon-icon {
-  font-size: 4rem;
-  opacity: 0.2;
-  font-family: 'Playfair Display', serif;
-}
-.coming-soon-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem;
-  font-weight: 700;
-  opacity: 0.5;
-}
-.coming-soon-sub {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 2px;
-  color: var(--gold);
-  opacity: 0.6;
-}
 
 /* ── Footer ───────────────────────────────────────────────────────────────── */
 .sol-footer {
@@ -727,7 +876,7 @@ html, body {
   <div class="nav-stage" data-symbol="∇">
     <div class="nav-eyebrow">chapter 14 — fluid mechanics</div>
     <h1 class="nav-title">What would<br>you like?</h1>
-    <p class="nav-sub">Choose your resource type below. Each is crafted for a different purpose.</p>
+    <p class="nav-sub">Three governing protocols. One unified framework. Zero unsolvable problems. Master the SOP and every fluid system — from a still tank to supersonic flight — collapses into algebra.</p>
     <div class="nav-grid">
       <button class="nav-btn chapter coming-soon" disabled>
         <span class="nav-btn-label">resource</span>
@@ -743,6 +892,12 @@ html, body {
       <button class="nav-btn chapter" onclick="go('page-ch14-exam3')">
         <span class="nav-btn-label">resource</span>
         <span class="nav-btn-title">Exam III<br>Review Questions</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
+      <button class="nav-btn chapter sop-btn" onclick="go('page-ch14-sop')">
+        <span class="nav-btn-label">framework</span>
+        <span class="nav-btn-title">Standard Operating<br>Procedure (SOP)</span>
+        <span class="nav-btn-desc">The universal attack plan. Domain → Protocols → Algebra. No fluid can resist.</span>
         <span class="nav-btn-arrow">→</span>
       </button>
     </div>
@@ -804,7 +959,7 @@ html, body {
   <div class="nav-stage" data-symbol="Ω">
     <div class="nav-eyebrow">choose your lens</div>
     <h1 class="nav-title">Exam III<br>Review Questions</h1>
-    <p class="nav-sub">Ten fluid mechanics problems solved three ways. Pick the depth that matches your study goal.</p>
+    <p class="nav-sub">Ten fluid mechanics problems solved multiple ways. Pick the depth that matches your study goal.</p>
     <div class="nav-grid" style="flex-direction:column;align-items:center;gap:14px;">
       <button class="nav-btn mode-btn" onclick="go('page-exam3-simple')">
         <span class="nav-btn-label">mode 1</span>
@@ -812,15 +967,21 @@ html, body {
         <span class="nav-btn-desc">Formula → substitution → answer. The fastest path to exam-ready confidence.</span>
         <span class="nav-btn-arrow">→</span>
       </button>
+      <button class="nav-btn mode-btn sop-mode-btn" onclick="go('page-exam3-sop')">
+        <span class="nav-btn-label">mode 2 — the framework</span>
+        <span class="nav-btn-title">Execute the Unified SOP</span>
+        <span class="nav-btn-desc">Domain Archetyping → Protocol Invocation → Symbolic Synthesis. Every problem solved as a formal manifold operation.</span>
+        <span class="nav-btn-arrow">→</span>
+      </button>
       <button class="nav-btn mode-btn coming-soon" disabled>
-        <span class="nav-btn-label">mode 2</span>
+        <span class="nav-btn-label">mode 3</span>
         <span class="nav-btn-title">A Mathematician's Way</span>
         <span class="nav-btn-desc">Every problem as an integral or ODE. Calculus, divergence theorem, first integrals.</span>
         <span class="soon-badge">COMING SOON</span>
         <span class="nav-btn-arrow">→</span>
       </button>
       <button class="nav-btn mode-btn" onclick="go('page-exam3-derive')">
-        <span class="nav-btn-label">mode 3</span>
+        <span class="nav-btn-label">mode 4</span>
         <span class="nav-btn-title">Pure Derivation</span>
         <span class="nav-btn-desc">Domain and field definitions, governing equations, boundary conditions — proven from the ground up.</span>
         <span class="nav-btn-arrow">→</span>
@@ -829,10 +990,230 @@ html, body {
   </div>
 </div>
 
+
+<!-- ══════════════════════════ PAGE: SOP ═══════════════════════════════════ -->
+<div class="sol-page" id="page-ch14-sop">
+  <header class="site-header" style="position:sticky;top:0;z-index:100;">
+    <button class="back-btn" onclick="go('page-ch14')">← BACK</button>
+    <div class="breadcrumb">
+      <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
+      <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
+      <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
+      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
+      <span class="current">UNIFIED SOP</span>
+    </div>
+  </header>
+  <div class="solutions-wrap">
+
+    <div class="sol-header sop-header" data-symbol="SOP">
+      <div class="mode-badge sop-badge">FLUID MECHANICS — GRAND UNIFIED FRAMEWORK V6.0</div>
+      <h1>The Standard Operating Procedure</h1>
+      <p>Three governing protocols. One procedural attack plan. Follow this SOP and the physics of any fluid system — static or dynamic, simple or complex — reduces inevitably to algebra. No memorization required. Only logic.</p>
+    </div>
+
+    <div class="sol-main">
+
+      <!-- Introduction Card -->
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">I.</div>
+          <div>
+            <div class="sop-card-head-title">The Nature of Fluidic Systems</div>
+            <div class="sop-card-head-sub">Introduction &amp; Philosophy</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sec prob-stmt">
+            <div class="sec-label">Core Principle</div>
+            <p>At its core, fluid dynamics is the study of <strong>continuous media</strong> — substances such as liquids and gases that deform continuously under applied shear stress. Rather than tracking discrete, isolated point masses, we analyze fluid behavior through <strong>continuous fields spread across a defined spatial region</strong>.</p>
+          </div>
+          <div class="sec given-sec">
+            <div class="sec-label">Purpose of This SOP</div>
+            <p>This Standard Operating Procedure serves as a universal roadmap for tackling fluid flow manifolds. To avoid the rote memorization of complex calculus derivations and isolated formulas, this guide constructs the governing equations directly from fundamental conservation laws — mass, momentum, and energy.</p>
+            <p>It provides a rigorous, step-by-step procedure to reduce generalized three-dimensional integrals into the practical algebraic tools needed to <strong>conquer any fluidic system</strong>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 1 Card -->
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">Φ₁</div>
+          <div>
+            <div class="sop-card-head-title">Phase 1: Domain Archetyping</div>
+            <div class="sop-card-head-sub">Before a single digit is written, the manifold must be bound.</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Step 1 — Map the Manifold</div>
+            <p>Define the boundaries of $\Omega$. Identify all <strong>Inlets</strong> ($S_{in}$), <strong>Outlets</strong> ($S_{out}$), and <strong>Walls</strong> ($S_w$). Every fluidic problem lives inside a domain — your first job is to draw it.</p>
+          </div>
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Step 2 — Identify the State</div>
+            <p>Observe the Velocity Field $\mathbf{v}(\mathbf{r})$. This single observation routes you to the correct protocol:</p>
+            <div class="math-display">$$\mathbf{v} = \mathbf{0} \;\longrightarrow\; \textbf{Static Instance} \quad\text{(Go to Phase 2, Instance C)}$$</div>
+            <div class="math-display">$$\mathbf{v} \neq \mathbf{0} \;\longrightarrow\; \textbf{Dynamic Instance} \quad\text{(Proceed to Phase 2, Instances A \& B)}$$</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Phase 2 Card -->
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">Φ₂</div>
+          <div>
+            <div class="sop-card-head-title">Phase 2: Protocol Invocation</div>
+            <div class="sop-card-head-sub">Force the physics to reduce into algebra through logical constraints.</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+
+          <div class="sop-divider">Instance A</div>
+          <div class="sop-instance-box inst-a">
+            <div class="sop-instance-label">Instance A — The Mass-Flux Lock (Continuity)</div>
+            <p><strong>Goal:</strong> Relate cross-sectional area to flow speed.</p>
+            <p><strong>The Command:</strong></p>
+            <div class="math-display">$$\oiint_{\partial\Omega} \rho\,\mathbf{v} \cdot d\mathbf{A} = -\frac{\partial}{\partial t} \iiint_{\Omega} \rho \, dV$$</div>
+            <p><strong>The Constraint:</strong> Assume <em>Steady</em> ($\partial/\partial t = 0$) and <em>Incompressible</em> ($\rho = \text{const}$).</p>
+            <p><strong>The Result:</strong> $\displaystyle\iint_{S_1} \mathbf{v} \cdot d\mathbf{A} + \iint_{S_2} \mathbf{v} \cdot d\mathbf{A} = 0$</p>
+            <div class="sop-convergence">
+              <div class="sop-convergence-label">Convergence</div>
+              <div class="math-display" style="background:transparent;">$$\boxed{A_1 v_1 = A_2 v_2}$$</div>
+              <p style="font-size:0.78rem;opacity:0.6;margin-top:4px;">Use this to find an unknown $v$ or $A$.</p>
+            </div>
+          </div>
+
+          <div class="sop-divider">Instance B</div>
+          <div class="sop-instance-box inst-b">
+            <div class="sop-instance-label">Instance B — Streamline Energy Conservation (Bernoulli)</div>
+            <p><strong>Goal:</strong> Solve for Pressure or Velocity at specific points.</p>
+            <p><strong>The Command:</strong></p>
+            <div class="math-display">$$\int \nabla P \cdot d\mathbf{r} + \int \rho\,\mathbf{v} \cdot d\mathbf{v} + \int \rho\,\mathbf{g} \cdot d\mathbf{r} = 0$$</div>
+            <p><strong>The Constraint:</strong> Assume <em>Inviscid</em> (zero friction) and <em>Steady</em> flow along a streamline.</p>
+            <p><strong>The Result:</strong> $P + \tfrac{1}{2}\rho v^2 + \rho gz = \text{Constant}$</p>
+            <div class="sop-convergence">
+              <div class="sop-convergence-label">Convergence</div>
+              <div class="math-display" style="background:transparent;">$$\boxed{P_1 + \tfrac{1}{2}\rho v_1^2 + \rho g z_1 = P_2 + \tfrac{1}{2}\rho v_2^2 + \rho g z_2}$$</div>
+            </div>
+          </div>
+
+          <div class="sop-divider">Instance C</div>
+          <div class="sop-instance-box inst-c">
+            <div class="sop-instance-label">Instance C — The Gravitational Gradient (Statics)</div>
+            <p><strong>Goal:</strong> Determine pressure at depth in a static fluid.</p>
+            <p><strong>The Command:</strong></p>
+            <div class="math-display">$$\nabla P = \rho\,\mathbf{g}$$</div>
+            <p><strong>The Constraint:</strong> Set $\mathbf{v} = \mathbf{0}$. Gravity acts only in the $-\hat{k}$ direction, giving $dP/dz = -\rho g$.</p>
+            <div class="sop-convergence">
+              <div class="sop-convergence-label">Convergence</div>
+              <div class="math-display" style="background:transparent;">$$\boxed{P = P_0 + \rho g h}$$</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Phase 3 Card -->
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">Φ₃</div>
+          <div>
+            <div class="sop-card-head-title">Phase 3: Symbolic Synthesis</div>
+            <div class="sop-card-head-sub">Combine instances to collapse the system.</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Step 1 — The Link</div>
+            <p>If you have two unknowns (e.g., $P_2$ and $v_2$), use <strong>Instance A</strong> to find $v_2$, then plug it into <strong>Instance B</strong> to solve for $P_2$. The protocols chain together.</p>
+          </div>
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Step 2 — Boundary Injection</div>
+            <p>Replace all symbolic parameters with known boundary conditions: $P_{atm} = 101{,}325\text{ Pa}$, $g = 9.8\text{ m/s}^2$, densities, geometry.</p>
+          </div>
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Step 3 — Final Execution</div>
+            <p>Isolate the target variable. The math is now trivial arithmetic. The physics was fully resolved in Phases 1 and 2.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Summary Table Card -->
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">∑</div>
+          <div>
+            <div class="sop-card-head-title">Execution Summary</div>
+            <div class="sop-card-head-sub">When you need X, invoke Y with input Z.</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sop-table-wrap">
+            <table class="sop-table">
+              <thead>
+                <tr>
+                  <th>If you need…</th>
+                  <th>Invoke…</th>
+                  <th>Required Input</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Velocity or area ratios between two sections</td>
+                  <td>Instance A</td>
+                  <td>$A_1,\; v_1,\; A_2$</td>
+                </tr>
+                <tr>
+                  <td>Pressure at a point in moving flow</td>
+                  <td>Instance B</td>
+                  <td>$P_1,\; v_1,\; v_2,\; z_1,\; z_2$</td>
+                </tr>
+                <tr>
+                  <td>Pressure in a still or static fluid</td>
+                  <td>Instance C</td>
+                  <td>$P_0,\; \rho,\; h$</td>
+                </tr>
+                <tr>
+                  <td>Both pressure and velocity (complex pipe)</td>
+                  <td>A then B</td>
+                  <td>$Q,\; A_1,\; A_2,\; P_1,\; z_1,\; z_2$</td>
+                </tr>
+                <tr>
+                  <td>Stagnation / pitot pressure</td>
+                  <td>C then B</td>
+                  <td>$\rho_{fluid},\; \rho_{manometer},\; h$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="sec intuit" style="margin-top:8px;">
+            <div class="sec-label">Remember</div>
+            <p>The SOP is not a shortcut — it is the <em>complete logical structure</em> of fluid statics and dynamics. Every formula in your textbook is a special case of Phases 1–3. Master the framework, and every formula follows automatically.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sol-footer">
+      The Grand Unified SOP — Fluid Mechanics Framework V6.0<br>
+      Domain Archetyping → Protocol Invocation → Symbolic Synthesis<br>
+      To see the SOP applied to every Exam III problem, select <em>Execute the Unified SOP</em> from the Exam III mode screen.
+    </div>
+  </div>
+</div>
+
+
 <!-- ══════════════════════════ PAGE: SIMPLE PHYSICS I SOLUTIONS ═══════════ -->
 <div class="sol-page" id="page-ch14-hw-simple">
   <header class="site-header" style="position:sticky;top:0;z-index:100;">
-    <button class="back-btn" onclick="goSol('page-ch14-hw')">← BACK</button>
+    <button class="back-btn" onclick="go('page-ch14-hw')">← BACK</button>
     <div class="breadcrumb">
       <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
       <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
@@ -1203,7 +1584,7 @@ P₃ = 162,000 + 500(1.103² − 0.204²) − (1000)(9.8)(1.58)
 <!-- ══════════════════════════ PAGE: MATHEMATICIAN'S SOLUTIONS ═════════════ -->
 <div class="sol-page" id="page-ch14-hw-math">
   <header class="site-header" style="position:sticky;top:0;z-index:100;">
-    <button class="back-btn" onclick="goSol('page-ch14-hw')">← BACK</button>
+    <button class="back-btn" onclick="go('page-ch14-hw')">← BACK</button>
     <div class="breadcrumb">
       <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
       <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
@@ -1243,36 +1624,15 @@ P₃ = 162,000 + 500(1.103² − 0.204²) − (1000)(9.8)(1.58)
       <div class="problem-card" id="mp1">
         <div class="prob-head"><div class="prob-num">1</div><div class="prob-title">Force on a Circular Nail Tip — Uniform Pressure on a Disk</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Nail tips exert tremendous pressures when they are hit by a hammer because they exert a large force over a small area. What force, in newtons, must be exerted on a nail with a circular tip of diameter $d = 1.17\text{ mm}$ to create a pressure of $P = 3.17 \times 10^9\text{ Pa}$?</p>
-          </div>
-          <div class="sec think">
-            <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>You see the word <em>pressure</em> and immediately think: pressure is a scalar field. More precisely, $P = dF/dA$ — the instantaneous rate at which normal force accumulates per unit area. The question gives you $P$ and asks for $F$. A mathematician's instinct: <strong>integrate $P$ over the domain $A$</strong> to recover $F$.</p>
-          </div>
-          <div class="sec assume">
-            <div class="sec-label">② Starting Assumptions</div>
-            <p><strong>A1:</strong> Pressure is spatially uniform across the tip — $P(x,y) = P_0 = \text{const}$. $P$ factors out of the integral completely.</p>
-            <p><strong>A2:</strong> Domain is a closed disk $D$ of diameter $d = 1.17\text{ mm}$, so radius $r = d/2 = 5.85\times10^{-4}\text{ m}$.</p>
-            <p><strong>A3:</strong> Force is purely normal (perpendicular) to the area — no shear.</p>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-display">$$F = \iint_D P(x,y)\,dA = P_0 \cdot \iint_D dA = P_0 \cdot \text{Area}(D)$$</div>
-            <div class="math-display">$$\text{Area}(D) = \int_0^{2\pi}\!\int_0^r \rho\,d\rho\,d\theta = \pi r^2$$</div>
-            <div class="math-block">r = 1.17×10⁻³ / 2 = 5.85×10⁻⁴ m
-A = π(5.85×10⁻⁴)² = 1.0752×10⁻⁶ m²
-F = 3.17×10⁹ × 1.0752×10⁻⁶ = 3408 N</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">④ Answer</div>
-            <div class="ans-val">F = 3408 N</div>
-          </div>
-          <div class="sec intuit">
-            <div class="sec-label">⑤ Intuition</div>
-            <p>Fix total force $F$ and shrink area $A \to 0$: pressure $F/A$ blows up. This is exactly why nails work — concentrate force onto a tiny area to achieve enormous local pressure with modest total force.</p>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Nail tips exert tremendous pressures when they are hit by a hammer because they exert a large force over a small area. What force must be exerted on a nail with a circular tip of diameter $d = 1.17\text{ mm}$ to create a pressure of $P = 3.17 \times 10^9\text{ Pa}$?</p></div>
+          <div class="sec think"><div class="sec-label">① How a Mathematician Reads This</div><p>You see the word <em>pressure</em> and immediately think: pressure is a scalar field. More precisely, $P = dF/dA$ — the instantaneous rate at which normal force accumulates per unit area. A mathematician's instinct: <strong>integrate $P$ over the domain $A$</strong> to recover $F$.</p></div>
+          <div class="sec assume"><div class="sec-label">② Starting Assumptions</div><p><strong>A1:</strong> Pressure is spatially uniform — $P(x,y) = P_0 = \text{const}$. <strong>A2:</strong> Domain is a closed disk $D$ of diameter $d$. <strong>A3:</strong> Force is purely normal — no shear.</p></div>
+          <div class="sec derive"><div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-display">$$F = \iint_D P(x,y)\,dA = P_0 \cdot \iint_D dA = P_0 \cdot \pi r^2$$</div>
+            <div class="math-block">r = 5.85×10⁻⁴ m, A = π(5.85×10⁻⁴)² = 1.0752×10⁻⁶ m²
+F = 3.17×10⁹ × 1.0752×10⁻⁶ = 3408 N</div></div>
+          <div class="sec answer"><div class="sec-label">④ Answer</div><div class="ans-val">F = 3408 N</div></div>
+          <div class="sec intuit"><div class="sec-label">⑤ Intuition</div><p>Fix total force $F$ and shrink area $A \to 0$: pressure $F/A$ blows up. This is exactly why nails work.</p></div>
         </div>
       </div>
 
@@ -1280,38 +1640,13 @@ F = 3.17×10⁹ × 1.0752×10⁻⁶ = 3408 N</div>
       <div class="problem-card" id="mp2">
         <div class="prob-head"><div class="prob-num">2</div><div class="prob-title">Hydrostatic Load on a Gas Tank — Weight as a Surface Force</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Consider a $0.505\text{ m}$-wide by $0.89\text{ m}$-long gas tank that can hold $49\text{ kg}$ of gasoline. <strong>Part (a):</strong> What pressure in N/m² is exerted on the bottom? <strong>Part (b):</strong> Ratio of atmospheric to this pressure?</p>
-          </div>
-          <div class="sec think">
-            <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>Gravity is a body force ($\rho g$ per unit volume). A mathematician asks: <em>what is the force density acting on the bottom face?</em> $P = F/A$, where $F$ comes from Newton: $F = mg$.</p>
-          </div>
-          <div class="sec assume">
-            <div class="sec-label">② Starting Assumptions</div>
-            <p><strong>A1:</strong> Gasoline in static equilibrium — only gravity and the bottom reaction force.</p>
-            <p><strong>A2:</strong> Bottom face: $0.505\text{ m} \times 0.89\text{ m}$. Pressure is uniform (lumped mass model).</p>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-display">$$\sum F = 0 \;\Rightarrow\; F = mg = (49)(9.8) = 480.2\text{ N}$$</div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A $0.505\text{ m} \times 0.89\text{ m}$ gas tank holds $49\text{ kg}$ of gasoline. <strong>(a)</strong> Pressure on the bottom? <strong>(b)</strong> Ratio of atmospheric to this pressure?</p></div>
+          <div class="sec think"><div class="sec-label">① How a Mathematician Reads This</div><p>Gravity is a body force ($\rho g$ per unit volume). $P = F/A$, where $F$ comes from Newton: $F = mg$.</p></div>
+          <div class="sec derive"><div class="sec-label">③ Calculus Derivation</div>
             <div class="math-display">$$F = \iint_B P\,dA = P \cdot A \;\Rightarrow\; P = \frac{mg}{A}$$</div>
-            <div class="math-block">P = 480.2 / 0.44945 = 1068.4 Pa
-
-Ratio:  R = P_atm / P = 101325 / 1068.4 = 94.84</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">④ Answers</div>
-            <div class="ans-row">
-              <div><div class="ans-val">P = 1068 Pa</div><div class="ans-sub">Part (a)</div></div>
-              <div><div class="ans-val">P₀/P = 94.84</div><div class="ans-sub">Part (b)</div></div>
-            </div>
-          </div>
-          <div class="sec intuit">
-            <div class="sec-label">⑤ Intuition</div>
-            <p>The ratio ≈95 is striking: a full tank of gasoline exerts less than 1% of atmospheric pressure. Air pushes on surfaces far harder than gasoline does.</p>
-          </div>
+            <div class="math-block">P = 480.2 / 0.44945 = 1068.4 Pa   |   Ratio = 101325 / 1068.4 = 94.84</div></div>
+          <div class="sec answer"><div class="sec-label">④ Answers</div><div class="ans-row"><div><div class="ans-val">P = 1068 Pa</div><div class="ans-sub">Part (a)</div></div><div><div class="ans-val">P₀/P = 94.84</div><div class="ans-sub">Part (b)</div></div></div></div>
+          <div class="sec intuit"><div class="sec-label">⑤ Intuition</div><p>The ratio ≈95 is striking: a full tank of gasoline exerts less than 1% of atmospheric pressure.</p></div>
         </div>
       </div>
 
@@ -1319,259 +1654,95 @@ Ratio:  R = P_atm / P = 101325 / 1068.4 = 94.84</div>
       <div class="problem-card" id="mp3">
         <div class="prob-head"><div class="prob-num">3</div><div class="prob-title">Differential Manometry — Integrating the Hydrostatic Gradient</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>A mercury manometer. Open side is $9.3\text{ cm}$ lower than jar side. $\rho_{Hg} = 13.5\text{ g/cm}^3$. Find gauge pressure and absolute pressure in the jar.</p>
-          </div>
-          <div class="sec think">
-            <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>This is a <em>boundary value problem for a first-order ODE</em>. The pressure field in a static fluid satisfies $dP/dz = -\rho g$. You're given a height difference and asked for a pressure difference — literally: integrate the gradient.</p>
-          </div>
-          <div class="sec assume">
-            <div class="sec-label">② Starting Assumptions</div>
-            <p><strong>A1:</strong> Mercury is incompressible and static: $\rho = 13{,}500\text{ kg/m}^3$.</p>
-            <p><strong>A2:</strong> Open side 9.3 cm lower than jar side → jar is below atmospheric pressure.</p>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-display">$$\nabla P = \rho\vec{g} \;\Rightarrow\; \frac{dP}{dz} = -\rho g$$</div>
-            <div class="math-display">$$P_\text{atm} - P_\text{jar} = \rho g h \;\Rightarrow\; P_g = -\rho g h$$</div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Mercury manometer, open side $9.3\text{ cm}$ lower than jar side. $\rho_{Hg} = 13.5\text{ g/cm}^3$. Find gauge and absolute pressure in jar.</p></div>
+          <div class="sec think"><div class="sec-label">① How a Mathematician Reads This</div><p>This is a <em>boundary value problem for a first-order ODE</em>. The pressure field in a static fluid satisfies $dP/dz = -\rho g$. Integrate the gradient.</p></div>
+          <div class="sec derive"><div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-display">$$\nabla P = \rho\vec{g} \;\Rightarrow\; \frac{dP}{dz} = -\rho g \;\Rightarrow\; P_g = -\rho g h$$</div>
             <div class="math-block">P_g = −(13500)(9.8)(0.093) = −12,304 Pa
-P_abs = 101,325 − 12,304 = 89,021 Pa</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">④ Answers</div>
-            <div class="ans-row">
-              <div><div class="ans-val">Pᵍ = −12,304 Pa</div><div class="ans-sub">Part (a)</div></div>
-              <div><div class="ans-val">Pₐᵦₛ = 89,021 Pa</div><div class="ans-sub">Part (b)</div></div>
-            </div>
-          </div>
-          <div class="sec intuit">
-            <div class="sec-label">⑤ Intuition</div>
-            <p>$dP/dz = -\rho g$ means: going <em>up</em> in elevation, pressure <em>decreases</em>. Mercury higher on the jar side means the jar is pulling mercury up — it must be at below-atmospheric pressure.</p>
-          </div>
+P_abs = 101,325 − 12,304 = 89,021 Pa</div></div>
+          <div class="sec answer"><div class="sec-label">④ Answers</div><div class="ans-row"><div><div class="ans-val">Pᵍ = −12,304 Pa</div></div><div><div class="ans-val">Pₐᵦₛ = 89,021 Pa</div></div></div></div>
+          <div class="sec intuit"><div class="sec-label">⑤ Intuition</div><p>$dP/dz = -\rho g$ means: going <em>up</em>, pressure <em>decreases</em>. Mercury higher on jar side → jar is below atmospheric.</p></div>
         </div>
       </div>
 
-      <!-- ── MP4 ── -->
+      <!-- ── MP4-10 condensed ── -->
       <div class="problem-card" id="mp4">
         <div class="prob-head"><div class="prob-num">4</div><div class="prob-title">Physiological Pressure Limits — Additive Pressure Scalars</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Heroes breathe through a hollow reed. Lungs $60.0\text{ cm}$ below surface, achieving $-3.15\text{ cm H}_2\text{O}$. What max negative gauge pressure can you create on dry land?</p>
-          </div>
-          <div class="sec think">
-            <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>This is a <em>constraint satisfaction problem</em>. Two pressure systems whose algebraic sum must equal zero for the person to inhale. Think: $P_\text{lungs} + P_\text{water} = 0$.</p>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-display">$$P_\text{ext}(z) = +z \;\text{cm H}_2\text{O (gauge)}, \quad z = 60\text{ cm}$$</div>
-            <div class="math-display">$$P_\text{required} = -(60 + 3.15) = -63.15\text{ cm H}_2\text{O}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">④ Answer</div>
-            <div class="ans-val">P = −63.15 cm H₂O</div>
-          </div>
-          <div class="sec intuit">
-            <div class="sec-label">⑤ Intuition</div>
-            <p>On dry land, lungs fight only atmospheric pressure. Underwater, the water column adds extra force crushing the chest. Think of the lung as a spring trying to expand against two opposing forces at once.</p>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Heroes breathe through a hollow reed 60 cm underwater, achieving $-3.15\text{ cm H}_2\text{O}$. Max negative gauge pressure on land?</p></div>
+          <div class="sec think"><div class="sec-label">① How a Mathematician Reads This</div><p>A <em>constraint satisfaction problem</em>. Two pressure systems whose algebraic sum must equal zero for inhalation.</p></div>
+          <div class="sec derive"><div class="sec-label">③ Derivation</div><div class="math-display">$$P_\text{required} = -(60 + 3.15) = -63.15\text{ cm H}_2\text{O}$$</div></div>
+          <div class="sec answer"><div class="sec-label">④ Answer</div><div class="ans-val">P = −63.15 cm H₂O</div></div>
+          <div class="sec intuit"><div class="sec-label">⑤ Intuition</div><p>Underwater, the water column adds extra force crushing the chest. The lung fights two opponents simultaneously.</p></div>
         </div>
       </div>
 
-      <!-- ── MP5 ── -->
       <div class="problem-card" id="mp5">
         <div class="prob-head"><div class="prob-num">5</div><div class="prob-title">Buoyancy Fraction of Ice — Equilibrium as a Fixed-Point Equation</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>$\rho_\text{ice} = 910.9\text{ kg/m}^3$, freshwater $\rho_w = 1000\text{ kg/m}^3$. What fraction of ice is submerged when floating?</p>
-          </div>
-          <div class="sec think">
-            <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>Write the equilibrium condition as an equation in $f = V_\text{sub}/V_\text{total}$, solve symbolically. No arithmetic until the algebra is done.</p>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">③ Calculus Derivation</div>
-            <p>Archimedes follows from integrating pressure over the submerged surface (divergence theorem: $\oint P\hat{n}\,dA = \rho g V_\text{sub}$):</p>
-            <div class="math-display">$$\rho_w V_\text{sub} g = \rho_i V_\text{total} g \;\Rightarrow\; f = \frac{\rho_i}{\rho_w} = \frac{910.9}{1000} = 0.9109$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">④ Answer</div>
-            <div class="ans-val">f = 0.9109</div>
-          </div>
-          <div class="sec intuit">
-            <div class="sec-label">⑤ Intuition</div>
-            <p>$g$ and $V_\text{total}$ cancel completely — the fraction depends <em>only</em> on the density ratio. This is why the iceberg rule is universal regardless of size.</p>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$\rho_\text{ice} = 910.9$, $\rho_w = 1000\text{ kg/m}^3$. What fraction submerged when floating?</p></div>
+          <div class="sec derive"><div class="sec-label">③ Calculus Derivation</div><p>Archimedes follows from integrating pressure over the submerged surface (divergence theorem):</p><div class="math-display">$$\rho_w V_\text{sub} g = \rho_i V_\text{total} g \;\Rightarrow\; f = \frac{\rho_i}{\rho_w} = 0.9109$$</div></div>
+          <div class="sec answer"><div class="sec-label">④ Answer</div><div class="ans-val">f = 0.9109</div></div>
+          <div class="sec intuit"><div class="sec-label">⑤ Intuition</div><p>$g$ and $V_\text{total}$ cancel — the fraction depends <em>only</em> on the density ratio. Universal regardless of size.</p></div>
         </div>
       </div>
 
-      <!-- ── MP6 ── -->
       <div class="problem-card" id="mp6">
         <div class="prob-head"><div class="prob-num">6</div><div class="prob-title">Static Equilibrium of a Suspended Cube — Three-Force Balance</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Cube $L = 0.13\text{ m}$, $\rho_c = 3900$, $\rho_l = 810\text{ kg/m}^3$, half submerged on a string. Find $W$, $F_b$, $T$, and the effect of deeper submersion on $T$.</p>
-          </div>
-          <div class="sec think">
-            <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>$\sum F = 0$ is a linear equation in $\{W, F_b, T\}$. Parameterize symbolically in terms of $(\rho_c, \rho_l, L, g)$, reduce to scalar, solve.</p>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-display">$$W = \iiint_\text{cube} \rho_c g\,dV = \rho_c g L^3$$</div>
-            <div class="math-display">$$F_b = \rho_l g \frac{L^3}{2} \qquad T = W - F_b$$</div>
-            <div class="math-block">W = (3900)(9.8)(0.13)³ = 83.97 N
-F_b = (810)(9.8)(0.002197/2) = 8.72 N
-T = 83.97 − 8.72 = 75.25 N
-
-Part (h): more submersion → V_sub↑ → F_b↑ → T↓</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">④ Answers</div>
-            <div class="ans-row">
-              <div><div class="ans-val">W = 83.97 N</div></div>
-              <div><div class="ans-val">Fb = 8.72 N</div></div>
-              <div><div class="ans-val">T = 75.25 N</div></div>
-            </div>
-          </div>
-          <div class="sec intuit">
-            <div class="sec-label">⑤ Intuition</div>
-            <p>Tension is what's "left over" after buoyancy partially supports the cube. Deeper submersion → more displaced fluid → more buoyancy → string relaxes.</p>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Cube $L = 0.13\text{ m}$, $\rho_c = 3900$, $\rho_l = 810\text{ kg/m}^3$, half submerged on a string. Find $W$, $F_b$, $T$, and effect of deeper submersion.</p></div>
+          <div class="sec derive"><div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-display">$$W = \iiint_\text{cube} \rho_c g\,dV = \rho_c g L^3 \qquad F_b = \rho_l g \frac{L^3}{2} \qquad T = W - F_b$$</div>
+            <div class="math-block">W = 83.97 N  |  F_b = 8.72 N  |  T = 75.25 N</div></div>
+          <div class="sec answer"><div class="sec-label">④ Answers</div><div class="ans-row"><div><div class="ans-val">W = 83.97 N</div></div><div><div class="ans-val">Fb = 8.72 N</div></div><div><div class="ans-val">T = 75.25 N</div></div></div><p style="margin-top:10px;font-size:0.85rem;color:#666;">(h) More submersion → F_b↑ → T↓</p></div>
         </div>
       </div>
 
-      <!-- ── MP7 ── -->
       <div class="problem-card" id="mp7">
         <div class="prob-head"><div class="prob-num">7</div><div class="prob-title">Arterial Blood Flow — Flux Integral over a Circular Cross-Section</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Artery radius $r = 2.3\text{ mm}$, speed $v = 42\text{ cm/s}$. Find $Q$ and volume in $30.0\text{ s}$.</p>
-          </div>
-          <div class="sec think">
-            <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>$Q = \iint_A \vec{v} \cdot \hat{n}\,dA$. Volume $= \int Q\,dt$.</p>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">③ Calculus Derivation</div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Artery $r = 2.3\text{ mm}$, speed $v = 42\text{ cm/s}$. Find $Q$ and volume in $30\text{ s}$.</p></div>
+          <div class="sec derive"><div class="sec-label">③ Calculus Derivation</div>
             <div class="math-display">$$Q = \iint_D \vec{v}\cdot\hat{n}\,dA = v\cdot\pi r^2 \qquad V = \int_0^{30} Q\,dt = Q \cdot 30$$</div>
-            <div class="math-block">Q = 42 × π(0.23)² = 6.980 cm³/s
-V = 6.980 × 30 = 209.4 cm³</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">④ Answers</div>
-            <div class="ans-row">
-              <div><div class="ans-val">Q = 6.98 cm³/s</div></div>
-              <div><div class="ans-val">V = 209.4 cm³</div></div>
-            </div>
-          </div>
-          <div class="sec intuit">
-            <div class="sec-label">⑤ Intuition</div>
-            <p>In one second, all the blood in a cylinder of length $v$ and cross-section $A$ passes through. Volume = how many such cylinders pass in time $t$? Exactly $Q \cdot t$.</p>
-          </div>
+            <div class="math-block">Q = 42 × π(0.23)² = 6.98 cm³/s   |   V = 209.4 cm³</div></div>
+          <div class="sec answer"><div class="sec-label">④ Answers</div><div class="ans-row"><div><div class="ans-val">Q = 6.98 cm³/s</div></div><div><div class="ans-val">V = 209.4 cm³</div></div></div></div>
         </div>
       </div>
 
-      <!-- ── MP8 ── -->
       <div class="problem-card" id="mp8">
         <div class="prob-head"><div class="prob-num">8</div><div class="prob-title">Air Duct Velocity — Continuity / Conservation of Volume</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Duct diameter $0.305\text{ m}$, house $12 \times 19.5 \times 2.8\text{ m}^3$. Air cycles every $15\text{ min}$. Find air speed in duct.</p>
-          </div>
-          <div class="sec think">
-            <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>Conservation law: total volume flux is conserved. $Q_\text{room} = Q_\text{duct}$.</p>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-display">$$\oint_S \vec{v}\cdot\hat{n}\,dA = 0 \;\Rightarrow\; Q_\text{in} = Q_\text{out}$$</div>
-            <div class="math-block">Q = 655.2 / 900 = 0.7280 m³/s
-A = π(0.1525)² = 0.07306 m²
-v = 0.7280 / 0.07306 = 9.96 m/s</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">④ Answer</div>
-            <div class="ans-val">v = 9.96 m/s</div>
-          </div>
-          <div class="sec intuit">
-            <div class="sec-label">⑤ Intuition</div>
-            <p>Incompressible → can't "store" mass inside. Narrow duct → same $Q$ → higher speed.</p>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Duct $d = 0.305\text{ m}$, house $12 \times 19.5 \times 2.8\text{ m}^3$, cycle every $15\text{ min}$. Find air speed in duct.</p></div>
+          <div class="sec derive"><div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-display">$$\oint_S \vec{v}\cdot\hat{n}\,dA = 0 \;\Rightarrow\; Q_\text{in} = Q_\text{out} \qquad v = Q/A$$</div>
+            <div class="math-block">Q = 655.2/900 = 0.728 m³/s  |  A = 0.07306 m²  |  v = 9.96 m/s</div></div>
+          <div class="sec answer"><div class="sec-label">④ Answer</div><div class="ans-val">v = 9.96 m/s</div></div>
         </div>
       </div>
 
-      <!-- ── MP9 ── -->
       <div class="problem-card" id="mp9">
         <div class="prob-head"><div class="prob-num">9</div><div class="prob-title">Pitot Tube Stagnation Pressure — Bernoulli as a First Integral</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Pitot tube, $h = 0.195\text{ m}$, $\rho_{Hg} = 13.6\times10^3$, $\rho_{air} = 1.29\text{ kg/m}^3$. Find airspeed.</p>
-          </div>
-          <div class="sec think">
-            <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>Bernoulli's equation is the <em>first integral</em> of Euler's equation along a streamline. Integrate the momentum ODE to get a conserved quantity — total mechanical energy per unit volume.</p>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">③ Calculus Derivation</div>
-            <div class="math-display">$$\frac{d}{ds}\!\left[\tfrac{1}{2}\rho v^2 + P + \rho gz\right] = 0 \quad \Longrightarrow \quad \tfrac{1}{2}\rho_{air} v^2 = \Delta P = \rho_{Hg}\,g\,h$$</div>
-            <div class="math-block">ΔP = (13600)(9.8)(0.195) = 25,989.6 Pa
-v = √(2 × 25989.6 / 1.29) = 200.7 m/s</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">④ Answer</div>
-            <div class="ans-val">v = 200.7 m/s</div>
-          </div>
-          <div class="sec intuit">
-            <div class="sec-label">⑤ Intuition</div>
-            <p>Slowing fluid to zero at stagnation converts ALL kinetic energy to pressure. Mercury is ~10,000× denser than air — tiny $\Delta P$ → measurable column height.</p>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Pitot tube, $h = 0.195\text{ m}$, $\rho_{Hg} = 13{,}600$, $\rho_{air} = 1.29\text{ kg/m}^3$. Find airspeed.</p></div>
+          <div class="sec think"><div class="sec-label">① How a Mathematician Reads This</div><p>Bernoulli is the <em>first integral</em> of Euler's equation along a streamline. A conserved quantity — total mechanical energy per unit volume.</p></div>
+          <div class="sec derive"><div class="sec-label">③ Calculus Derivation</div>
+            <div class="math-display">$$\tfrac{1}{2}\rho_{air} v^2 = \Delta P = \rho_{Hg}\,g\,h \;\Rightarrow\; v = \sqrt{\frac{2\,\Delta P}{\rho_{air}}}$$</div>
+            <div class="math-block">ΔP = 25,989.6 Pa  |  v = 200.7 m/s</div></div>
+          <div class="sec answer"><div class="sec-label">④ Answer</div><div class="ans-val">v = 200.7 m/s</div></div>
         </div>
       </div>
 
-      <!-- ── MP10 ── -->
       <div class="problem-card" id="mp10">
         <div class="prob-head"><div class="prob-num">10</div><div class="prob-title">Sump Pump Energy Conservation — Full Bernoulli</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>$Q = 0.599\text{ L/s}$, $P_1 = 1.62\times10^5\text{ Pa}$, $d = 2.63\text{ cm}$. <strong>(a)</strong> rises $H = 2.09\text{ m}$, same diameter. <strong>(b)</strong> widens to $D = 6.11\text{ cm}$, drops $h = 0.51\text{ m}$.</p>
-          </div>
-          <div class="sec think">
-            <div class="sec-label">① How a Mathematician Reads This</div>
-            <p>Bernoulli with all three terms varying: pressure, velocity (continuity), and elevation. Set the conserved quantity at point 1 equal to points 2 and 3.</p>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">③ Calculus Derivation</div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$Q = 0.599\text{ L/s}$, $P_1 = 1.62\times10^5\text{ Pa}$, $d = 2.63\text{ cm}$. <strong>(a)</strong> rises $H = 2.09\text{ m}$, same $d$. <strong>(b)</strong> widens to $D = 6.11\text{ cm}$, drops $h = 0.51\text{ m}$.</p></div>
+          <div class="sec derive"><div class="sec-label">③ Calculus Derivation</div>
             <div class="math-display">$$P + \tfrac{1}{2}\rho v^2 + \rho gz = \text{const}$$</div>
             <div class="math-block">v₁ = 1.103 m/s
-
-Part (a): v₂ = v₁ → KE cancels
-P₂ = 162,000 − (1000)(9.8)(2.09) = 141,518 Pa
-
-Part (b): v₃ = 0.2043 m/s, z₃ = 1.58 m
-P₃ = 162,000 + 500(1.103² − 0.204²) − (1000)(9.8)(1.58)
-   = 147,103 Pa</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">④ Answers</div>
-            <div class="ans-row">
-              <div><div class="ans-val">P₂ = 141,518 Pa</div></div>
-              <div><div class="ans-val">P₃ = 147,103 Pa</div></div>
-            </div>
-          </div>
-          <div class="sec intuit">
-            <div class="sec-label">⑤ Intuition</div>
-            <p>Wider pipe (Part b): fluid slows (continuity) → kinetic energy converts back to pressure, partially compensating the elevation loss. This is the Venturi effect in reverse.</p>
-          </div>
+(a): v₂ = v₁ → KE cancels → P₂ = 162,000 − (1000)(9.8)(2.09) = 141,518 Pa
+(b): v₃ = 0.2043 m/s, z₃ = 1.58 m → P₃ = 147,103 Pa</div></div>
+          <div class="sec answer"><div class="sec-label">④ Answers</div><div class="ans-row"><div><div class="ans-val">P₂ = 141,518 Pa</div></div><div><div class="ans-val">P₃ = 147,103 Pa</div></div></div></div>
+          <div class="sec intuit"><div class="sec-label">⑤ Intuition</div><p>Wider pipe (Part b): fluid slows → kinetic energy converts back to pressure, partially compensating the elevation loss. Venturi effect in reverse.</p></div>
         </div>
       </div>
 
@@ -1591,7 +1762,7 @@ P₃ = 162,000 + 500(1.103² − 0.204²) − (1000)(9.8)(1.58)
 <!-- ══════════════════════════ PAGE: EXAM III — SIMPLE ════════════════════ -->
 <div class="sol-page" id="page-exam3-simple">
   <header class="site-header" style="position:sticky;top:0;z-index:100;">
-    <button class="back-btn" onclick="goSol('page-ch14-exam3')">← BACK</button>
+    <button class="back-btn" onclick="go('page-ch14-exam3')">← BACK</button>
     <div class="breadcrumb">
       <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
       <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
@@ -1627,314 +1798,118 @@ P₃ = 162,000 + 500(1.103² − 0.204²) − (1000)(9.8)(1.58)
 
     <div class="sol-main">
 
-      <!-- ── ES1 ── -->
       <div class="problem-card" id="es1">
         <div class="prob-head"><div class="prob-num">1</div><div class="prob-title">Pressure-Force Mapping on a Circular Nail Tip</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>A nail tip has a circular cross-section of diameter $d = 1.17 \times 10^{-3}\text{ m}$. A uniform pressure of $P = 3.17 \times 10^9\text{ Pa}$ is applied. Find the total normal force $F$ on the tip.</p>
-          </div>
-          <div class="sec given-sec">
-            <div class="sec-label">Given</div>
-            <p>$d = 1.17 \times 10^{-3}\text{ m}$, $\quad r = 5.85 \times 10^{-4}\text{ m}$, $\quad P = 3.17 \times 10^9\text{ Pa}$</p>
-          </div>
-          <div class="sec formula-sec">
-            <div class="sec-label">Formula</div>
-            <div class="math-display">$$F = P \cdot A = P \cdot \pi r^2$$</div>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">Evaluation</div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A nail tip has a circular cross-section of diameter $d = 1.17 \times 10^{-3}\text{ m}$. A uniform pressure of $P = 3.17 \times 10^9\text{ Pa}$ is applied. Find the total normal force $F$ on the tip.</p></div>
+          <div class="sec given-sec"><div class="sec-label">Given</div><p>$d = 1.17 \times 10^{-3}\text{ m}$, $r = 5.85 \times 10^{-4}\text{ m}$, $P = 3.17 \times 10^9\text{ Pa}$</p></div>
+          <div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$F = P \cdot A = P \cdot \pi r^2$$</div></div>
+          <div class="sec derive"><div class="sec-label">Evaluation</div>
             <div class="math-display">$$A = \pi(5.85 \times 10^{-4})^2 = 1.07513 \times 10^{-6}\text{ m}^2$$</div>
-            <div class="math-display">$$F = (3.17 \times 10^9)(1.07513 \times 10^{-6}) = 3408.2\text{ N}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Answer</div>
-            <div class="ans-val">F = 3408.2 N</div>
-            <div class="ans-sub">Pressure is uniform → $F = P \cdot A$; the tiny area amplifies force into enormous pressure</div>
-          </div>
+            <div class="math-display">$$F = (3.17 \times 10^9)(1.07513 \times 10^{-6}) = 3408.2\text{ N}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">F = 3408.2 N</div><div class="ans-sub">Pressure is uniform → $F = P \cdot A$; the tiny area amplifies force into enormous pressure</div></div>
         </div>
       </div>
 
-      <!-- ── ES2 ── -->
       <div class="problem-card" id="es2">
         <div class="prob-head"><div class="prob-num">2</div><div class="prob-title">Hydrostatic Load in a Rectangular Tank</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>A rectangular tank base measures $0.505\text{ m} \times 0.89\text{ m}$ and supports a static gasoline mass of $49\text{ kg}$ ($g = 9.8\text{ m/s}^2$). <strong>(a)</strong> Find the scalar pressure $P$ exerted on the base. <strong>(b)</strong> Find $\mathcal{R} = P_{atm}/P$ where $P_{atm} = 101{,}325\text{ Pa}$.</p>
-          </div>
-          <div class="sec given-sec">
-            <div class="sec-label">Given</div>
-            <p>$A_{base} = 0.505 \times 0.89 = 0.44945\text{ m}^2$; $m = 49\text{ kg}$; $g = 9.8\text{ m/s}^2$; $P_{atm} = 101{,}325\text{ Pa}$</p>
-          </div>
-          <div class="sec formula-sec">
-            <div class="sec-label">Formula</div>
-            <div class="math-display">$$P = \frac{mg}{A} \qquad \mathcal{R} = \frac{P_{atm}}{P}$$</div>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">Evaluation</div>
-            <div class="math-display">$$P = \frac{(49)(9.8)}{0.44945} = \frac{480.2}{0.44945} = 1068.4\text{ Pa}$$</div>
-            <div class="math-display">$$\mathcal{R} = \frac{101{,}325}{1068.4} = 94.84$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Answers</div>
-            <div class="ans-row">
-              <div><div class="ans-val">P = 1068.4 Pa</div><div class="ans-sub">Part (a)</div></div>
-              <div><div class="ans-val">𝓡 = 94.84</div><div class="ans-sub">Part (b) — atmosphere is ~95× larger</div></div>
-            </div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A rectangular tank base $0.505\text{ m} \times 0.89\text{ m}$ supports static gasoline mass $49\text{ kg}$. <strong>(a)</strong> Find pressure $P$ on the base. <strong>(b)</strong> Find $\mathcal{R} = P_{atm}/P$.</p></div>
+          <div class="sec given-sec"><div class="sec-label">Given</div><p>$A_{base} = 0.44945\text{ m}^2$; $m = 49\text{ kg}$; $g = 9.8\text{ m/s}^2$; $P_{atm} = 101{,}325\text{ Pa}$</p></div>
+          <div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$P = \frac{mg}{A} \qquad \mathcal{R} = \frac{P_{atm}}{P}$$</div></div>
+          <div class="sec derive"><div class="sec-label">Evaluation</div>
+            <div class="math-display">$$P = \frac{(49)(9.8)}{0.44945} = 1068.4\text{ Pa} \qquad \mathcal{R} = \frac{101{,}325}{1068.4} = 94.84$$</div></div>
+          <div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">P = 1068.4 Pa</div><div class="ans-sub">Part (a)</div></div><div><div class="ans-val">𝓡 = 94.84</div><div class="ans-sub">Part (b)</div></div></div></div>
         </div>
       </div>
 
-      <!-- ── ES3 ── -->
       <div class="problem-card" id="es3">
         <div class="prob-head"><div class="prob-num">3</div><div class="prob-title">Differential Manometry</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>A U-tube manometer filled with mercury ($\rho = 13{,}500\text{ kg/m}^3$) shows a height displacement $\Delta z = 0.093\text{ m}$ (open side lower → jar is sub-atmospheric). Find <strong>(a)</strong> gauge pressure and <strong>(b)</strong> absolute pressure in the jar.</p>
-          </div>
-          <div class="sec given-sec">
-            <div class="sec-label">Given</div>
-            <p>$\rho_{Hg} = 13{,}500\text{ kg/m}^3$; $\Delta z = 0.093\text{ m}$; $P_{atm} = 101{,}325\text{ Pa}$</p>
-          </div>
-          <div class="sec formula-sec">
-            <div class="sec-label">Formula</div>
-            <div class="math-display">$$P_{gauge} = -\rho g \,\Delta z \qquad P_{abs} = P_{atm} + P_{gauge}$$</div>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">Evaluation</div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>U-tube manometer ($\rho_{Hg} = 13{,}500\text{ kg/m}^3$), $\Delta z = 0.093\text{ m}$, open side lower → sub-atmospheric. Find <strong>(a)</strong> gauge and <strong>(b)</strong> absolute pressure.</p></div>
+          <div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$P_{gauge} = -\rho g \,\Delta z \qquad P_{abs} = P_{atm} + P_{gauge}$$</div></div>
+          <div class="sec derive"><div class="sec-label">Evaluation</div>
             <div class="math-display">$$P_{gauge} = -(13{,}500)(9.8)(0.093) = -12{,}303.9\text{ Pa}$$</div>
-            <div class="math-display">$$P_{abs} = 101{,}325 + (-12{,}303.9) = 89{,}021.1\text{ Pa}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Answers</div>
-            <div class="ans-row">
-              <div><div class="ans-val">P_g = −12,303.9 Pa</div><div class="ans-sub">Part (a)</div></div>
-              <div><div class="ans-val">P_abs = 89,021.1 Pa</div><div class="ans-sub">Part (b)</div></div>
-            </div>
-          </div>
+            <div class="math-display">$$P_{abs} = 101{,}325 - 12{,}303.9 = 89{,}021.1\text{ Pa}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">P_g = −12,303.9 Pa</div><div class="ans-sub">Part (a)</div></div><div><div class="ans-val">P_abs = 89,021.1 Pa</div><div class="ans-sub">Part (b)</div></div></div></div>
         </div>
       </div>
 
-      <!-- ── ES4 ── -->
       <div class="problem-card" id="es4">
         <div class="prob-head"><div class="prob-num">4</div><div class="prob-title">Physiological Gauge Constraints</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Breathing underwater through a tube. Lungs are $60\text{ cm H}_2\text{O}$ below surface; lung effort at that depth is $-3.15\text{ cm H}_2\text{O}$. Find the maximum negative gauge pressure the lungs must produce on dry land to equal that physiological effort underwater.</p>
-          </div>
-          <div class="sec given-sec">
-            <div class="sec-label">Given</div>
-            <p>$h_{ext} = 60\text{ cm H}_2\text{O}$; $h_{int} = -3.15\text{ cm H}_2\text{O}$</p>
-          </div>
-          <div class="sec formula-sec">
-            <div class="sec-label">Formula</div>
-            <div class="math-display">$$\Delta P_{max} = h_{ext} - h_{int} = 60 - (-3.15)$$</div>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">Evaluation</div>
-            <div class="math-display">$$\Delta P_{max} = 63.15\text{ cm H}_2\text{O}$$</div>
-            <div class="math-display">$$P_{gauge,land} = -\Delta P_{max} = -63.15\text{ cm H}_2\text{O}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Answer</div>
-            <div class="ans-val">P_gauge = −63.15 cm H₂O</div>
-            <div class="ans-sub">Physiologically impossible on dry land — lungs only produce −3.15 cm H₂O</div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Breathing underwater through a tube. Lungs $60\text{ cm H}_2\text{O}$ below surface; lung effort at depth is $-3.15\text{ cm H}_2\text{O}$. Find max negative gauge pressure lungs must produce on dry land.</p></div>
+          <div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$\Delta P_{max} = h_{ext} - h_{int} = 60 - (-3.15)$$</div></div>
+          <div class="sec derive"><div class="sec-label">Evaluation</div><div class="math-display">$$P_{gauge,land} = -(60 + 3.15) = -63.15\text{ cm H}_2\text{O}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">P_gauge = −63.15 cm H₂O</div><div class="ans-sub">Physiologically impossible — lungs only produce −3.15 cm H₂O</div></div>
         </div>
       </div>
 
-      <!-- ── ES5 ── -->
       <div class="problem-card" id="es5">
         <div class="prob-head"><div class="prob-num">5</div><div class="prob-title">Divergence Theorem and Buoyancy</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>An ice block with $\rho_i = 910.9\text{ kg/m}^3$ floats in freshwater ($\rho_w = 1000\text{ kg/m}^3$) in static equilibrium. What fraction of the total volume is submerged?</p>
-          </div>
-          <div class="sec given-sec">
-            <div class="sec-label">Given</div>
-            <p>$\rho_i = 910.9\text{ kg/m}^3$; $\rho_w = 1000\text{ kg/m}^3$; static equilibrium: $F_B = W$</p>
-          </div>
-          <div class="sec formula-sec">
-            <div class="sec-label">Formula — Archimedes</div>
-            <div class="math-display">$$\rho_w V_{sub} g = \rho_i V_{total} g \;\Rightarrow\; \frac{V_{sub}}{V_{total}} = \frac{\rho_i}{\rho_w}$$</div>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">Evaluation</div>
-            <div class="math-display">$$\text{Fraction} = \frac{910.9}{1000} = 0.9109$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Answer</div>
-            <div class="ans-val">f = 0.9109</div>
-            <div class="ans-sub">91.09% submerged — only ~9% visible above the waterline</div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Ice block $\rho_i = 910.9\text{ kg/m}^3$ floats in freshwater $\rho_w = 1000\text{ kg/m}^3$. What fraction is submerged?</p></div>
+          <div class="sec formula-sec"><div class="sec-label">Formula — Archimedes</div><div class="math-display">$$\rho_w V_{sub} g = \rho_i V_{total} g \;\Rightarrow\; \frac{V_{sub}}{V_{total}} = \frac{\rho_i}{\rho_w}$$</div></div>
+          <div class="sec derive"><div class="sec-label">Evaluation</div><div class="math-display">$$\text{Fraction} = \frac{910.9}{1000} = 0.9109$$</div></div>
+          <div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">f = 0.9109</div><div class="ans-sub">91.09% submerged</div></div>
         </div>
       </div>
 
-      <!-- ── ES6 ── -->
       <div class="problem-card" id="es6">
         <div class="prob-head"><div class="prob-num">6</div><div class="prob-title">Static Equilibrium of a Partially Submerged Manifold</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>A cube with $L = 0.13\text{ m}$, $\rho_c = 3900\text{ kg/m}^3$ is half submerged in liquid $\rho_l = 810\text{ kg/m}^3$, held by a taut string. Find: <strong>(c)</strong> weight $w$, <strong>(e)</strong> buoyant force $F_B$, <strong>(g)</strong> tension $T$. <strong>(h)</strong> What happens to $T$ if submerged deeper?</p>
-          </div>
-          <div class="sec given-sec">
-            <div class="sec-label">Given</div>
-            <p>$L = 0.13\text{ m}$; $\rho_c = 3900\text{ kg/m}^3$; $\rho_l = 810\text{ kg/m}^3$; $V = L^3$; $V_{sub} = 0.5\,L^3$</p>
-          </div>
-          <div class="sec formula-sec">
-            <div class="sec-label">Formulas</div>
-            <div class="math-display">$$w = \rho_c L^3 g \qquad F_B = \rho_l (0.5\,L^3) g \qquad T = w - F_B$$</div>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">Evaluation</div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Cube $L = 0.13\text{ m}$, $\rho_c = 3900\text{ kg/m}^3$, half submerged in $\rho_l = 810\text{ kg/m}^3$, on string. Find <strong>(c)</strong> $w$, <strong>(e)</strong> $F_B$, <strong>(g)</strong> $T$. <strong>(h)</strong> What happens to $T$ if deeper?</p></div>
+          <div class="sec formula-sec"><div class="sec-label">Formulas</div><div class="math-display">$$w = \rho_c L^3 g \qquad F_B = \rho_l (0.5\,L^3) g \qquad T = w - F_B$$</div></div>
+          <div class="sec derive"><div class="sec-label">Evaluation</div>
             <div class="math-display">$$w = (3900)(0.13)^3(9.8) = 83.97\text{ N}$$</div>
-            <div class="math-display">$$F_B = (810)(0.5)(0.13)^3(9.8) = 8.72\text{ N}$$</div>
-            <div class="math-display">$$T = 83.97 - 8.72 = 75.25\text{ N}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Answers</div>
-            <div class="ans-row">
-              <div><div class="ans-val">w = 83.97 N</div><div class="ans-sub">(c)</div></div>
-              <div><div class="ans-val">F_B = 8.72 N</div><div class="ans-sub">(e)</div></div>
-              <div><div class="ans-val">T = 75.25 N</div><div class="ans-sub">(g)</div></div>
-            </div>
-            <p style="margin-top:12px;font-size:0.85rem;color:#666;">(h) Deeper submersion → $F_B$ increases → tension <strong>decreases</strong>.</p>
-          </div>
+            <div class="math-display">$$F_B = (810)(0.5)(0.13)^3(9.8) = 8.72\text{ N} \qquad T = 75.25\text{ N}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">w = 83.97 N</div><div class="ans-sub">(c)</div></div><div><div class="ans-val">F_B = 8.72 N</div><div class="ans-sub">(e)</div></div><div><div class="ans-val">T = 75.25 N</div><div class="ans-sub">(g)</div></div></div><p style="margin-top:12px;font-size:0.85rem;color:#666;">(h) Deeper → $F_B$↑ → tension <strong>decreases</strong>.</p></div>
         </div>
       </div>
 
-      <!-- ── ES7 ── -->
       <div class="problem-card" id="es7">
         <div class="prob-head"><div class="prob-num">7</div><div class="prob-title">Flux Integrals in Arterial Domains</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Blood flows through an artery of radius $r = 0.0023\text{ m}$ at a constant velocity of $v = 0.42\text{ m/s}$. <strong>(a)</strong> Find volumetric flow rate $Q$ (cm³/s). <strong>(b)</strong> Find total displaced volume $V$ over $t = 30\text{ s}$.</p>
-          </div>
-          <div class="sec given-sec">
-            <div class="sec-label">Given</div>
-            <p>$r = 0.23\text{ cm}$; $v = 42\text{ cm/s}$; $t = 30\text{ s}$</p>
-          </div>
-          <div class="sec formula-sec">
-            <div class="sec-label">Formula</div>
-            <div class="math-display">$$Q = v \cdot \pi r^2 \qquad V = Q \cdot t$$</div>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">Evaluation</div>
-            <div class="math-display">$$A = \pi(0.23)^2 = 0.16619\text{ cm}^2$$</div>
-            <div class="math-display">$$Q = 42 \times 0.16619 = 6.98\text{ cm}^3/\text{s}$$</div>
-            <div class="math-display">$$V = 6.98 \times 30 = 209.4\text{ cm}^3$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Answers</div>
-            <div class="ans-row">
-              <div><div class="ans-val">Q = 6.98 cm³/s</div><div class="ans-sub">(a)</div></div>
-              <div><div class="ans-val">V = 209.4 cm³</div><div class="ans-sub">(b)</div></div>
-            </div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Blood, artery $r = 0.0023\text{ m}$, $v = 0.42\text{ m/s}$. <strong>(a)</strong> Find $Q$ (cm³/s). <strong>(b)</strong> Volume over $30\text{ s}$.</p></div>
+          <div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$Q = v \cdot \pi r^2 \qquad V = Q \cdot t$$</div></div>
+          <div class="sec derive"><div class="sec-label">Evaluation</div>
+            <div class="math-display">$$Q = 42 \times \pi(0.23)^2 = 6.98\text{ cm}^3/\text{s} \qquad V = 6.98 \times 30 = 209.4\text{ cm}^3$$</div></div>
+          <div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">Q = 6.98 cm³/s</div><div class="ans-sub">(a)</div></div><div><div class="ans-val">V = 209.4 cm³</div><div class="ans-sub">(b)</div></div></div></div>
         </div>
       </div>
 
-      <!-- ── ES8 ── -->
       <div class="problem-card" id="es8">
         <div class="prob-head"><div class="prob-num">8</div><div class="prob-title">Continuity in Air Duct Manifolds</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>House volume $V_R = 12 \times 19.5 \times 2.8\text{ m}^3$ is fully exchanged every $\Delta t = 900\text{ s}$ through a circular duct of diameter $d = 0.305\text{ m}$. Find the required average air velocity $v$ in the duct.</p>
-          </div>
-          <div class="sec given-sec">
-            <div class="sec-label">Given</div>
-            <p>$V_R = 655.2\text{ m}^3$; $\Delta t = 900\text{ s}$; $d = 0.305\text{ m}$, $r = 0.1525\text{ m}$</p>
-          </div>
-          <div class="sec formula-sec">
-            <div class="sec-label">Formula — Continuity</div>
-            <div class="math-display">$$Q = \frac{V_R}{\Delta t} = v \cdot A \;\Rightarrow\; v = \frac{V_R}{\Delta t \cdot A}$$</div>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">Evaluation</div>
-            <div class="math-display">$$A = \pi(0.1525)^2 = 0.07306\text{ m}^2$$</div>
-            <div class="math-display">$$v = \frac{655.2}{900 \times 0.07306} = \frac{0.7280}{0.07306} = 9.96\text{ m/s}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Answer</div>
-            <div class="ans-val">v = 9.96 m/s</div>
-            <div class="ans-sub">≈ 35.9 km/h — fast air inside the duct</div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>House $V_R = 655.2\text{ m}^3$, cycle every $900\text{ s}$, duct $d = 0.305\text{ m}$. Find air speed.</p></div>
+          <div class="sec formula-sec"><div class="sec-label">Formula — Continuity</div><div class="math-display">$$v = \frac{V_R}{\Delta t \cdot A}$$</div></div>
+          <div class="sec derive"><div class="sec-label">Evaluation</div>
+            <div class="math-display">$$A = \pi(0.1525)^2 = 0.07306\text{ m}^2 \qquad v = \frac{655.2}{900 \times 0.07306} = 9.96\text{ m/s}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">v = 9.96 m/s</div><div class="ans-sub">≈ 35.9 km/h</div></div>
         </div>
       </div>
 
-      <!-- ── ES9 ── -->
       <div class="problem-card" id="es9">
         <div class="prob-head"><div class="prob-num">9</div><div class="prob-title">Stagnation Pressures and Velocity Mapping</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>A pitot tube measures a mercury column displacement of $h = 0.195\text{ m}$. Given $\rho_{Hg} = 13{,}600\text{ kg/m}^3$ and $\rho_a = 1.29\text{ kg/m}^3$, find the freestream airspeed $v$.</p>
-          </div>
-          <div class="sec given-sec">
-            <div class="sec-label">Given</div>
-            <p>$h = 0.195\text{ m}$; $\rho_{Hg} = 13{,}600\text{ kg/m}^3$; $\rho_a = 1.29\text{ kg/m}^3$</p>
-          </div>
-          <div class="sec formula-sec">
-            <div class="sec-label">Formula — Bernoulli Stagnation</div>
-            <div class="math-display">$$\Delta P = \rho_{Hg}\,g\,h = \tfrac{1}{2}\rho_a v^2 \;\Rightarrow\; v = \sqrt{\frac{2\,\Delta P}{\rho_a}}$$</div>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">Evaluation</div>
-            <div class="math-display">$$\Delta P = (13{,}600)(9.8)(0.195) = 25{,}989.6\text{ Pa}$$</div>
-            <div class="math-display">$$v = \sqrt{\frac{2 \times 25{,}989.6}{1.29}} = \sqrt{40{,}294} = 200.7\text{ m/s}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Answer</div>
-            <div class="ans-val">v = 200.7 m/s</div>
-            <div class="ans-sub">≈ 723 km/h — mercury amplifies the tiny air pressure signal</div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Pitot tube: $h = 0.195\text{ m}$, $\rho_{Hg} = 13{,}600\text{ kg/m}^3$, $\rho_a = 1.29\text{ kg/m}^3$. Find freestream airspeed.</p></div>
+          <div class="sec formula-sec"><div class="sec-label">Formula — Bernoulli Stagnation</div><div class="math-display">$$\Delta P = \rho_{Hg}\,g\,h = \tfrac{1}{2}\rho_a v^2 \;\Rightarrow\; v = \sqrt{\frac{2\,\Delta P}{\rho_a}}$$</div></div>
+          <div class="sec derive"><div class="sec-label">Evaluation</div>
+            <div class="math-display">$$\Delta P = (13{,}600)(9.8)(0.195) = 25{,}989.6\text{ Pa} \qquad v = \sqrt{40{,}294} = 200.7\text{ m/s}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">v = 200.7 m/s</div><div class="ans-sub">≈ 723 km/h</div></div>
         </div>
       </div>
 
-      <!-- ── ES10 ── -->
       <div class="problem-card" id="es10">
         <div class="prob-head"><div class="prob-num">10</div><div class="prob-title">Energy Conservation in Pumped Systems</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>A sump pump delivers $Q = 5.99 \times 10^{-4}\text{ m}^3/\text{s}$ at $P_1 = 162{,}000\text{ Pa}$ through a pipe of diameter $d_1 = 0.0263\text{ m}$. <strong>(a)</strong> Same diameter rises to $z_2 = 2.09\text{ m}$ — find $P_2$. <strong>(b)</strong> Pipe widens to $d_3 = 0.0612\text{ m}$ at elevation $z_3 = 1.58\text{ m}$ — find $P_3$.</p>
-          </div>
-          <div class="sec given-sec">
-            <div class="sec-label">Given</div>
-            <p>$Q = 5.99 \times 10^{-4}\text{ m}^3/\text{s}$; $P_1 = 162{,}000\text{ Pa}$; $\rho = 1000\text{ kg/m}^3$</p>
-          </div>
-          <div class="sec formula-sec">
-            <div class="sec-label">Formula — Bernoulli + Continuity</div>
-            <div class="math-display">$$P_1 + \tfrac{1}{2}\rho v_1^2 + \rho g z_1 = P_n + \tfrac{1}{2}\rho v_n^2 + \rho g z_n \qquad v = \frac{Q}{A}$$</div>
-          </div>
-          <div class="sec derive">
-            <div class="sec-label">Evaluation</div>
-            <div class="math-block">v₁ = Q / π(0.01315)² = 5.99×10⁻⁴ / 5.43×10⁻⁴ = 1.103 m/s
-
-Part (a): v₂ = v₁ (same diameter) → KE cancels
-P₂ = P₁ − ρg·z₂ = 162,000 − (1000)(9.8)(2.09)
-P₂ = 162,000 − 20,482 = 141,518 Pa
-
-Part (b): v₃ = Q / π(0.0306)² = 5.99×10⁻⁴ / 2.932×10⁻³ = 0.2036 m/s
-P₃ = P₁ + ½ρ(v₁² − v₃²) − ρg·z₃
-P₃ = 162,000 + 500(1.1027² − 0.2036²) − (1000)(9.8)(1.58)
-P₃ = 162,000 + 587.3 − 15,484 = 147,103 Pa</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Answers</div>
-            <div class="ans-row">
-              <div><div class="ans-val">P₂ = 141,518 Pa</div><div class="ans-sub">(a) — pressure drops as water rises</div></div>
-              <div><div class="ans-val">P₃ = 147,103 Pa</div><div class="ans-sub">(b) — wider pipe recovers pressure</div></div>
-            </div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Sump pump: $Q = 5.99 \times 10^{-4}\text{ m}^3/\text{s}$, $P_1 = 162{,}000\text{ Pa}$, $d_1 = 0.0263\text{ m}$. <strong>(a)</strong> Same diameter, $z_2 = 2.09\text{ m}$ — find $P_2$. <strong>(b)</strong> $d_3 = 0.0612\text{ m}$, $z_3 = 1.58\text{ m}$ — find $P_3$.</p></div>
+          <div class="sec formula-sec"><div class="sec-label">Formula — Bernoulli + Continuity</div><div class="math-display">$$P_1 + \tfrac{1}{2}\rho v_1^2 + \rho g z_1 = P_n + \tfrac{1}{2}\rho v_n^2 + \rho g z_n \qquad v = Q/A$$</div></div>
+          <div class="sec derive"><div class="sec-label">Evaluation</div>
+            <div class="math-block">v₁ = 1.103 m/s
+(a): same d → v₂ = v₁ → KE cancels → P₂ = 162,000 − (1000)(9.8)(2.09) = 141,518 Pa
+(b): v₃ = 0.2036 m/s → P₃ = 162,000 + 500(1.103² − 0.204²) − (1000)(9.8)(1.58) = 147,103 Pa</div></div>
+          <div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">P₂ = 141,518 Pa</div><div class="ans-sub">(a)</div></div><div><div class="ans-val">P₃ = 147,103 Pa</div><div class="ans-sub">(b)</div></div></div></div>
         </div>
       </div>
 
@@ -1948,10 +1923,390 @@ P₃ = 162,000 + 587.3 − 15,484 = 147,103 Pa</div>
 </div>
 
 
+<!-- ══════════════════════════ PAGE: EXAM III — UNIFIED SOP ═══════════════ -->
+<div class="sol-page" id="page-exam3-sop">
+  <header class="site-header" style="position:sticky;top:0;z-index:100;">
+    <button class="back-btn" onclick="go('page-ch14-exam3')">← BACK</button>
+    <div class="breadcrumb">
+      <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
+      <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
+      <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
+      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
+      <span onclick="go('page-ch14-exam3')">EXAM III</span><span class="sep">/</span>
+      <span class="current">UNIFIED SOP</span>
+    </div>
+  </header>
+  <div class="solutions-wrap">
+
+    <div class="sol-header sop-header" data-symbol="Φ₁Φ₂Φ₃">
+      <div class="mode-badge sop-badge">EXAM III — MODE 2 · EXECUTE THE UNIFIED SOP</div>
+      <h1>Fluid Mechanics — The Framework in Action</h1>
+      <p>Every problem attacked identically: Phase 1 binds the domain, Phase 2 invokes the correct protocol, Phase 3 synthesizes the answer. Watch the SOP demolish all ten problems in sequence.</p>
+    </div>
+
+    <div class="toc-wrap">
+      <div class="toc-label">Problems</div>
+      <div class="toc-grid">
+        <div class="toc-item" onclick="scrollToProb('sop1')"><span class="toc-num">1</span>Nail Tip</div>
+        <div class="toc-item" onclick="scrollToProb('sop2')"><span class="toc-num">2</span>Gas Tank</div>
+        <div class="toc-item" onclick="scrollToProb('sop3')"><span class="toc-num">3</span>Manometer</div>
+        <div class="toc-item" onclick="scrollToProb('sop4')"><span class="toc-num">4</span>Breathing</div>
+        <div class="toc-item" onclick="scrollToProb('sop5')"><span class="toc-num">5</span>Ice Float</div>
+        <div class="toc-item" onclick="scrollToProb('sop6')"><span class="toc-num">6</span>Cube &amp; String</div>
+        <div class="toc-item" onclick="scrollToProb('sop7')"><span class="toc-num">7</span>Artery Flow</div>
+        <div class="toc-item" onclick="scrollToProb('sop8')"><span class="toc-num">8</span>Air Duct</div>
+        <div class="toc-item" onclick="scrollToProb('sop9')"><span class="toc-num">9</span>Pitot Tube</div>
+        <div class="toc-item" onclick="scrollToProb('sop10')"><span class="toc-num">10</span>Sump Pump</div>
+      </div>
+    </div>
+
+    <div class="sol-main">
+
+      <!-- ── SOP1 ── -->
+      <div class="problem-card" id="sop1">
+        <div class="prob-head"><div class="prob-num">1</div><div class="prob-title">Circular Pressure-Force Mapping</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A nail tip has a circular cross-section of diameter $d = 1.17 \times 10^{-3}\text{ m}$. A uniform pressure field $P = 3.17 \times 10^9\text{ Pa}$ is applied. Find the total normal force $F$.</p></div>
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
+            <p>The domain is a 2D circular manifold $\Omega \subset \mathbb{R}^2$ with diameter $d = 1.17 \times 10^{-3}\text{ m}$. The velocity field is null ($\mathbf{v} = \mathbf{0}$), categorizing this as a <strong>Static Instance → Invoke Instance C</strong>.</p>
+          </div>
+
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
+            <p>Because the pressure field $P$ is uniform across the boundary, the surface integral $F = \iint_S P \, dA$ collapses into a simple scalar-area product:</p>
+            <div class="math-display">$$F = \iint_S P\,dA = P \cdot A$$</div>
+          </div>
+
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
+            <p>Area evaluated as $A = \pi d^2/4 \approx 1.075 \times 10^{-6}\text{ m}^2$. Multiplying by boundary condition $P = 3.17 \times 10^9\text{ Pa}$:</p>
+            <div class="math-display">$$A = \pi(5.85 \times 10^{-4})^2 = 1.075 \times 10^{-6}\text{ m}^2$$</div>
+            <div class="math-display">$$F = (3.17 \times 10^9)(1.075 \times 10^{-6}) = 3408.2\text{ N}$$</div>
+          </div>
+
+          <div class="sec sop-answer">
+            <div class="sec-label">Convergence</div>
+            <div class="ans-val">F = 3408.2 N</div>
+            <div class="ans-sub">The uniform pressure field maps to a resultant normal force of 3408.2 N</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SOP2 ── -->
+      <div class="problem-card" id="sop2">
+        <div class="prob-head"><div class="prob-num">2</div><div class="prob-title">Rectangular Hydrostatic Load</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A rectangular base $0.505\text{ m} \times 0.89\text{ m}$ supports static gasoline of mass $49\text{ kg}$. <strong>(a)</strong> Find pressure $P$ on the base. <strong>(b)</strong> Find $\mathcal{R} = P_{atm}/P$.</p></div>
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
+            <p>The manifold is a rectangular base supporting a static mass ($m = 49\text{ kg}$). With $\mathbf{v} = \mathbf{0}$, this is a <strong>Static Instance → Invoke Instance C</strong>.</p>
+          </div>
+
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
+            <p>The scalar pressure $P$ is the gravitational force vector $F = mg$ distributed over the manifold area $A$:</p>
+            <div class="math-display">$$P = \frac{F}{A} = \frac{mg}{A} \qquad \mathcal{R} = \frac{P_{atm}}{P}$$</div>
+          </div>
+
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
+            <p>$A = 0.44945\text{ m}^2$, $F = 480.2\text{ N}$. The internal pressure maps to $1068.4\text{ Pa}$. Comparing to the atmospheric boundary condition yields $\mathcal{R}$:</p>
+            <div class="math-display">$$P = \frac{480.2}{0.44945} = 1068.4\text{ Pa} \qquad \mathcal{R} = \frac{101{,}325}{1068.4} = 94.84$$</div>
+          </div>
+
+          <div class="sec sop-answer">
+            <div class="sec-label">Convergence</div>
+            <div class="ans-row">
+              <div><div class="ans-val">P = 1068.4 Pa</div><div class="ans-sub">(a)</div></div>
+              <div><div class="ans-val">𝓡 = 94.84</div><div class="ans-sub">(b)</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SOP3 ── -->
+      <div class="problem-card" id="sop3">
+        <div class="prob-head"><div class="prob-num">3</div><div class="prob-title">U-Manifold Differential Manometry</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Mercury manometer ($\rho = 13{,}500\text{ kg/m}^3$), open side $0.093\text{ m}$ lower than jar side. Find gauge and absolute pressure in the jar.</p></div>
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
+            <p>Analysis of a 1D path through a mercury manifold. The state is at rest, enforcing a <strong>Static Instance → Invoke Instance C</strong>.</p>
+          </div>
+
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
+            <p>The pressure gradient $\nabla P = \rho\mathbf{g}$ is integrated vertically to relate the geometric displacement $\Delta z$ to the internal pressure state:</p>
+            <div class="math-display">$$P_{gauge} = -\rho g\,\Delta z \qquad P_{abs} = P_{atm} + P_{gauge}$$</div>
+          </div>
+
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
+            <div class="math-display">$$P_g = -(13{,}500)(9.8)(0.093) = -12{,}303.9\text{ Pa}$$</div>
+            <div class="math-display">$$P_{abs} = 101{,}325 + (-12{,}303.9) = 89{,}021.1\text{ Pa}$$</div>
+          </div>
+
+          <div class="sec sop-answer">
+            <div class="sec-label">Convergence</div>
+            <div class="ans-row">
+              <div><div class="ans-val">P_g = −12,303.9 Pa</div><div class="ans-sub">(a) gauge</div></div>
+              <div><div class="ans-val">P_abs = 89,021.1 Pa</div><div class="ans-sub">(b) absolute</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SOP4 ── -->
+      <div class="problem-card" id="sop4">
+        <div class="prob-head"><div class="prob-num">4</div><div class="prob-title">Physiological Lung Constraints</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Breathing through a tube $60\text{ cm}$ underwater with residual lung effort $-3.15\text{ cm H}_2\text{O}$. Find maximum negative gauge pressure the lungs must produce on dry land.</p></div>
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
+            <p>A dual-domain interface between the lung manifold and external environment. Analyzed as a <strong>Static Instance of differential equilibrium → Invoke Instance C</strong>.</p>
+          </div>
+
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
+            <p>Instance C determines the system's maximum mechanical limit ($\Delta P_{max}$) based on the aquatic boundary condition ($h = 60\text{ cm}$):</p>
+            <div class="math-display">$$\Delta P_{max} = P_{ext} - P_{int}\big|_{water} \qquad P_{gauge,land} = -\Delta P_{max}$$</div>
+          </div>
+
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
+            <p>The absolute differential is $\Delta P_{max} = 60 - (-3.15) = 63.15\text{ cm H}_2\text{O}$. Mapping this fixed constraint back to the terrestrial domain (where $P_{ext} = 0$ gauge) isolates the lung field:</p>
+            <div class="math-display">$$P_{gauge,land} = 0 - 63.15 = -63.15\text{ cm H}_2\text{O}$$</div>
+          </div>
+
+          <div class="sec sop-answer">
+            <div class="sec-label">Convergence</div>
+            <div class="ans-val">P_gauge = −63.15 cm H₂O</div>
+            <div class="ans-sub">Physiologically impossible — the lung manifold is mechanically limited to −3.15 cm H₂O</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SOP5 ── -->
+      <div class="problem-card" id="sop5">
+        <div class="prob-head"><div class="prob-num">5</div><div class="prob-title">Divergence Theorem and Buoyancy</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>An ice manifold $\Omega_i$ with $\rho_i = 910.9\text{ kg/m}^3$ suspended in water domain $\Omega_w$ with $\rho_w = 1000\text{ kg/m}^3$. Find the submerged fraction.</p></div>
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
+            <p>An ice manifold suspended in a water domain. The system is in <strong>Static Equilibrium → Invoke Instance C</strong>. By the Divergence Theorem, the surface pressure flux is replaced by the volume integral of the displaced fluid's weight.</p>
+          </div>
+
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
+            <div class="math-display">$$F_B = W \;\Rightarrow\; \rho_w V_{sub}\,g = \rho_i V_{total}\,g$$</div>
+          </div>
+
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
+            <p>Dividing the density scalars collapses the geometry into a single fraction:</p>
+            <div class="math-display">$$\frac{V_{sub}}{V_{total}} = \frac{\rho_i}{\rho_w} = \frac{910.9}{1000} = 0.9109$$</div>
+          </div>
+
+          <div class="sec sop-answer">
+            <div class="sec-label">Convergence</div>
+            <div class="ans-val">Submerged Fraction = 0.9109</div>
+            <div class="ans-sub">91.09% submerged — the buoyant force and weight balance at exactly this fraction</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SOP6 ── -->
+      <div class="problem-card" id="sop6">
+        <div class="prob-head"><div class="prob-num">6</div><div class="prob-title">Partially Submerged Cubic Manifold</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A cubic manifold $L = 0.13\text{ m}$, $\rho_c = 3900\text{ kg/m}^3$, half submerged in $\rho_l = 810\text{ kg/m}^3$. Find $w$, $F_B$, $T$. What happens to $T$ if submerged deeper?</p></div>
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
+            <p>A cubic manifold with competing force vectors. Being at rest, this is a <strong>Static Instance → Invoke Instance C</strong> to calculate the weight vector and buoyant flux acting on the half-volume boundary.</p>
+          </div>
+
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
+            <div class="math-display">$$T + F_B - w = 0 \;\Rightarrow\; T = w - F_B$$</div>
+            <div class="math-display">$$w = \rho_c\,L^3\,g \qquad F_B = \rho_l\,(0.5\,L^3)\,g$$</div>
+          </div>
+
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
+            <p>Weight is $83.97\text{ N}$ and buoyancy is $8.72\text{ N}$. Synthesizing the tension requirement via $T = w - F_B$:</p>
+            <div class="math-display">$$w = (3900)(0.13)^3(9.8) = 83.97\text{ N} \qquad F_B = (810)(0.5)(0.13)^3(9.8) = 8.72\text{ N}$$</div>
+            <div class="math-display">$$T = 83.97 - 8.72 = 75.25\text{ N}$$</div>
+            <p style="font-size:0.88rem;margin-top:6px;">Deeper submersion: $V_{sub}\uparrow \;\Rightarrow\; F_B\uparrow \;\Rightarrow\; T\downarrow$ — tension decreases.</p>
+          </div>
+
+          <div class="sec sop-answer">
+            <div class="sec-label">Convergence</div>
+            <div class="ans-row">
+              <div><div class="ans-val">w = 83.97 N</div><div class="ans-sub">(c)</div></div>
+              <div><div class="ans-val">F_B = 8.72 N</div><div class="ans-sub">(e)</div></div>
+              <div><div class="ans-val">T = 75.25 N</div><div class="ans-sub">(g)</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SOP7 ── -->
+      <div class="problem-card" id="sop7">
+        <div class="prob-head"><div class="prob-num">7</div><div class="prob-title">Flux Integrals in Arterial Domains</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A cylindrical manifold (artery) with $r = 0.0023\text{ m}$, $v = 0.42\text{ m/s}$. Find $Q$ (cm³/s) and volume over $30\text{ s}$.</p></div>
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
+            <p>A cylindrical manifold with a continuous velocity field ($\mathbf{v} \neq \mathbf{0}$). This is a <strong>Dynamic Instance → Invoke Instance A</strong>.</p>
+          </div>
+
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance A)</div>
+            <p>The volumetric flow rate $Q$ is defined by the surface flux integral $\iint \mathbf{v} \cdot d\mathbf{A}$:</p>
+            <div class="math-display">$$Q = \iint_S \mathbf{v}\cdot d\mathbf{A} = v \cdot \pi r^2 \qquad V = \int_0^t Q\,dt = Q \cdot t$$</div>
+          </div>
+
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
+            <p>With $A = 0.166\text{ cm}^2$ and $v = 42\text{ cm/s}$, the instantaneous flux is $6.98\text{ cm}^3/\text{s}$. Temporal integration over $t = 30\text{ s}$ yields:</p>
+            <div class="math-display">$$Q = 42 \times \pi(0.23)^2 = 6.980\text{ cm}^3/\text{s} \qquad V = 6.980 \times 30 = 209.4\text{ cm}^3$$</div>
+          </div>
+
+          <div class="sec sop-answer">
+            <div class="sec-label">Convergence</div>
+            <div class="ans-row">
+              <div><div class="ans-val">Q = 6.98 cm³/s</div><div class="ans-sub">(a)</div></div>
+              <div><div class="ans-val">V = 209.4 cm³</div><div class="ans-sub">(b)</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SOP8 ── -->
+      <div class="problem-card" id="sop8">
+        <div class="prob-head"><div class="prob-num">8</div><div class="prob-title">Continuity in Air Duct Manifolds</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A control volume (room) $V_R = 655.2\text{ m}^3$ coupled to a circular duct manifold $d = 0.305\text{ m}$. Air cycles every $900\text{ s}$. Find air velocity in the duct.</p></div>
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
+            <p>A control volume (room) coupled to a secondary circular manifold (duct). High-velocity exchange defines a <strong>Dynamic Instance → Invoke Instance A</strong>.</p>
+          </div>
+
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance A)</div>
+            <p>The rate of volume change in the primary domain is mapped to the flux through the duct area:</p>
+            <div class="math-display">$$Q = \frac{V_R}{\Delta t} = v \cdot A \;\Rightarrow\; v = \frac{V_R}{\Delta t \cdot A}$$</div>
+          </div>
+
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
+            <p>Required flux $Q = V/\Delta t = 0.728\text{ m}^3/\text{s}$. Given duct area $A = 0.073\text{ m}^2$, isolate the velocity scalar:</p>
+            <div class="math-display">$$A = \pi(0.1525)^2 = 0.07306\text{ m}^2 \qquad v = \frac{0.728}{0.07306} = 9.96\text{ m/s}$$</div>
+          </div>
+
+          <div class="sec sop-answer">
+            <div class="sec-label">Convergence</div>
+            <div class="ans-val">v = 9.96 m/s</div>
+            <div class="ans-sub">≈ 35.9 km/h inside the duct</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SOP9 ── -->
+      <div class="problem-card" id="sop9">
+        <div class="prob-head"><div class="prob-num">9</div><div class="prob-title">Stagnation Pressures and Velocity Mapping</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A streamline from freestream to stagnation. Pitot tube: $h = 0.195\text{ m}$, $\rho_{Hg} = 13{,}600\text{ kg/m}^3$, $\rho_a = 1.29\text{ kg/m}^3$. Find freestream airspeed.</p></div>
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
+            <p>A streamline stretching from freestream to stagnation. Active flow identifies this as a <strong>Dynamic Instance → Invoke Instance B (Bernoulli), linked to Instance C (Statics) to evaluate the manometer column</strong>.</p>
+          </div>
+
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C then B)</div>
+            <p>Instance C resolves the manometer pressure head. Instance B links dynamic pressure to static rise:</p>
+            <div class="math-display">$$\Delta P = \rho_{Hg}\,g\,h \quad\text{(Instance C)} \qquad \tfrac{1}{2}\rho_a v^2 = \Delta P \quad\text{(Instance B)}$$</div>
+          </div>
+
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
+            <p>The dynamic energy $\tfrac{1}{2}\rho_a v^2$ is equated to the hydrostatic head $\rho_{Hg}\,gh = 25{,}989.6\text{ Pa}$. Solving for $v$:</p>
+            <div class="math-display">$$\Delta P = (13{,}600)(9.8)(0.195) = 25{,}989.6\text{ Pa} \qquad v = \sqrt{\frac{2 \times 25{,}989.6}{1.29}} = 200.7\text{ m/s}$$</div>
+          </div>
+
+          <div class="sec sop-answer">
+            <div class="sec-label">Convergence</div>
+            <div class="ans-val">v = 200.7 m/s</div>
+            <div class="ans-sub">≈ 723 km/h — mercury amplifies the tiny air pressure differential into a measurable column</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SOP10 ── -->
+      <div class="problem-card" id="sop10">
+        <div class="prob-head"><div class="prob-num">10</div><div class="prob-title">Energy Conservation in Pumped Systems</div></div>
+        <div class="prob-body">
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A pipeline manifold with variable elevation and area. $Q = 5.99 \times 10^{-4}\text{ m}^3/\text{s}$, $P_1 = 162{,}000\text{ Pa}$, $d_1 = 0.0263\text{ m}$. <strong>(a)</strong> Same diameter, $z_2 = 2.09\text{ m}$ — find $P_2$. <strong>(b)</strong> $d_3 = 0.0612\text{ m}$, $z_3 = 1.58\text{ m}$ — find $P_3$.</p></div>
+
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
+            <p>A pipeline manifold with variable elevation $z$ and cross-sectional area $A$. This is a complex <strong>Dynamic Instance → Invoke dual protocol: Instance A then Instance B</strong>.</p>
+          </div>
+
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance A → Instance B)</div>
+            <p>Instance A defines the localized velocity field $v(\mathbf{r})$ at each cross-section. Instance B then solves the energy constant $\mathcal{C}$ for pressure:</p>
+            <div class="math-display">$$v = \frac{Q}{A} \quad\text{(Instance A)} \qquad P_1 + \tfrac{1}{2}\rho v_1^2 + \rho g z_1 = P_n + \tfrac{1}{2}\rho v_n^2 + \rho g z_n \quad\text{(Instance B)}$$</div>
+          </div>
+
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
+            <div class="math-block">v₁ = Q / π(0.01315)² = 1.103 m/s
+
+Part (a): same diameter → v₂ = v₁ → KE terms cancel out of Bernoulli
+P₂ = P₁ − ρg·z₂ = 162,000 − (1000)(9.8)(2.09) = 141,518 Pa
+
+Part (b): A₃ = π(0.0306)² = 2.932×10⁻³ m²
+v₃ = 5.99×10⁻⁴ / 2.932×10⁻³ = 0.204 m/s (slows in wider pipe)
+P₃ = 162,000 + ½(1000)(1.103² − 0.204²) − (1000)(9.8)(1.58)
+P₃ = 162,000 + 587.3 − 15,484 = 147,103 Pa</div>
+          </div>
+
+          <div class="sec sop-answer">
+            <div class="sec-label">Convergence</div>
+            <div class="ans-row">
+              <div><div class="ans-val">P₂ = 141,518 Pa</div><div class="ans-sub">(a) — pressure drops as water rises</div></div>
+              <div><div class="ans-val">P₃ = 147,103 Pa</div><div class="ans-sub">(b) — wider pipe recovers pressure</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sol-footer">
+      The Unified SOP in action — Domain Archetyping → Protocol Invocation → Symbolic Synthesis.<br>
+      Static domains invoke Instance C. Dynamic domains invoke A and/or B. Complex domains chain them.<br>
+      Every fluid problem is the same problem, solved the same way.
+    </div>
+  </div>
+</div>
+
+
 <!-- ══════════════════════════ PAGE: EXAM III — PURE DERIVATION ═══════════ -->
 <div class="sol-page" id="page-exam3-derive">
   <header class="site-header" style="position:sticky;top:0;z-index:100;">
-    <button class="back-btn" onclick="goSol('page-ch14-exam3')">← BACK</button>
+    <button class="back-btn" onclick="go('page-ch14-exam3')">← BACK</button>
     <div class="breadcrumb">
       <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
       <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
@@ -1964,7 +2319,7 @@ P₃ = 162,000 + 587.3 − 15,484 = 147,103 Pa</div>
   <div class="solutions-wrap">
 
     <div class="sol-header" data-symbol="∬∇·F">
-      <div class="mode-badge">EXAM III — MODE 3 · PURE DERIVATION</div>
+      <div class="mode-badge">EXAM III — MODE 4 · PURE DERIVATION</div>
       <h1>Fluid Mechanics — From First Principles</h1>
       <p>Every problem treated as a formal boundary value problem. Domain and field definitions, governing equations, boundary conditions — stated explicitly before a single number is touched.</p>
     </div>
@@ -1987,349 +2342,133 @@ P₃ = 162,000 + 587.3 − 15,484 = 147,103 Pa</div>
 
     <div class="sol-main">
 
-      <!-- ── PD1 ── -->
       <div class="problem-card" id="pd1">
         <div class="prob-head"><div class="prob-num">1</div><div class="prob-title">Pressure-Force Mapping on a Circular Domain</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>A nail tip has a circular cross-section of diameter $d = 1.17 \times 10^{-3}\text{ m}$. A uniform pressure field $P = 3.17 \times 10^9\text{ Pa}$ is applied. Find the total normal force $F$.</p>
-          </div>
-          <div class="sec domain-sec">
-            <div class="sec-label">① Domain &amp; Field Definition</div>
-            <p>The system consists of a two-dimensional circular manifold $S \subset \mathbb{R}^2$ bounded by diameter $d = 1.17 \times 10^{-3}\text{ m}$. Across this boundary, a constant scalar pressure field is applied. Because the pressure is uniform, the rigorous surface integral $F = \iint_S P\,dA$ simplifies significantly — $P$ factors out, leaving the force as the simple product of pressure magnitude and total area.</p>
-          </div>
-          <div class="sec gov-eq">
-            <div class="sec-label">② Governing Equation</div>
-            <div class="math-display">$$F = \iint_S P\,dA = P \iint_S dA = P \cdot A$$</div>
-          </div>
-          <div class="sec bc-sec">
-            <div class="sec-label">③ Boundary Conditions</div>
-            <p>$S \subset \mathbb{R}^2$, $\; d = 1.17 \times 10^{-3}\text{ m}$, $\; r = 5.85 \times 10^{-4}\text{ m}$</p>
-            <p>$P = 3.17 \times 10^9\text{ Pa}$ (uniform scalar field)</p>
-          </div>
-          <div class="sec eval-sec">
-            <div class="sec-label">④ Evaluation</div>
-            <div class="math-display">$$A = \pi r^2 = \pi(5.85 \times 10^{-4})^2 = 1.075132 \times 10^{-6}\text{ m}^2$$</div>
-            <div class="math-display">$$F = (3.17 \times 10^9)(1.075132 \times 10^{-6}) = 3408.2\text{ N}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Result</div>
-            <div class="ans-val">F = 3408.2 N</div>
-            <div class="ans-sub">The uniform pressure field maps to a resultant normal force vector of magnitude 3408.2 N</div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A nail tip has a circular cross-section of diameter $d = 1.17 \times 10^{-3}\text{ m}$. A uniform pressure field $P = 3.17 \times 10^9\text{ Pa}$ is applied. Find the total normal force $F$.</div>
+          <div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>The system consists of a two-dimensional circular manifold $S \subset \mathbb{R}^2$ bounded by diameter $d = 1.17 \times 10^{-3}\text{ m}$. Because the pressure is uniform, the surface integral $F = \iint_S P\,dA$ simplifies — $P$ factors out, leaving the force as the product of pressure magnitude and total area.</p></div>
+          <div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$F = \iint_S P\,dA = P \iint_S dA = P \cdot A$$</div></div>
+          <div class="sec bc-sec"><div class="sec-label">③ Boundary Conditions</div><p>$r = 5.85 \times 10^{-4}\text{ m}$; $\quad P = 3.17 \times 10^9\text{ Pa}$ (uniform scalar field)</p></div>
+          <div class="sec eval-sec"><div class="sec-label">④ Evaluation</div>
+            <div class="math-display">$$A = \pi(5.85 \times 10^{-4})^2 = 1.075132 \times 10^{-6}\text{ m}^2 \qquad F = (3.17 \times 10^9)(1.075 \times 10^{-6}) = 3408.2\text{ N}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Result</div><div class="ans-val">F = 3408.2 N</div></div>
         </div>
       </div>
 
-      <!-- ── PD2 ── -->
       <div class="problem-card" id="pd2">
         <div class="prob-head"><div class="prob-num">2</div><div class="prob-title">Hydrostatic Load in a Rectangular Tank</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>A rectangular base $0.505\text{ m} \times 0.89\text{ m}$ supports static gasoline of mass $49\text{ kg}$. <strong>(a)</strong> Find pressure $P$ on the base. <strong>(b)</strong> Find $\mathcal{R} = P_{atm}/P$.</p>
-          </div>
-          <div class="sec domain-sec">
-            <div class="sec-label">① Domain &amp; Field Definition</div>
-            <p>This problem examines the statics of a flat rectangular manifold at the base of a tank with dimensions $0.505\text{ m} \times 0.89\text{ m}$. The domain supports a static fluid mass of $49\text{ kg}$. The governing equations of statics state that the scalar pressure $P$ exerted on the base is the ratio of the total orthogonal force vector (gravity acting on the mass) to the area of the manifold, $P = F/A$. Boundary conditions are defined by Earth gravity ($g = 9.8\text{ m/s}^2$) and standard atmospheric pressure ($P_{atm} = 101{,}325\text{ Pa}$).</p>
-          </div>
-          <div class="sec gov-eq">
-            <div class="sec-label">② Governing Equation</div>
-            <div class="math-display">$$P = \frac{F}{A}, \quad F = mg \qquad \mathcal{R} = \frac{P_{atm}}{P}$$</div>
-          </div>
-          <div class="sec bc-sec">
-            <div class="sec-label">③ Boundary Conditions</div>
-            <p>$A_{base} = w \times l = 0.505 \times 0.89\text{ m}^2$; $\; m = 49\text{ kg}$; $\; g = 9.8\text{ m/s}^2$; $\; P_{atm} = 101{,}325\text{ Pa}$</p>
-          </div>
-          <div class="sec eval-sec">
-            <div class="sec-label">④ Evaluation</div>
-            <div class="math-display">$$A = 0.44945\text{ m}^2 \qquad P = \frac{(49)(9.8)}{0.44945} = 1068.4\text{ Pa}$$</div>
-            <div class="math-display">$$\mathcal{R} = \frac{101{,}325}{1068.4} = 94.84$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Results</div>
-            <div class="ans-row">
-              <div><div class="ans-val">P = 1068.4 Pa</div><div class="ans-sub">(a)</div></div>
-              <div><div class="ans-val">𝓡 = 94.84</div><div class="ans-sub">(b)</div></div>
-            </div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Rectangular base $0.505\text{ m} \times 0.89\text{ m}$, static gasoline $49\text{ kg}$. <strong>(a)</strong> Pressure on base. <strong>(b)</strong> $\mathcal{R} = P_{atm}/P$.</p></div>
+          <div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>A flat rectangular manifold at the base of a tank. The domain supports a static fluid mass of $49\text{ kg}$. The scalar pressure $P$ is the ratio of the total orthogonal force to the area of the manifold, $P = F/A$. Boundary conditions: $g = 9.8\text{ m/s}^2$, $P_{atm} = 101{,}325\text{ Pa}$.</p></div>
+          <div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$P = \frac{mg}{A} \qquad \mathcal{R} = \frac{P_{atm}}{P}$$</div></div>
+          <div class="sec bc-sec"><div class="sec-label">③ Boundary Conditions</div><p>$A = 0.44945\text{ m}^2$; $m = 49\text{ kg}$; $P_{atm} = 101{,}325\text{ Pa}$</p></div>
+          <div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$P = \frac{480.2}{0.44945} = 1068.4\text{ Pa} \qquad \mathcal{R} = 94.84$$</div></div>
+          <div class="sec answer"><div class="sec-label">Results</div><div class="ans-row"><div><div class="ans-val">P = 1068.4 Pa</div><div class="ans-sub">(a)</div></div><div><div class="ans-val">𝓡 = 94.84</div><div class="ans-sub">(b)</div></div></div></div>
         </div>
       </div>
 
-      <!-- ── PD3 ── -->
       <div class="problem-card" id="pd3">
         <div class="prob-head"><div class="prob-num">3</div><div class="prob-title">Differential Manometry</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Mercury manometer ($\rho = 13{,}500\text{ kg/m}^3$), open side $0.093\text{ m}$ lower than jar side. Find gauge and absolute pressure in the jar.</p>
-          </div>
-          <div class="sec domain-sec">
-            <div class="sec-label">① Domain &amp; Field Definition</div>
-            <p>We analyze a one-dimensional path along a U-shaped fluidic manifold filled with mercury, characterized by density field $\rho = 13{,}500\text{ kg/m}^3$. Governing principles of fluid statics: $\nabla P = \rho\mathbf{g}$. Integrating vertically yields $\Delta P = -\rho g\,\Delta z$. Primary boundary condition: fluid level $\Delta z = 0.093\text{ m}$ lower on the atmospheric side, enforcing $P_{jar} &lt; P_{atm}$ (vacuum-sealed jar).</p>
-          </div>
-          <div class="sec gov-eq">
-            <div class="sec-label">② Governing Equation</div>
-            <div class="math-display">$$P_{gauge} = -\rho g\,\Delta z \qquad P_{abs} = P_{atm} + P_{gauge}$$</div>
-          </div>
-          <div class="sec bc-sec">
-            <div class="sec-label">③ Boundary Conditions</div>
-            <p>$\rho_{Hg} = 13{,}500\text{ kg/m}^3$; $\; \Delta z = 0.093\text{ m}$; $\; P_{atm} = 101{,}325\text{ Pa}$</p>
-          </div>
-          <div class="sec eval-sec">
-            <div class="sec-label">④ Evaluation</div>
-            <div class="math-display">$$P_{gauge} = -(13{,}500)(9.8)(0.093) = -12{,}303.9\text{ Pa}$$</div>
-            <div class="math-display">$$P_{abs} = 101{,}325 + (-12{,}303.9) = 89{,}021.1\text{ Pa}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Results</div>
-            <div class="ans-row">
-              <div><div class="ans-val">P_g = −12,303.9 Pa</div></div>
-              <div><div class="ans-val">P_abs = 89,021.1 Pa</div></div>
-            </div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Mercury manometer ($\rho = 13{,}500\text{ kg/m}^3$), open side $0.093\text{ m}$ lower. Find gauge and absolute pressure.</p></div>
+          <div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>A one-dimensional path along a U-shaped fluidic manifold filled with mercury, $\rho = 13{,}500\text{ kg/m}^3$. Governing principles of fluid statics: $\nabla P = \rho\mathbf{g}$. Integrating vertically yields $\Delta P = -\rho g\,\Delta z$. Boundary condition: fluid level $\Delta z = 0.093\text{ m}$ lower on the atmospheric side, enforcing $P_{jar} < P_{atm}$.</p></div>
+          <div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$P_{gauge} = -\rho g\,\Delta z \qquad P_{abs} = P_{atm} + P_{gauge}$$</div></div>
+          <div class="sec bc-sec"><div class="sec-label">③ Boundary Conditions</div><p>$\rho_{Hg} = 13{,}500\text{ kg/m}^3$; $\Delta z = 0.093\text{ m}$; $P_{atm} = 101{,}325\text{ Pa}$</p></div>
+          <div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$P_g = -(13{,}500)(9.8)(0.093) = -12{,}303.9\text{ Pa} \qquad P_{abs} = 89{,}021.1\text{ Pa}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Results</div><div class="ans-row"><div><div class="ans-val">P_g = −12,303.9 Pa</div></div><div><div class="ans-val">P_abs = 89,021.1 Pa</div></div></div></div>
         </div>
       </div>
 
-      <!-- ── PD4 ── -->
       <div class="problem-card" id="pd4">
         <div class="prob-head"><div class="prob-num">4</div><div class="prob-title">Physiological Gauge Constraints</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Breathing through a tube $60\text{ cm}$ underwater with residual lung effort $-3.15\text{ cm H}_2\text{O}$. Find maximum negative gauge pressure the lungs must produce on dry land.</p>
-          </div>
-          <div class="sec domain-sec">
-            <div class="sec-label">① Domain &amp; Field Definition</div>
-            <p>This system is modeled as a dual-domain boundary problem centered on the human respiratory interface. The internal domain is the lung manifold ($P_{lung}$); the external domain is the surrounding fluid field ($P_{ext}$), which shifts between water and air. The governing equation is the differential pressure required to induce flow: $\Delta P = P_{ext} - P_{lung}$. The physiological limit: breathing $0.60\text{ m}$ underwater creates external hydrostatic field $P_{atm} + 60\text{ cm H}_2\text{O}$, while the lung generates $P_{atm} - 3.15\text{ cm H}_2\text{O}$, defining the peak mechanical limit of the diaphragm.</p>
-          </div>
-          <div class="sec gov-eq">
-            <div class="sec-label">② Governing Equation</div>
-            <div class="math-display">$$\Delta P_{max} = P_{ext} - P_{int}\big|_{water} \qquad P_{gauge,land} = -\Delta P_{max}$$</div>
-          </div>
-          <div class="sec bc-sec">
-            <div class="sec-label">③ Boundary Conditions</div>
-            <p>$h_{ext} = 60\text{ cm H}_2\text{O}$ (water column); $\; h_{int} = -3.15\text{ cm H}_2\text{O}$ (lung effort)</p>
-          </div>
-          <div class="sec eval-sec">
-            <div class="sec-label">④ Evaluation</div>
-            <div class="math-display">$$\Delta P_{max} = 60 - (-3.15) = 63.15\text{ cm H}_2\text{O}$$</div>
-            <div class="math-display">$$P_{gauge,land} = 0 - 63.15 = -63.15\text{ cm H}_2\text{O}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Result</div>
-            <div class="ans-val">P_gauge = −63.15 cm H₂O</div>
-            <div class="ans-sub">Physiologically impossible — the lung manifold is mechanically limited to −3.15 cm H₂O</div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Breathing through a tube $60\text{ cm}$ underwater with residual lung effort $-3.15\text{ cm H}_2\text{O}$. Find max negative gauge pressure the lungs must produce on dry land.</p></div>
+          <div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>A dual-domain boundary problem: internal lung manifold ($P_{lung}$) vs. external fluid field ($P_{ext}$). The governing equation is the differential pressure required to induce flow: $\Delta P = P_{ext} - P_{lung}$. The physiological limit is defined by the peak mechanical capacity of the diaphragm.</p></div>
+          <div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$\Delta P_{max} = P_{ext} - P_{int}\big|_{water} \qquad P_{gauge,land} = -\Delta P_{max}$$</div></div>
+          <div class="sec bc-sec"><div class="sec-label">③ Boundary Conditions</div><p>$h_{ext} = 60\text{ cm H}_2\text{O}$; $h_{int} = -3.15\text{ cm H}_2\text{O}$</p></div>
+          <div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$\Delta P_{max} = 60 - (-3.15) = 63.15\text{ cm H}_2\text{O} \qquad P_{gauge,land} = -63.15\text{ cm H}_2\text{O}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Result</div><div class="ans-val">P_gauge = −63.15 cm H₂O</div><div class="ans-sub">Physiologically impossible — lung manifold limited to −3.15 cm H₂O</div></div>
         </div>
       </div>
 
-      <!-- ── PD5 ── -->
       <div class="problem-card" id="pd5">
         <div class="prob-head"><div class="prob-num">5</div><div class="prob-title">Divergence Theorem and Buoyancy</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Ice block $\rho_i = 910.9\text{ kg/m}^3$ floats in freshwater $\rho_w = 1000\text{ kg/m}^3$. Find the submerged fraction.</p>
-          </div>
-          <div class="sec domain-sec">
-            <div class="sec-label">① Domain &amp; Field Definition</div>
-            <p>We define a solid ice manifold $\Omega_i$ with density $\rho_i = 910.9\text{ kg/m}^3$, suspended within denser water domain $\Omega_w$ with $\rho_w = 1000\text{ kg/m}^3$. The system is in static equilibrium ($\sum\mathbf{F} = 0$). Applying the Divergence Theorem transforms the surface integral of fluid pressure acting on the submerged boundary $\left(\oiint_{\partial\Omega_{sub}} -P\mathbf{n}\,dS\right)$ into a volume integral representing buoyant force $\left(\iiint_{V_{sub}} \rho_w\mathbf{g}\,dV\right)$ — elegantly proving Archimedes' principle from vector calculus.</p>
-          </div>
-          <div class="sec gov-eq">
-            <div class="sec-label">② Governing Equation</div>
-            <div class="math-display">$$F_B = W \;\Rightarrow\; \rho_w V_{sub}\,g = \rho_i V_{total}\,g$$</div>
-          </div>
-          <div class="sec bc-sec">
-            <div class="sec-label">③ Boundary Conditions</div>
-            <p>Static equilibrium; $\; \rho_i = 910.9\text{ kg/m}^3$; $\; \rho_w = 1000\text{ kg/m}^3$</p>
-          </div>
-          <div class="sec eval-sec">
-            <div class="sec-label">④ Evaluation</div>
-            <p>Cancel $g$ and divide both sides by $\rho_w V_{total}$:</p>
-            <div class="math-display">$$\frac{V_{sub}}{V_{total}} = \frac{\rho_i}{\rho_w} = \frac{910.9}{1000} = 0.9109$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Result</div>
-            <div class="ans-val">f = 0.9109</div>
-            <div class="ans-sub">91.09% submerged — the buoyant force and weight balance at this exact fraction</div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Ice $\rho_i = 910.9\text{ kg/m}^3$ floats in freshwater $\rho_w = 1000\text{ kg/m}^3$. Find the submerged fraction.</p></div>
+          <div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>A solid ice manifold $\Omega_i$ suspended within denser water domain $\Omega_w$. Applying the Divergence Theorem transforms the surface integral of fluid pressure $\left(\oiint_{\partial\Omega_{sub}} -P\mathbf{n}\,dS\right)$ into a volume integral $\left(\iiint_{V_{sub}} \rho_w\mathbf{g}\,dV\right)$ — proving Archimedes' principle from vector calculus.</p></div>
+          <div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$F_B = W \;\Rightarrow\; \rho_w V_{sub}\,g = \rho_i V_{total}\,g$$</div></div>
+          <div class="sec bc-sec"><div class="sec-label">③ Boundary Conditions</div><p>Static equilibrium; $\rho_i = 910.9\text{ kg/m}^3$; $\rho_w = 1000\text{ kg/m}^3$</p></div>
+          <div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$\frac{V_{sub}}{V_{total}} = \frac{\rho_i}{\rho_w} = \frac{910.9}{1000} = 0.9109$$</div></div>
+          <div class="sec answer"><div class="sec-label">Result</div><div class="ans-val">f = 0.9109</div></div>
         </div>
       </div>
 
-      <!-- ── PD6 ── -->
       <div class="problem-card" id="pd6">
         <div class="prob-head"><div class="prob-num">6</div><div class="prob-title">Static Equilibrium of a Partially Submerged Manifold</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Cube $L = 0.13\text{ m}$, $\rho_c = 3900\text{ kg/m}^3$, half submerged in $\rho_l = 810\text{ kg/m}^3$. Find $w$, $F_B$, and $T$. What happens to $T$ if submerged deeper?</p>
-          </div>
-          <div class="sec domain-sec">
-            <div class="sec-label">① Domain &amp; Field Definition</div>
-            <p>The physical domain is a perfect cubic manifold $\Omega$ with side lengths $L = 0.13\text{ m}$ and solid density $\rho_c = 3900\text{ kg/m}^3$, partially immersed in a fluid field defined by $\rho_l = 810\text{ kg/m}^3$. The governing statics equation balances three parallel vector forces: upward tension $T$, upward buoyant force $F_B$ from fluid displacement, and downward gravitational weight $w$. Boundary condition: exactly half the cubic volume is submerged ($V_{sub} = 0.5\,L^3$).</p>
-          </div>
-          <div class="sec gov-eq">
-            <div class="sec-label">② Governing Equation</div>
-            <div class="math-display">$$T + F_B - w = 0 \;\Rightarrow\; T = w - F_B$$</div>
-          </div>
-          <div class="sec bc-sec">
-            <div class="sec-label">③ Boundary Conditions</div>
-            <p>$L = 0.13\text{ m}$; $\; V = L^3$; $\; V_{sub} = 0.5\,L^3$; $\; \rho_c = 3900\text{ kg/m}^3$; $\; \rho_l = 810\text{ kg/m}^3$; $\; g = 9.8\text{ m/s}^2$</p>
-          </div>
-          <div class="sec eval-sec">
-            <div class="sec-label">④ Evaluation</div>
-            <div class="math-display">$$w = \rho_c\,L^3\,g = (3900)(0.13)^3(9.8) = 83.97\text{ N}$$</div>
-            <div class="math-display">$$F_B = \rho_l(0.5\,L^3)\,g = (810)(0.5)(0.13)^3(9.8) = 8.72\text{ N}$$</div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Cube $L = 0.13\text{ m}$, $\rho_c = 3900\text{ kg/m}^3$, half submerged in $\rho_l = 810\text{ kg/m}^3$. Find $w$, $F_B$, $T$. What happens to $T$ if submerged deeper?</p></div>
+          <div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>A perfect cubic manifold $\Omega$ with side $L = 0.13\text{ m}$ and $\rho_c = 3900\text{ kg/m}^3$, partially immersed in fluid field $\rho_l = 810\text{ kg/m}^3$. The governing statics equation balances three parallel vector forces: upward tension $T$, upward buoyant force $F_B$, and downward weight $w$. Boundary condition: half the volume submerged ($V_{sub} = 0.5\,L^3$).</p></div>
+          <div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$T + F_B - w = 0 \;\Rightarrow\; T = w - F_B$$</div></div>
+          <div class="sec bc-sec"><div class="sec-label">③ Boundary Conditions</div><p>$L = 0.13\text{ m}$; $V_{sub} = 0.5\,L^3$; $\rho_c = 3900\text{ kg/m}^3$; $\rho_l = 810\text{ kg/m}^3$</p></div>
+          <div class="sec eval-sec"><div class="sec-label">④ Evaluation</div>
+            <div class="math-display">$$w = (3900)(0.13)^3(9.8) = 83.97\text{ N} \qquad F_B = (810)(0.5)(0.13)^3(9.8) = 8.72\text{ N}$$</div>
             <div class="math-display">$$T = 83.97 - 8.72 = 75.25\text{ N}$$</div>
-            <p style="font-size:0.88rem;margin-top:8px;">Deeper submersion: $V_{sub}\uparrow \;\Rightarrow\; F_B\uparrow \;\Rightarrow\; T = w - F_B\;\downarrow$ (tension decreases).</p>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Results</div>
-            <div class="ans-row">
-              <div><div class="ans-val">w = 83.97 N</div><div class="ans-sub">(c)</div></div>
-              <div><div class="ans-val">F_B = 8.72 N</div><div class="ans-sub">(e)</div></div>
-              <div><div class="ans-val">T = 75.25 N</div><div class="ans-sub">(g)</div></div>
-            </div>
-          </div>
+            <p style="font-size:0.88rem;margin-top:6px;">Deeper: $V_{sub}\uparrow \Rightarrow F_B\uparrow \Rightarrow T\downarrow$</p></div>
+          <div class="sec answer"><div class="sec-label">Results</div><div class="ans-row"><div><div class="ans-val">w = 83.97 N</div><div class="ans-sub">(c)</div></div><div><div class="ans-val">F_B = 8.72 N</div><div class="ans-sub">(e)</div></div><div><div class="ans-val">T = 75.25 N</div><div class="ans-sub">(g)</div></div></div></div>
         </div>
       </div>
 
-      <!-- ── PD7 ── -->
       <div class="problem-card" id="pd7">
         <div class="prob-head"><div class="prob-num">7</div><div class="prob-title">Flux Integrals in Arterial Domains</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Artery modeled as cylindrical manifold, $r = 0.0023\text{ m}$, $v = 0.42\text{ m/s}$. Find $Q$ (cm³/s) and volume over $30\text{ s}$.</p>
-          </div>
-          <div class="sec domain-sec">
-            <div class="sec-label">① Domain &amp; Field Definition</div>
-            <p>This problem models a biological system as a cylindrical manifold $S$ with $r = 0.0023\text{ m}$. A vector velocity field $\mathbf{v}$ passes through at constant magnitude $0.42\text{ m/s}$. The fundamental equation for volumetric flow rate is the surface flux integral $Q = \iint_S \mathbf{v}\cdot d\mathbf{A}$. Because velocity is parallel to the manifold's normal vector, this simplifies to $Q = vA$. Total displaced volume: integrate $Q$ over the temporal boundary $t = 30\text{ s}$.</p>
-          </div>
-          <div class="sec gov-eq">
-            <div class="sec-label">② Governing Equation</div>
-            <div class="math-display">$$Q = \iint_S \mathbf{v}\cdot d\mathbf{A} = v \cdot \pi r^2 \qquad V = \int_0^t Q\,dt = Q \cdot t$$</div>
-          </div>
-          <div class="sec bc-sec">
-            <div class="sec-label">③ Boundary Conditions</div>
-            <p>$r = 0.23\text{ cm}$; $\; v = 42\text{ cm/s}$; $\; t = 30\text{ s}$</p>
-          </div>
-          <div class="sec eval-sec">
-            <div class="sec-label">④ Evaluation</div>
-            <div class="math-display">$$A = \pi(0.23)^2 = 0.16619\text{ cm}^2$$</div>
-            <div class="math-display">$$Q = 42 \times 0.16619 = 6.980\text{ cm}^3/\text{s} \qquad V = 6.980 \times 30 = 209.4\text{ cm}^3$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Results</div>
-            <div class="ans-row">
-              <div><div class="ans-val">Q = 6.98 cm³/s</div><div class="ans-sub">(a)</div></div>
-              <div><div class="ans-val">V = 209.4 cm³</div><div class="ans-sub">(b)</div></div>
-            </div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Cylindrical manifold (artery), $r = 0.0023\text{ m}$, $v = 0.42\text{ m/s}$. Find $Q$ (cm³/s) and volume over $30\text{ s}$.</p></div>
+          <div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>A cylindrical manifold $S$ with $r = 0.0023\text{ m}$. Vector velocity field $\mathbf{v}$ passes through at constant magnitude. The volumetric flow rate: $Q = \iint_S \mathbf{v}\cdot d\mathbf{A}$. Because velocity is parallel to the normal vector, $Q = vA$. Total displaced volume: integrate $Q$ over $t = 30\text{ s}$.</p></div>
+          <div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$Q = \iint_S \mathbf{v}\cdot d\mathbf{A} = v \cdot \pi r^2 \qquad V = \int_0^t Q\,dt = Q \cdot t$$</div></div>
+          <div class="sec bc-sec"><div class="sec-label">③ Boundary Conditions</div><p>$r = 0.23\text{ cm}$; $v = 42\text{ cm/s}$; $t = 30\text{ s}$</p></div>
+          <div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$Q = 42 \times \pi(0.23)^2 = 6.980\text{ cm}^3/\text{s} \qquad V = 6.980 \times 30 = 209.4\text{ cm}^3$$</div></div>
+          <div class="sec answer"><div class="sec-label">Results</div><div class="ans-row"><div><div class="ans-val">Q = 6.98 cm³/s</div></div><div><div class="ans-val">V = 209.4 cm³</div></div></div></div>
         </div>
       </div>
 
-      <!-- ── PD8 ── -->
       <div class="problem-card" id="pd8">
         <div class="prob-head"><div class="prob-num">8</div><div class="prob-title">Continuity in Air Duct Manifolds</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Large control volume (room) $V_R = 655.2\text{ m}^3$, coupled to circular duct manifold $d = 0.305\text{ m}$. Air cycles every $900\text{ s}$. Find air velocity in the duct.</p>
-          </div>
-          <div class="sec domain-sec">
-            <div class="sec-label">① Domain &amp; Field Definition</div>
-            <p>We define a large primary control volume (the room) with $V_R = 655.2\text{ m}^3$, coupled to a secondary circular manifold (the duct) with $A = \pi(0.1525)^2\text{ m}^2$. The physics are governed by the integral form of the continuity equation, mapping the rate of volume change in the primary domain to flux across the secondary manifold: $dV/dt = \iint\mathbf{v}\cdot d\mathbf{A}$. Assuming incompressible fluid and uniform distribution, this simplifies to $V_R/\Delta t = vA$.</p>
-          </div>
-          <div class="sec gov-eq">
-            <div class="sec-label">② Governing Equation</div>
-            <div class="math-display">$$Q = \frac{V_R}{\Delta t} = v \cdot A \;\Rightarrow\; v = \frac{V_R}{\Delta t \cdot A}$$</div>
-          </div>
-          <div class="sec bc-sec">
-            <div class="sec-label">③ Boundary Conditions</div>
-            <p>$V_R = 12 \times 19.5 \times 2.8 = 655.2\text{ m}^3$; $\; d = 0.305\text{ m}$, $r = 0.1525\text{ m}$; $\; \Delta t = 900\text{ s}$</p>
-          </div>
-          <div class="sec eval-sec">
-            <div class="sec-label">④ Evaluation</div>
-            <div class="math-display">$$A = \pi(0.1525)^2 = 0.07306\text{ m}^2$$</div>
-            <div class="math-display">$$v = \frac{655.2}{900 \times 0.07306} = \frac{0.728}{0.07306} = 9.96\text{ m/s}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Result</div>
-            <div class="ans-val">v = 9.96 m/s</div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Large control volume (room) $V_R = 655.2\text{ m}^3$, circular duct $d = 0.305\text{ m}$. Air cycles every $900\text{ s}$. Find velocity in duct.</p></div>
+          <div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>A large primary control volume (the room) coupled to a secondary circular manifold (the duct). The integral form of the continuity equation maps the rate of volume change in the primary domain to flux across the secondary manifold: $dV/dt = \iint\mathbf{v}\cdot d\mathbf{A}$. Assuming incompressible fluid: $V_R/\Delta t = vA$.</p></div>
+          <div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$Q = \frac{V_R}{\Delta t} = v \cdot A \;\Rightarrow\; v = \frac{V_R}{\Delta t \cdot A}$$</div></div>
+          <div class="sec bc-sec"><div class="sec-label">③ Boundary Conditions</div><p>$V_R = 655.2\text{ m}^3$; $r = 0.1525\text{ m}$; $\Delta t = 900\text{ s}$</p></div>
+          <div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$A = \pi(0.1525)^2 = 0.07306\text{ m}^2 \qquad v = \frac{655.2}{900 \times 0.07306} = 9.96\text{ m/s}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Result</div><div class="ans-val">v = 9.96 m/s</div></div>
         </div>
       </div>
 
-      <!-- ── PD9 ── -->
       <div class="problem-card" id="pd9">
         <div class="prob-head"><div class="prob-num">9</div><div class="prob-title">Stagnation Pressures and Velocity Mapping</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Pitot tube: $h = 0.195\text{ m}$ mercury column, $\rho_{Hg} = 13{,}600\text{ kg/m}^3$, $\rho_a = 1.29\text{ kg/m}^3$. Find freestream airspeed.</p>
-          </div>
-          <div class="sec domain-sec">
-            <div class="sec-label">① Domain &amp; Field Definition</div>
-            <p>This maps a streamline from freestream domain (infinity) to stagnation point $s$ on a solid body. Bernoulli's principle establishes that freestream dynamic pressure $\tfrac{1}{2}\rho_a v^2$ entirely converts into static pressure rise at the stagnation point: $P_\infty + \tfrac{1}{2}\rho_a v^2 = P_s$. A secondary manometer manifold captures the pressure differential $\Delta P = P_s - P_\infty$ using the statics equation $\rho_{Hg}\,g\,h$.</p>
-          </div>
-          <div class="sec gov-eq">
-            <div class="sec-label">② Governing Equation</div>
-            <div class="math-display">$$\Delta P = \rho_{Hg}\,g\,h = \tfrac{1}{2}\rho_a v^2 \;\Rightarrow\; v = \sqrt{\frac{2\,\Delta P}{\rho_a}}$$</div>
-          </div>
-          <div class="sec bc-sec">
-            <div class="sec-label">③ Boundary Conditions</div>
-            <p>$\rho_{Hg} = 13{,}600\text{ kg/m}^3$; $\; \rho_a = 1.29\text{ kg/m}^3$; $\; h = 0.195\text{ m}$; Bernoulli stagnation</p>
-          </div>
-          <div class="sec eval-sec">
-            <div class="sec-label">④ Evaluation</div>
-            <div class="math-display">$$\Delta P = (13{,}600)(9.8)(0.195) = 25{,}989.6\text{ Pa}$$</div>
-            <div class="math-display">$$v = \sqrt{\frac{2 \times 25{,}989.6}{1.29}} = \sqrt{40{,}294} = 200.7\text{ m/s}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Result</div>
-            <div class="ans-val">v = 200.7 m/s</div>
-          </div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Pitot tube: $h = 0.195\text{ m}$, $\rho_{Hg} = 13{,}600\text{ kg/m}^3$, $\rho_a = 1.29\text{ kg/m}^3$. Find freestream airspeed.</p></div>
+          <div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>A streamline from freestream domain to stagnation point $s$ on a solid body. Bernoulli establishes that freestream dynamic pressure $\tfrac{1}{2}\rho_a v^2$ converts entirely to static pressure rise: $P_\infty + \tfrac{1}{2}\rho_a v^2 = P_s$. A secondary manometer manifold captures the differential $\Delta P = \rho_{Hg}\,g\,h$.</p></div>
+          <div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$\Delta P = \rho_{Hg}\,g\,h = \tfrac{1}{2}\rho_a v^2 \;\Rightarrow\; v = \sqrt{\frac{2\,\Delta P}{\rho_a}}$$</div></div>
+          <div class="sec bc-sec"><div class="sec-label">③ Boundary Conditions</div><p>$\rho_{Hg} = 13{,}600\text{ kg/m}^3$; $\rho_a = 1.29\text{ kg/m}^3$; $h = 0.195\text{ m}$; Bernoulli stagnation</p></div>
+          <div class="sec eval-sec"><div class="sec-label">④ Evaluation</div>
+            <div class="math-display">$$\Delta P = (13{,}600)(9.8)(0.195) = 25{,}989.6\text{ Pa} \qquad v = \sqrt{\frac{2 \times 25{,}989.6}{1.29}} = 200.7\text{ m/s}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Result</div><div class="ans-val">v = 200.7 m/s</div></div>
         </div>
       </div>
 
-      <!-- ── PD10 ── -->
       <div class="problem-card" id="pd10">
         <div class="prob-head"><div class="prob-num">10</div><div class="prob-title">Energy Conservation in Pumped Systems</div></div>
         <div class="prob-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Problem</div>
-            <p>Sump pump: $Q = 5.99 \times 10^{-4}\text{ m}^3/\text{s}$, $P_1 = 162{,}000\text{ Pa}$, $d_1 = 0.0263\text{ m}$. <strong>(a)</strong> Same diameter, $z_2 = 2.09\text{ m}$ — find $P_2$. <strong>(b)</strong> $d_3 = 0.0612\text{ m}$, $z_3 = 1.58\text{ m}$ — find $P_3$.</p>
-          </div>
-          <div class="sec domain-sec">
-            <div class="sec-label">① Domain &amp; Field Definition</div>
-            <p>The final problem investigates a dynamic pipeline manifold where the spatial coordinate $z$ and cross-sectional area $A$ vary along the streamline. To evaluate the changing scalar pressure field, we simultaneously satisfy two governing constraints: the Continuity equation ($v = Q/A$) to map velocity fields at varying cross-sections, and Bernoulli's equation ($P/\rho + \tfrac{1}{2}v^2 + gz = \mathcal{C}$) to track total mechanical energy. Foundational boundary conditions: $P_1 = 162{,}000\text{ Pa}$, $Q = 5.99 \times 10^{-4}\text{ m}^3/\text{s}$, and primary elevation shift $z_2 = 2.09\text{ m}$.</p>
-          </div>
-          <div class="sec gov-eq">
-            <div class="sec-label">② Governing Equation</div>
-            <div class="math-display">$$P_1 + \tfrac{1}{2}\rho v_1^2 + \rho g z_1 = P_n + \tfrac{1}{2}\rho v_n^2 + \rho g z_n \qquad v = \frac{Q}{A}$$</div>
-          </div>
-          <div class="sec bc-sec">
-            <div class="sec-label">③ Boundary Conditions</div>
-            <p>$Q = 5.99 \times 10^{-4}\text{ m}^3/\text{s}$; $\; d_1 = 0.0263\text{ m}$; $\; d_3 = 0.0612\text{ m}$; $\; P_1 = 162{,}000\text{ Pa}$; $\; \rho = 1000\text{ kg/m}^3$; $\; z_1 = 0$, $z_2 = 2.09\text{ m}$, $z_3 = 1.58\text{ m}$</p>
-          </div>
-          <div class="sec eval-sec">
-            <div class="sec-label">④ Evaluation</div>
+          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Sump pump: $Q = 5.99 \times 10^{-4}\text{ m}^3/\text{s}$, $P_1 = 162{,}000\text{ Pa}$, $d_1 = 0.0263\text{ m}$. <strong>(a)</strong> Same diameter, $z_2 = 2.09\text{ m}$. <strong>(b)</strong> $d_3 = 0.0612\text{ m}$, $z_3 = 1.58\text{ m}$.</p></div>
+          <div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>A pipeline manifold where the spatial coordinate $z$ and cross-sectional area $A$ vary along the streamline. Two governing constraints must be simultaneously satisfied: the Continuity equation ($v = Q/A$) to map velocity fields at varying cross-sections, and Bernoulli's equation to track total mechanical energy. Foundational boundary conditions: $P_1 = 162{,}000\text{ Pa}$, $Q = 5.99 \times 10^{-4}\text{ m}^3/\text{s}$.</p></div>
+          <div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$P_1 + \tfrac{1}{2}\rho v_1^2 + \rho g z_1 = P_n + \tfrac{1}{2}\rho v_n^2 + \rho g z_n \qquad v = \frac{Q}{A}$$</div></div>
+          <div class="sec bc-sec"><div class="sec-label">③ Boundary Conditions</div><p>$Q = 5.99 \times 10^{-4}\text{ m}^3/\text{s}$; $d_1 = 0.0263\text{ m}$; $d_3 = 0.0612\text{ m}$; $P_1 = 162{,}000\text{ Pa}$; $\rho = 1000\text{ kg/m}^3$; $z_1 = 0$, $z_2 = 2.09\text{ m}$, $z_3 = 1.58\text{ m}$</p></div>
+          <div class="sec eval-sec"><div class="sec-label">④ Evaluation</div>
             <div class="math-display">$$v_1 = \frac{Q}{\pi(0.01315)^2} = 1.103\text{ m/s} \qquad v_3 = \frac{Q}{\pi(0.0306)^2} = 0.204\text{ m/s}$$</div>
-            <p><strong>Part (a):</strong> Same diameter → $v_2 = v_1$ → kinetic terms cancel:</p>
-            <div class="math-display">$$P_2 = P_1 - \rho g z_2 = 162{,}000 - (1000)(9.8)(2.09) = 141{,}518\text{ Pa}$$</div>
+            <p><strong>Part (a):</strong> Same diameter → $v_2 = v_1$ → KE terms cancel:</p>
+            <div class="math-display">$$P_2 = 162{,}000 - (1000)(9.8)(2.09) = 141{,}518\text{ Pa}$$</div>
             <p><strong>Part (b):</strong></p>
-            <div class="math-display">$$P_3 = P_1 + \tfrac{1}{2}\rho(v_1^2 - v_3^2) - \rho g z_3$$</div>
-            <div class="math-display">$$= 162{,}000 + 500(1.103^2 - 0.204^2) - (1000)(9.8)(1.58) = 147{,}103\text{ Pa}$$</div>
-          </div>
-          <div class="sec answer">
-            <div class="sec-label">Results</div>
-            <div class="ans-row">
-              <div><div class="ans-val">P₂ = 141,518 Pa</div><div class="ans-sub">(a)</div></div>
-              <div><div class="ans-val">P₃ = 147,103 Pa</div><div class="ans-sub">(b)</div></div>
-            </div>
-          </div>
+            <div class="math-display">$$P_3 = 162{,}000 + 500(1.103^2 - 0.204^2) - (1000)(9.8)(1.58) = 147{,}103\text{ Pa}$$</div></div>
+          <div class="sec answer"><div class="sec-label">Results</div><div class="ans-row"><div><div class="ans-val">P₂ = 141,518 Pa</div><div class="ans-sub">(a)</div></div><div><div class="ans-val">P₃ = 147,103 Pa</div><div class="ans-sub">(b)</div></div></div></div>
         </div>
       </div>
 
@@ -2358,15 +2497,6 @@ function go(pageId) {
 
   const stage = target.querySelector('.nav-stage');
   if (stage) stage.scrollTop = 0;
-}
-
-function goSol(pageId) {
-  const navPages = document.querySelectorAll('.page');
-  const solPages = document.querySelectorAll('.sol-page');
-  navPages.forEach(p => p.classList.remove('active'));
-  solPages.forEach(p => p.classList.remove('active'));
-  const target = document.getElementById(pageId);
-  target.classList.add('active');
 }
 
 function scrollToProb(id) {
