@@ -1,2115 +1,866 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Benjamin's Notes</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
-  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false})">
-</script>
-<style>
+python3 << 'PYEOF'
+additions = open('/home/claude/additions.html', 'w', encoding='utf-8')
 
-/* ── Reset & Base ─────────────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+additions.write("""<!-- ====== NEW CHAPTER NAV PAGES ====== -->
 
-:root {
-  --ink:      #1a1a2e;
-  --paper:    #faf7f2;
-  --accent:   #c0392b;
-  --gold:     #b8860b;
-  --rule:     #d4c9b0;
-  --dim:      #6b6556;
-  --math-bg:  #f0ebe0;
-  --step-bg:  #eef4fb;
-  --ans-bg:   #fdf3f3;
-  --int-bg:   #f3fdf5;
-  --code-col: #2c3e50;
-  --derive-bg:#f5f0ff;
-  --derive-accent:#6c3fb5;
-  --bc-bg:    #fff8f0;
-  --bc-accent:#d35400;
-  --sop-p1:   #f0e8ff;
-  --sop-p1-a: #7c3aed;
-  --sop-p2:   #e8f5e9;
-  --sop-p2-a: #1a7a4a;
-  --sop-p3:   #f5f5f5;
-}
-
-html, body {
-  height: 100%;
-  font-family: 'Lato', sans-serif;
-  font-weight: 300;
-  background: var(--ink);
-  color: var(--paper);
-  overflow-x: hidden;
-}
-
-/* ── Page System ──────────────────────────────────────────────────────────── */
-.page {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.45s ease;
-  overflow-y: auto;
-}
-.page.active {
-  opacity: 1;
-  pointer-events: all;
-}
-
-/* ── Shared Nav Header ────────────────────────────────────────────────────── */
-.site-header {
-  padding: 28px 48px 22px;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  flex-shrink: 0;
-}
-.site-logo {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: var(--paper);
-  opacity: 0.9;
-}
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.35);
-  letter-spacing: 1.5px;
-  flex: 1;
-}
-.breadcrumb span { cursor: pointer; transition: color 0.2s; }
-.breadcrumb span:hover { color: rgba(255,255,255,0.75); }
-.breadcrumb .sep { opacity: 0.3; cursor: default; }
-.breadcrumb .current { color: var(--gold); cursor: default; }
-.back-btn {
-  background: none;
-  border: 1px solid rgba(255,255,255,0.15);
-  color: rgba(255,255,255,0.55);
-  padding: 6px 16px;
-  border-radius: 3px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.back-btn:hover {
-  border-color: rgba(255,255,255,0.4);
-  color: var(--paper);
-  background: rgba(255,255,255,0.05);
-}
-
-/* ── Nav Stage ────────────────────────────────────────────────────────────── */
-.nav-stage {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 40px;
-  position: relative;
-  overflow-y: auto;
-}
-.nav-stage::before {
-  content: attr(data-symbol);
-  position: absolute;
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(120px, 25vw, 260px);
-  color: rgba(255,255,255,0.028);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -52%);
-  pointer-events: none;
-  letter-spacing: -10px;
-  user-select: none;
-}
-.nav-eyebrow {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  letter-spacing: 3px;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 18px;
-  opacity: 0.85;
-}
-.nav-title {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2rem, 6vw, 4rem);
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.1;
-  margin-bottom: 14px;
-  color: var(--paper);
-}
-.nav-sub {
-  color: rgba(255,255,255,0.35);
-  font-size: 0.9rem;
-  margin-bottom: 48px;
-  text-align: center;
-  max-width: 520px;
-  line-height: 1.7;
-}
-.nav-grid {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* ── Big Nav Buttons ──────────────────────────────────────────────────────── */
-.nav-btn {
-  position: relative;
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.15);
-  color: var(--paper);
-  padding: 36px 52px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  min-width: 220px;
-  text-align: left;
-  overflow: hidden;
-}
-.nav-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.nav-btn:hover {
-  border-color: rgba(192,57,43,0.6);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(192,57,43,0.2);
-}
-.nav-btn:hover::before { opacity: 1; }
-.nav-btn-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.62rem;
-  letter-spacing: 2.5px;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  display: block;
-}
-.nav-btn-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
-  font-weight: 700;
-  display: block;
-  line-height: 1.1;
-}
-.nav-btn-desc {
-  display: block;
-  font-size: 0.78rem;
-  color: rgba(255,255,255,0.4);
-  margin-top: 8px;
-  font-style: italic;
-  line-height: 1.4;
-  max-width: 260px;
-}
-.nav-btn-arrow {
-  position: absolute;
-  bottom: 20px;
-  right: 22px;
-  font-size: 1.1rem;
-  opacity: 0.2;
-  transition: all 0.3s;
-}
-.nav-btn:hover .nav-btn-arrow {
-  opacity: 0.8;
-  transform: translateX(4px);
-  color: var(--accent);
-}
-.nav-btn.coming-soon {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-.nav-btn.coming-soon:hover {
-  transform: none;
-  border-color: rgba(255,255,255,0.15);
-  box-shadow: none;
-}
-.soon-badge {
-  display: inline-block;
-  background: rgba(255,255,255,0.1);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.58rem;
-  letter-spacing: 1.5px;
-  padding: 3px 8px;
-  border-radius: 2px;
-  margin-top: 10px;
-  color: rgba(255,255,255,0.5);
-}
-.nav-btn.chapter { min-width: 260px; padding: 28px 40px; }
-.nav-btn.mode-btn { min-width: 300px; padding: 30px 42px; }
-
-/* ── SOP highlight button ─────────────────────────────────────────────────── */
-.nav-btn.sop-btn {
-  border-color: rgba(124, 58, 237, 0.45);
-  background: rgba(124, 58, 237, 0.06);
-}
-.nav-btn.sop-btn .nav-btn-label { color: #a78bfa; }
-.nav-btn.sop-btn:hover {
-  border-color: rgba(124, 58, 237, 0.85);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,58,237,0.35);
-}
-.nav-btn.sop-btn:hover .nav-btn-arrow { color: #a78bfa; }
-
-.nav-btn.sop-mode-btn {
-  border-color: rgba(124,58,237,0.4);
-  background: rgba(124,58,237,0.05);
-}
-.nav-btn.sop-mode-btn .nav-btn-label { color: #a78bfa; }
-.nav-btn.sop-mode-btn:hover {
-  border-color: rgba(124,58,237,0.8);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(124,58,237,0.3);
-}
-.nav-btn.sop-mode-btn:hover .nav-btn-arrow { color: #a78bfa; }
-
-/* ── Chapter Grid ─────────────────────────────────────────────────────────── */
-.ch-grid-wrap {
-  width: 100%;
-  max-width: 820px;
-  position: relative;
-  z-index: 1;
-}
-.ch-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-}
-.ch-btn {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.12);
-  color: var(--paper);
-  padding: 16px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.25s;
-  text-align: left;
-  position: relative;
-}
-.ch-btn:not(:disabled):hover {
-  border-color: rgba(192,57,43,0.55);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
-  background: rgba(255,255,255,0.03);
-}
-.ch-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-.ch-btn .ch-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--accent);
-  display: block;
-  line-height: 1;
-  margin-bottom: 5px;
-}
-.ch-btn.active-ch .ch-num { color: var(--gold); }
-.ch-btn.active-ch { border-color: rgba(184,134,11,0.5); }
-.ch-btn .ch-name {
-  font-family: 'Lato', sans-serif;
-  font-size: 0.68rem;
-  opacity: 0.65;
-  line-height: 1.3;
-}
-.ch-btn.active-ch .ch-name { opacity: 0.9; color: var(--gold); }
-
-/* ── Solutions Pages ──────────────────────────────────────────────────────── */
-.sol-page {
-  background: var(--paper);
-  color: var(--ink);
-  position: fixed;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.45s ease;
-}
-.sol-page.active {
-  opacity: 1;
-  pointer-events: all;
-}
-.sol-page .site-header {
-  background: var(--ink);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  flex-shrink: 0;
-}
-.solutions-wrap {
-  overflow-y: auto;
-  flex: 1;
-  padding-bottom: 80px;
-}
-
-/* ── Sol Header ───────────────────────────────────────────────────────────── */
-.sol-header {
-  background: var(--ink);
-  color: var(--paper);
-  padding: 52px 72px 44px;
-  border-bottom: 6px solid var(--accent);
-  position: relative;
-  overflow: hidden;
-}
-.sol-header.sop-header { border-bottom-color: var(--sop-p1-a); }
-.sol-header::before {
-  content: attr(data-symbol);
-  position: absolute;
-  right: 60px;
-  top: 20px;
-  font-family: 'Playfair Display', serif;
-  font-size: 90px;
-  opacity: 0.06;
-  letter-spacing: 12px;
-  pointer-events: none;
-}
-.sol-header h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.4rem, 4vw, 2.4rem);
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-.sol-header p {
-  font-size: 0.95rem;
-  opacity: 0.55;
-  max-width: 560px;
-  line-height: 1.7;
-}
-.sol-header .mode-badge {
-  display: inline-block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.62rem;
-  letter-spacing: 2px;
-  color: var(--gold);
-  border: 1px solid rgba(184,134,11,0.4);
-  padding: 4px 10px;
-  border-radius: 3px;
-  margin-bottom: 14px;
-}
-.sol-header .mode-badge.sop-badge {
-  color: #a78bfa;
-  border-color: rgba(124,58,237,0.4);
-}
-
-/* ── TOC ──────────────────────────────────────────────────────────────────── */
-.toc-wrap {
-  max-width: 880px;
-  margin: 44px auto 0;
-  padding: 0 36px;
-}
-.toc-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 3px;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--rule);
-}
-.toc-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 8px;
-}
-.toc-item {
-  background: white;
-  border: 1px solid var(--rule);
-  border-radius: 4px;
-  padding: 10px 12px;
-  text-align: center;
-  color: var(--ink);
-  transition: all 0.18s;
-  font-size: 0.78rem;
-  cursor: pointer;
-}
-.toc-item:hover { background: var(--ink); color: var(--paper); }
-.toc-num {
-  display: block;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
-  color: var(--accent);
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: 3px;
-}
-.toc-item:hover .toc-num { color: #ff8080; }
-
-/* ── Problem Cards ────────────────────────────────────────────────────────── */
-.sol-main {
-  max-width: 880px;
-  margin: 44px auto;
-  padding: 0 36px;
-}
-.problem-card {
-  background: white;
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  margin-bottom: 44px;
-  overflow: hidden;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-}
-.prob-head {
-  background: var(--ink);
-  color: var(--paper);
-  padding: 18px 30px;
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-}
-.prob-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.8rem;
-  font-weight: 700;
-  color: var(--accent);
-  line-height: 1;
-  min-width: 42px;
-}
-.prob-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.1rem;
-  font-style: italic;
-  opacity: 0.88;
-  line-height: 1.3;
-}
-.prob-body {
-  padding: 26px 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* ── Section Boxes ────────────────────────────────────────────────────────── */
-.sec {
-  border-radius: 4px;
-  padding: 16px 20px;
-}
-.sec-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  margin-bottom: 9px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.sec-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.18;
-}
-.sec p { font-size: 0.92rem; line-height: 1.75; margin-bottom: 7px; }
-.sec p:last-child { margin-bottom: 0; }
-
-.prob-stmt { background: #f5f0e8; border-left: 4px solid var(--gold); }
-.prob-stmt .sec-label { color: var(--gold); }
-.think  { background: var(--math-bg); }
-.think  .sec-label { color: var(--gold); }
-.assume { background: var(--step-bg); }
-.assume .sec-label { color: #2980b9; }
-.given-sec { background: var(--step-bg); }
-.given-sec .sec-label { color: #2980b9; }
-.formula-sec { background: var(--int-bg); border-left: 4px solid #27ae60; }
-.formula-sec .sec-label { color: #27ae60; }
-.derive { background: #fefefe; border: 1px solid var(--rule); }
-.derive .sec-label { color: #8e44ad; }
-.answer { background: var(--ans-bg); border-left: 4px solid var(--accent); }
-.answer .sec-label { color: var(--accent); }
-.intuit { background: var(--int-bg); border-left: 4px solid #27ae60; }
-.intuit .sec-label { color: #27ae60; }
-
-/* ── Pure Derivation ──────────────────────────────────────────────────────── */
-.domain-sec { background: var(--derive-bg); border-left: 4px solid var(--derive-accent); }
-.domain-sec .sec-label { color: var(--derive-accent); }
-.gov-eq { background: var(--int-bg); border-left: 4px solid #1a7a4a; }
-.gov-eq .sec-label { color: #1a7a4a; }
-.bc-sec { background: var(--bc-bg); border-left: 4px solid var(--bc-accent); }
-.bc-sec .sec-label { color: var(--bc-accent); }
-.eval-sec { background: #fafafa; border: 1px solid #ddd; }
-.eval-sec .sec-label { color: #333; }
-
-/* ── SOP Section Boxes ────────────────────────────────────────────────────── */
-.sop-p1-sec { background: var(--sop-p1); border-left: 4px solid var(--sop-p1-a); }
-.sop-p1-sec .sec-label { color: var(--sop-p1-a); }
-.sop-p2-sec { background: var(--sop-p2); border-left: 4px solid var(--sop-p2-a); }
-.sop-p2-sec .sec-label { color: var(--sop-p2-a); }
-.sop-p3-sec { background: var(--sop-p3); border: 1px solid #d0d0d0; }
-.sop-p3-sec .sec-label { color: #444; }
-.sop-answer { background: #fff3f3; border-left: 4px solid var(--accent); }
-.sop-answer .sec-label { color: var(--accent); }
-
-/* ── SOP Page special ─────────────────────────────────────────────────────── */
-.sop-card {
-  background: white;
-  border: 1px solid var(--rule);
-  border-radius: 6px;
-  margin-bottom: 32px;
-  overflow: hidden;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-}
-.sop-card-head {
-  background: linear-gradient(135deg, var(--sop-p1-a) 0%, #4c1d95 100%);
-  color: white;
-  padding: 18px 30px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.sop-card-head-icon {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.2rem;
-  font-weight: 700;
-  opacity: 0.85;
-  line-height: 1;
-}
-.sop-card-head-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-.sop-card-head-sub {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.62rem;
-  letter-spacing: 2px;
-  opacity: 0.65;
-  margin-top: 4px;
-  text-transform: uppercase;
-}
-.sop-card-body {
-  padding: 26px 30px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* ── Boundary partition table ─────────────────────────────────────────────── */
-.boundary-table-wrap { overflow-x: auto; margin: 10px 0; }
-.boundary-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-}
-.boundary-table th {
-  background: var(--ink);
-  color: var(--gold);
-  padding: 10px 14px;
-  text-align: left;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.63rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.boundary-table td {
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--rule);
-  vertical-align: top;
-  font-size: 0.85rem;
-  line-height: 1.5;
-}
-.boundary-table tr:nth-child(even) td { background: #f5f0e8; }
-.boundary-table td:first-child { font-style: italic; color: #444; font-weight: 400; }
-.boundary-table td:nth-child(2) { font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--sop-p1-a); font-weight:600; }
-
-/* ── Primitives grid ──────────────────────────────────────────────────────── */
-.primitives-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 6px;
-}
-.prim-item {
-  background: #f8f4ff;
-  border: 1px solid rgba(124,58,237,0.18);
-  border-radius: 4px;
-  padding: 12px 14px;
-}
-.prim-sym {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.82rem;
-  color: var(--sop-p1-a);
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.prim-desc {
-  font-size: 0.8rem;
-  color: #555;
-  line-height: 1.45;
-}
-
-.sop-instance-box {
-  border-radius: 4px;
-  padding: 18px 20px;
-  margin: 4px 0;
-}
-.sop-instance-box.inst-a { background: #eef4fb; border-left: 4px solid #2980b9; }
-.sop-instance-box.inst-b { background: var(--int-bg); border-left: 4px solid #1a7a4a; }
-.sop-instance-box.inst-c { background: #fff8f0; border-left: 4px solid #d35400; }
-.sop-instance-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.sop-instance-label::after { content:''; flex:1; height:1px; background:currentColor; opacity:0.18; }
-.inst-a .sop-instance-label { color: #2980b9; }
-.inst-b .sop-instance-label { color: #1a7a4a; }
-.inst-c .sop-instance-label { color: #d35400; }
-.sop-instance-box p { font-size: 0.9rem; line-height: 1.7; margin-bottom: 5px; }
-.sop-instance-box p:last-child { margin-bottom: 0; }
-
-.sop-convergence {
-  background: var(--ink);
-  color: var(--paper);
-  border-radius: 4px;
-  padding: 12px 16px;
-  margin-top: 10px;
-  text-align: center;
-}
-.sop-convergence-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 2px;
-  color: var(--gold);
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-
-.sop-table-wrap { overflow-x: auto; margin-top: 4px; }
-.sop-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-}
-.sop-table th {
-  background: var(--ink);
-  color: var(--gold);
-  padding: 11px 16px;
-  text-align: left;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-.sop-table td {
-  padding: 11px 16px;
-  border-bottom: 1px solid var(--rule);
-  vertical-align: top;
-}
-.sop-table tr:nth-child(even) td { background: #f5f0e8; }
-.sop-table td:first-child { font-style: italic; color: #444; }
-.sop-table td:nth-child(2) { font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--sop-p1-a); font-weight:600; }
-.sop-table td:nth-child(3) { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:#555; }
-
-.sop-divider {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 4px 0;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.62rem;
-  letter-spacing: 2px;
-  color: var(--sop-p1-a);
-  opacity: 0.7;
-  text-transform: uppercase;
-}
-.sop-divider::before, .sop-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--sop-p1-a);
-  opacity: 0.25;
-}
-
-/* ── Math & Calc Blocks ───────────────────────────────────────────────────── */
-.math-display {
-  background: rgba(0,0,0,0.04);
-  border-radius: 4px;
-  padding: 14px 18px;
-  margin: 10px 0;
-  overflow-x: auto;
-  text-align: center;
-}
-.math-block {
-  background: rgba(0,0,0,0.042);
-  border-radius: 4px;
-  padding: 12px 15px;
-  margin: 9px 0;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.82rem;
-  color: var(--code-col);
-  line-height: 2;
-  overflow-x: auto;
-  white-space: pre;
-}
-
-/* ── Answer Section ───────────────────────────────────────────────────────── */
-.ans-val {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.55rem;
-  font-weight: 700;
-  color: var(--accent);
-  margin: 6px 0 3px;
-}
-.ans-sub { font-size: 0.78rem; color: #999; }
-.ans-row { display: flex; gap: 28px; flex-wrap: wrap; }
-
-/* ── KaTeX override ───────────────────────────────────────────────────────── */
-.katex { font-size: 1em; }
-.math-display .katex-display { margin: 0; }
-
-/* ── Footer ───────────────────────────────────────────────────────────────── */
-.sol-footer {
-  text-align: center;
-  padding: 36px;
-  color: #bbb;
-  font-size: 0.78rem;
-  border-top: 1px solid var(--rule);
-  max-width: 880px;
-  margin: 0 auto;
-  line-height: 1.9;
-}
-
-/* ── Animations ───────────────────────────────────────────────────────────── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(22px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.page.active .nav-eyebrow { animation: fadeUp 0.5s 0.05s both; }
-.page.active .nav-title   { animation: fadeUp 0.5s 0.12s both; }
-.page.active .nav-sub     { animation: fadeUp 0.5s 0.18s both; }
-.page.active .nav-grid    { animation: fadeUp 0.5s 0.25s both; }
-.page.active .ch-grid-wrap { animation: fadeUp 0.5s 0.25s both; }
-
-@media (max-width: 700px) {
-  .site-header { padding: 18px 24px; }
-  .sol-header  { padding: 36px 28px 32px; }
-  .sol-main    { padding: 0 18px; }
-  .toc-wrap    { padding: 0 18px; }
-  .nav-btn     { min-width: 160px; padding: 28px 32px; }
-  .nav-btn.mode-btn { min-width: 260px; }
-  .ch-grid     { grid-template-columns: repeat(3, 1fr); }
-  .primitives-grid { grid-template-columns: 1fr; }
-}
-</style>
-</head>
-<body>
-
-<!-- ══════════════════════════ PAGE: HOME ══════════════════════════════════ -->
-<div class="page active" id="page-home">
+<div class="page" id="page-ch10">
   <header class="site-header">
-    <div class="site-logo">Benjamin's Notes</div>
-    <div class="breadcrumb">
-      <span class="current">HOME</span>
-    </div>
-  </header>
-  <div class="nav-stage" data-symbol="∂">
-    <div class="nav-eyebrow">select a subject</div>
-    <h1 class="nav-title">What are we<br>studying today?</h1>
-    <p class="nav-sub">Course notes, problem sets, and derivations — explained the way a mathematician actually thinks.</p>
-    <div class="nav-grid">
-      <button class="nav-btn" onclick="go('page-physics')">
-        <span class="nav-btn-label">subject</span>
-        <span class="nav-btn-title">Physics</span>
-        <span class="nav-btn-arrow">→</span>
-      </button>
-      <button class="nav-btn coming-soon" disabled>
-        <span class="nav-btn-label">subject</span>
-        <span class="nav-btn-title">Calculus</span>
-        <span class="soon-badge">COMING SOON</span>
-        <span class="nav-btn-arrow">→</span>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════ PAGE: PHYSICS ═══════════════════════════════ -->
-<div class="page" id="page-physics">
-  <header class="site-header">
-    <button class="back-btn" onclick="go('page-home')">← BACK</button>
-    <div class="breadcrumb">
-      <span onclick="go('page-home')">HOME</span>
-      <span class="sep">/</span>
-      <span class="current">PHYSICS</span>
-    </div>
-  </header>
-  <div class="nav-stage" data-symbol="F">
-    <div class="nav-eyebrow">select a course</div>
-    <h1 class="nav-title">Physics</h1>
-    <p class="nav-sub">From mechanics to thermodynamics — all the derivations your textbook skipped.</p>
-    <div class="nav-grid">
-      <button class="nav-btn" onclick="go('page-physics1')">
-        <span class="nav-btn-label">course</span>
-        <span class="nav-btn-title">Physics I</span>
-        <span class="nav-btn-arrow">→</span>
-      </button>
-      <button class="nav-btn coming-soon" disabled>
-        <span class="nav-btn-label">course</span>
-        <span class="nav-btn-title">Physics II</span>
-        <span class="soon-badge">COMING SOON</span>
-        <span class="nav-btn-arrow">→</span>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════ PAGE: PHYSICS I ═════════════════════════════ -->
-<div class="page" id="page-physics1">
-  <header class="site-header">
-    <button class="back-btn" onclick="go('page-physics')">← BACK</button>
-    <div class="breadcrumb">
-      <span onclick="go('page-home')">HOME</span>
-      <span class="sep">/</span>
-      <span onclick="go('page-physics')">PHYSICS</span>
-      <span class="sep">/</span>
-      <span class="current">PHYSICS I</span>
-    </div>
-  </header>
-  <div class="nav-stage" data-symbol="ρ">
-    <div class="nav-eyebrow">select a chapter</div>
-    <h1 class="nav-title">Physics I</h1>
-    <p class="nav-sub">Choose a chapter below. Notes, homework solutions, and exam prep — all derived from first principles.</p>
-    <div class="ch-grid-wrap">
-      <div class="ch-grid">
-        <button class="ch-btn" disabled><span class="ch-num">1</span><span class="ch-name">Measurement</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">2</span><span class="ch-name">Kinematics 1D</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">3</span><span class="ch-name">Vectors</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">4</span><span class="ch-name">Motion 2D &amp; 3D</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">5</span><span class="ch-name">Newton's Laws</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">6</span><span class="ch-name">Friction &amp; Drag</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">7</span><span class="ch-name">Work &amp; Energy</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">8</span><span class="ch-name">Potential Energy</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">9</span><span class="ch-name">Center of Mass</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">10</span><span class="ch-name">Rotation</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">11</span><span class="ch-name">Torque &amp; Angular Mom.</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">12</span><span class="ch-name">Equilibrium</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">13</span><span class="ch-name">Gravitation</span></button>
-        <button class="ch-btn active-ch" onclick="go('page-ch14')"><span class="ch-num">14</span><span class="ch-name">Fluid Mechanics</span></button>
-        <button class="ch-btn" disabled><span class="ch-num">15</span><span class="ch-name">Oscillations</span></button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════ PAGE: CHAPTER 14 ════════════════════════════ -->
-<div class="page" id="page-ch14">
-  <header class="site-header">
-    <button class="back-btn" onclick="go('page-physics1')">← BACK</button>
+    <button class="back-btn" onclick="go('page-physics1')">&#8592; BACK</button>
     <div class="breadcrumb">
       <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
       <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
       <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
-      <span class="current">CH. 14</span>
+      <span class="current">CH. 10</span>
     </div>
   </header>
-  <div class="nav-stage" data-symbol="∇">
-    <div class="nav-eyebrow">chapter 14 — fluid mechanics</div>
+  <div class="nav-stage" data-symbol="&#969;">
+    <div class="nav-eyebrow">chapter 10 &mdash; rotation</div>
     <h1 class="nav-title">What would<br>you like?</h1>
-    <p class="nav-sub">Three governing protocols. One unified framework. Zero unsolvable problems. Master the SOP and every fluid system — from a still tank to supersonic flight — collapses into algebra.</p>
+    <p class="nav-sub">Kinematics of rotation, moment of inertia, torque &mdash; all derived from two axioms and pure calculus. No formulas memorized.</p>
     <div class="nav-grid">
       <button class="nav-btn chapter coming-soon" disabled>
         <span class="nav-btn-label">resource</span>
-        <span class="nav-btn-title">Chapter 14<br>Notes</span>
+        <span class="nav-btn-title">Chapter 10<br>Notes</span>
         <span class="soon-badge">COMING SOON</span>
-        <span class="nav-btn-arrow">→</span>
+        <span class="nav-btn-arrow">&#8594;</span>
       </button>
-      <button class="nav-btn chapter" onclick="go('page-ch14-hw')">
+      <button class="nav-btn chapter coming-soon" disabled>
         <span class="nav-btn-label">resource</span>
-        <span class="nav-btn-title">Chapter 14<br>Homework Solutions</span>
-        <span class="nav-btn-arrow">→</span>
+        <span class="nav-btn-title">Chapter 10<br>Homework Solutions</span>
+        <span class="soon-badge">COMING SOON</span>
+        <span class="nav-btn-arrow">&#8594;</span>
       </button>
-      <button class="nav-btn chapter" onclick="go('page-ch14-exam3')">
-        <span class="nav-btn-label">resource</span>
-        <span class="nav-btn-title">Exam III<br>Review Questions</span>
-        <span class="nav-btn-arrow">→</span>
-      </button>
-      <button class="nav-btn chapter sop-btn" onclick="go('page-ch14-sop')">
+      <button class="nav-btn chapter sop-btn" onclick="go('page-ch10-sop')">
         <span class="nav-btn-label">framework</span>
         <span class="nav-btn-title">Standard Operating<br>Procedure (SOP)</span>
-        <span class="nav-btn-desc">The universal attack plan. Domain → Protocols → Algebra. No fluid can resist.</span>
-        <span class="nav-btn-arrow">→</span>
+        <span class="nav-btn-desc">State space, kinematic operators, inertial metrics &mdash; rotational mechanics as formal mathematics.</span>
+        <span class="nav-btn-arrow">&#8594;</span>
       </button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════ PAGE: CH14 HW — MODE SELECT ════════════════ -->
-<div class="page" id="page-ch14-hw">
+<div class="page" id="page-ch11">
   <header class="site-header">
-    <button class="back-btn" onclick="go('page-ch14')">← BACK</button>
+    <button class="back-btn" onclick="go('page-physics1')">&#8592; BACK</button>
     <div class="breadcrumb">
       <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
       <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
       <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
-      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
-      <span class="current">HW SOLUTIONS</span>
+      <span class="current">CH. 11</span>
     </div>
   </header>
-  <div class="nav-stage" data-symbol="∫">
-    <div class="nav-eyebrow">choose your lens</div>
-    <h1 class="nav-title">Chapter 14 Fluids<br>Homework Solutions</h1>
-    <p class="nav-sub">The same 10 problems, solved three different ways. Choose how deep you want to go.</p>
-    <div class="nav-grid" style="flex-direction:column;align-items:center;gap:14px;">
-      <button class="nav-btn mode-btn" onclick="go('page-ch14-hw-simple')">
-        <span class="nav-btn-label">mode 1</span>
-        <span class="nav-btn-title">Simple Physics I</span>
-        <span class="nav-btn-desc">Identify the formula, plug in the numbers, get the answer. Classic Physics I approach.</span>
-        <span class="nav-btn-arrow">→</span>
-      </button>
-      <button class="nav-btn mode-btn" onclick="go('page-ch14-hw-math')">
-        <span class="nav-btn-label">mode 2</span>
-        <span class="nav-btn-title">A Mathematician's Way</span>
-        <span class="nav-btn-desc">Every problem as an integral or ODE. Calculus, divergence theorem, first integrals — the full story.</span>
-        <span class="nav-btn-arrow">→</span>
-      </button>
-      <button class="nav-btn mode-btn coming-soon" disabled>
-        <span class="nav-btn-label">mode 3</span>
-        <span class="nav-btn-title">Pure Derivation</span>
-        <span class="nav-btn-desc">Built from axioms. No formulas assumed — everything proven from first principles.</span>
+  <div class="nav-stage" data-symbol="L">
+    <div class="nav-eyebrow">chapter 11 &mdash; torque &amp; angular momentum</div>
+    <h1 class="nav-title">What would<br>you like?</h1>
+    <p class="nav-sub">Torque, angular momentum, rolling constraints &mdash; derived once from Newton&rsquo;s Second Law and never memorized again.</p>
+    <div class="nav-grid">
+      <button class="nav-btn chapter coming-soon" disabled>
+        <span class="nav-btn-label">resource</span>
+        <span class="nav-btn-title">Chapter 11<br>Notes</span>
         <span class="soon-badge">COMING SOON</span>
-        <span class="nav-btn-arrow">→</span>
+        <span class="nav-btn-arrow">&#8594;</span>
+      </button>
+      <button class="nav-btn chapter coming-soon" disabled>
+        <span class="nav-btn-label">resource</span>
+        <span class="nav-btn-title">Chapter 11<br>Homework Solutions</span>
+        <span class="soon-badge">COMING SOON</span>
+        <span class="nav-btn-arrow">&#8594;</span>
+      </button>
+      <button class="nav-btn chapter sop-btn" onclick="go('page-ch11-sop')">
+        <span class="nav-btn-label">framework</span>
+        <span class="nav-btn-title">Standard Operating<br>Procedure (SOP)</span>
+        <span class="nav-btn-desc">Impulse, energy, conservation &mdash; every path derived from exactly two axioms. Execute the SOP; the physics is inevitable.</span>
+        <span class="nav-btn-arrow">&#8594;</span>
       </button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════ PAGE: EXAM III — MODE SELECT ═══════════════ -->
-<div class="page" id="page-ch14-exam3">
+<div class="page" id="page-ch13">
   <header class="site-header">
-    <button class="back-btn" onclick="go('page-ch14')">← BACK</button>
+    <button class="back-btn" onclick="go('page-physics1')">&#8592; BACK</button>
     <div class="breadcrumb">
       <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
       <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
       <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
-      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
-      <span class="current">EXAM III REVIEW</span>
+      <span class="current">CH. 13</span>
     </div>
   </header>
-  <div class="nav-stage" data-symbol="Ω">
-    <div class="nav-eyebrow">choose your lens</div>
-    <h1 class="nav-title">Exam III<br>Review Questions</h1>
-    <p class="nav-sub">Ten fluid mechanics problems solved multiple ways. Pick the depth that matches your study goal.</p>
-    <div class="nav-grid" style="flex-direction:column;align-items:center;gap:14px;">
-      <button class="nav-btn mode-btn" onclick="go('page-exam3-simple')">
-        <span class="nav-btn-label">mode 1</span>
-        <span class="nav-btn-title">Simple Physics I</span>
-        <span class="nav-btn-desc">Formula → substitution → answer. The fastest path to exam-ready confidence.</span>
-        <span class="nav-btn-arrow">→</span>
-      </button>
-      <button class="nav-btn mode-btn sop-mode-btn" onclick="go('page-exam3-sop')">
-        <span class="nav-btn-label">mode 2 — the framework</span>
-        <span class="nav-btn-title">Execute the Unified SOP</span>
-        <span class="nav-btn-desc">Domain Archetyping → Protocol Invocation → Symbolic Synthesis. Every problem solved as a formal manifold operation.</span>
-        <span class="nav-btn-arrow">→</span>
-      </button>
-      <button class="nav-btn mode-btn coming-soon" disabled>
-        <span class="nav-btn-label">mode 3</span>
-        <span class="nav-btn-title">A Mathematician's Way</span>
-        <span class="nav-btn-desc">Every problem as an integral or ODE. Calculus, divergence theorem, first integrals.</span>
+  <div class="nav-stage" data-symbol="G">
+    <div class="nav-eyebrow">chapter 13 &mdash; gravitation</div>
+    <h1 class="nav-title">What would<br>you like?</h1>
+    <p class="nav-sub">From scalar potential to orbital mechanics &mdash; five phases that reduce every gravitational system to an ODE and its first integrals.</p>
+    <div class="nav-grid">
+      <button class="nav-btn chapter coming-soon" disabled>
+        <span class="nav-btn-label">resource</span>
+        <span class="nav-btn-title">Chapter 13<br>Notes</span>
         <span class="soon-badge">COMING SOON</span>
-        <span class="nav-btn-arrow">→</span>
+        <span class="nav-btn-arrow">&#8594;</span>
       </button>
-      <button class="nav-btn mode-btn" onclick="go('page-exam3-derive')">
-        <span class="nav-btn-label">mode 4</span>
-        <span class="nav-btn-title">Pure Derivation</span>
-        <span class="nav-btn-desc">Domain and field definitions, governing equations, boundary conditions — proven from the ground up.</span>
-        <span class="nav-btn-arrow">→</span>
+      <button class="nav-btn chapter coming-soon" disabled>
+        <span class="nav-btn-label">resource</span>
+        <span class="nav-btn-title">Chapter 13<br>Homework Solutions</span>
+        <span class="soon-badge">COMING SOON</span>
+        <span class="nav-btn-arrow">&#8594;</span>
+      </button>
+      <button class="nav-btn chapter sop-btn" onclick="go('page-ch13-sop')">
+        <span class="nav-btn-label">framework</span>
+        <span class="nav-btn-title">Standard Operating<br>Procedure (SOP)</span>
+        <span class="nav-btn-desc">Manifold &rarr; Potential Field &rarr; ODE &rarr; First Integrals &rarr; Boundary Analysis. Every gravitational problem, one framework.</span>
+        <span class="nav-btn-arrow">&#8594;</span>
       </button>
     </div>
   </div>
 </div>
 
+<div class="page" id="page-ch15">
+  <header class="site-header">
+    <button class="back-btn" onclick="go('page-physics1')">&#8592; BACK</button>
+    <div class="breadcrumb">
+      <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
+      <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
+      <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
+      <span class="current">CH. 15</span>
+    </div>
+  </header>
+  <div class="nav-stage" data-symbol="&#8767;">
+    <div class="nav-eyebrow">chapter 15 &mdash; oscillations</div>
+    <h1 class="nav-title">What would<br>you like?</h1>
+    <p class="nav-sub">Simple and physical pendula, springs, energy conservation &mdash; unified under a single linear differential operator and its sinusoidal eigenfunctions.</p>
+    <div class="nav-grid">
+      <button class="nav-btn chapter coming-soon" disabled>
+        <span class="nav-btn-label">resource</span>
+        <span class="nav-btn-title">Chapter 15<br>Notes</span>
+        <span class="soon-badge">COMING SOON</span>
+        <span class="nav-btn-arrow">&#8594;</span>
+      </button>
+      <button class="nav-btn chapter coming-soon" disabled>
+        <span class="nav-btn-label">resource</span>
+        <span class="nav-btn-title">Chapter 15<br>Homework Solutions</span>
+        <span class="soon-badge">COMING SOON</span>
+        <span class="nav-btn-arrow">&#8594;</span>
+      </button>
+      <button class="nav-btn chapter sop-btn" onclick="go('page-ch15-sop')">
+        <span class="nav-btn-label">framework</span>
+        <span class="nav-btn-title">Standard Operating<br>Procedure (SOP)</span>
+        <span class="nav-btn-desc">Phase space definition, the linear operator &#8466;, Hamiltonian invariants &mdash; oscillatory dynamics as a formal manifold problem.</span>
+        <span class="nav-btn-arrow">&#8594;</span>
+      </button>
+    </div>
+  </div>
+</div>
+""")
 
-<!-- ══════════════════════════ PAGE: SOP ═══════════════════════════════════ -->
-<div class="sol-page" id="page-ch14-sop">
+additions.write("""
+<!-- ====== CH10 SOP PAGE ====== -->
+<div class="sol-page" id="page-ch10-sop">
   <header class="site-header" style="position:sticky;top:0;z-index:100;">
-    <button class="back-btn" onclick="go('page-ch14')">← BACK</button>
+    <button class="back-btn" onclick="go('page-ch10')">&#8592; BACK</button>
     <div class="breadcrumb">
       <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
       <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
       <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
-      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
+      <span onclick="go('page-ch10')">CH. 10</span><span class="sep">/</span>
       <span class="current">UNIFIED SOP</span>
     </div>
   </header>
   <div class="solutions-wrap">
-
     <div class="sol-header sop-header" data-symbol="SOP">
-      <div class="mode-badge sop-badge">FLUID MECHANICS — GRAND UNIFIED FRAMEWORK V6.0</div>
-      <h1>The Standard Operating Procedure</h1>
-      <p>Three governing protocols. One procedural attack plan. Follow this SOP and the physics of any fluid system — static or dynamic, simple or complex — reduces inevitably to algebra. No memorization required. Only logic.</p>
+      <div class="mode-badge sop-badge">ROTATION &mdash; MATHEMATICAL SOP</div>
+      <h1>Chapter 10: Rotation</h1>
+      <p>The axiomatic foundation for rotational mechanics. A formal state-space framework built on kinematic operators, the mass-metric integral, and dynamic invariants &mdash; derived from first principles, never memorized.</p>
     </div>
-
     <div class="sol-main">
 
-      <!-- Card I: Nature of Fluidic Systems -->
       <div class="sop-card">
         <div class="sop-card-head">
           <div class="sop-card-head-icon">I.</div>
           <div>
-            <div class="sop-card-head-title">The Nature of Fluidic Systems</div>
-            <div class="sop-card-head-sub">Introduction &amp; Philosophy</div>
+            <div class="sop-card-head-title">Axiom 1 &mdash; The State Space</div>
+            <div class="sop-card-head-sub">The domain of all rotational motion</div>
           </div>
         </div>
         <div class="sop-card-body">
-          <div class="sec prob-stmt">
-            <div class="sec-label">Core Principle</div>
-            <p>At its core, fluid dynamics is the study of <strong>continuous media</strong> — substances such as liquids and gases that deform continuously under applied shear stress. Rather than tracking discrete, isolated point masses, we analyze fluid behavior through <strong>continuous fields spread across a defined spatial region</strong>.</p>
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Definition</div>
+            <p>Let a system be defined by a continuous, twice-differentiable function $\\theta(t): \\mathbb{R} \\to \\mathbb{R}$, representing <strong>angular position</strong>. This single scalar field is the complete state of any purely rotational system. Everything else is derived from it by differentiation.</p>
           </div>
-          <div class="sec given-sec">
-            <div class="sec-label">Purpose of This SOP</div>
-            <p>This Standard Operating Procedure serves as a universal roadmap for tackling fluid flow manifolds. To avoid the rote memorization of complex calculus derivations and isolated formulas, this guide constructs the governing equations directly from fundamental conservation laws — mass, momentum, and energy.</p>
-            <p>It provides a rigorous, step-by-step procedure to reduce generalized three-dimensional integrals into the practical algebraic tools needed to <strong>conquer any fluidic system</strong>.</p>
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Definition 1 &mdash; Kinematic Operators</div>
+            <p>The motion is fully defined by the temporal derivatives of $\\theta(t)$:</p>
+            <div class="math-display">$$\\omega(t) = \\frac{d\\theta}{dt} \\qquad \\text{(angular velocity)}$$</div>
+            <div class="math-display">$$\\alpha(t) = \\frac{d\\omega}{dt} = \\frac{d^2\\theta}{dt^2} \\qquad \\text{(angular acceleration)}$$</div>
+          </div>
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Definition 2 &mdash; Spatial Mapping (Linear to Angular)</div>
+            <p>For a point at fixed scalar distance $r$ from the axis, arc length $s = r\\theta$. Differentiation propagates the mapping:</p>
+            <div class="math-display">$$v = r\\omega \\qquad a_t = r\\alpha$$</div>
+            <p>These follow from the chain rule applied to $s = r\\theta$ &mdash; not separate formulas.</p>
           </div>
         </div>
       </div>
 
-      <!-- Card II: Boundary Partitioning -->
       <div class="sop-card">
         <div class="sop-card-head">
           <div class="sop-card-head-icon">II.</div>
           <div>
-            <div class="sop-card-head-title">The Geometry of Interaction: Boundary Partitioning</div>
-            <div class="sop-card-head-sub">How to bind the manifold before any calculation begins</div>
+            <div class="sop-card-head-title">The Mass-Metric Integral &mdash; Moment of Inertia</div>
+            <div class="sop-card-head-sub">Definition 3: the system&rsquo;s resistance to angular acceleration</div>
           </div>
         </div>
         <div class="sop-card-body">
-
-          <div class="sec given-sec">
-            <div class="sec-label">Overview</div>
-            <p>To map the manifold is to partition the boundary $\partial\Omega$ into distinct functional subsets. These are the regions where your control volume interacts with the universe. Since the area normal vector $\hat{n}$ is defined by convention to point <strong>outward</strong> from the domain $\Omega$, the classification of these subsets is determined entirely by the orientation of the velocity field $\mathbf{v}$ relative to that outward normal.</p>
-          </div>
-
           <div class="sec sop-p1-sec">
-            <div class="sec-label">S_in — The Portals of Entry (Inlets)</div>
-            <p>These are the boundary segments where fluid <em>enters</em> the manifold. The velocity vector opposes the outward normal — the fluid is moving <em>in</em> while the boundary points <em>out</em>, so their dot product is negative. Think of water entering a pipe from a reservoir: the flow moves right, the surface normal points left. Or a retracting piston cylinder: air flows inward while the face normal points outward.</p>
-            <p><strong>Constraint:</strong> $\mathbf{v} \cdot \hat{n} &lt; 0$. This is the "source" term in your flux integrals — the system is <em>gaining</em> mass.</p>
+            <div class="sec-label">The Integral Definition</div>
+            <p>The rotational inertia about an axis is the volume integral of density $\\rho(\\mathbf{x})$ weighted by the squared perpendicular distance $r^2$:</p>
+            <div class="math-display">$$I = \\iiint_V r^2 \\rho(\\mathbf{x})\\,dV$$</div>
           </div>
-
           <div class="sec sop-p2-sec">
-            <div class="sec-label">S_out — The Thresholds of Exit (Outlets)</div>
-            <p>These are the segments where fluid <em>escapes</em> the domain. Here the flow aligns with the boundary orientation — both point the same direction, so the dot product is positive. Think of exhaust gases leaving an engine port, or water ejecting from a sprinkler nozzle: velocity and normal vector agree.</p>
-            <p><strong>Constraint:</strong> $\mathbf{v} \cdot \hat{n} &gt; 0$. This is the "sink" term — the system is <em>losing</em> mass.</p>
-          </div>
-
-          <div class="sec bc-sec">
-            <div class="sec-label">S_w — The Impenetrable Constraints (Walls)</div>
-            <p>Walls are the physical limits of the manifold — solid containers that prevent the fluid from escaping $\Omega$. The fluid slides <em>along</em> the wall, never through it, so velocity and normal are perpendicular. Imagine the inside of a hose: water moves parallel to the wall while the normal points radially inward. Or a solid steel ball in water: flow grazes the surface but never penetrates it.</p>
-            <p><strong>Constraint:</strong> $\mathbf{v} \cdot \hat{n} = 0$. Walls contribute <strong>zero</strong> to flux integrals — they vanish from the calculation entirely.</p>
-          </div>
-
-          <div class="sec derive">
-            <div class="sec-label">The Summary</div>
-            <div class="boundary-table-wrap">
-              <table class="boundary-table">
-                <thead>
-                  <tr><th>Boundary</th><th>Dot Product</th><th>Integral Contribution</th><th>Intuition</th></tr>
-                </thead>
+            <div class="sec-label">Standard Results (Derived, Not Memorized)</div>
+            <div class="sop-table-wrap">
+              <table class="sop-table">
+                <thead><tr><th>Geometry</th><th>$I$</th><th>Key Integration Step</th></tr></thead>
                 <tbody>
-                  <tr><td>Inlet ($S_{in}$)</td><td>$\mathbf{v}\cdot\hat{n} &lt; 0$</td><td>Adds to system</td><td>Fluid enters — source term</td></tr>
-                  <tr><td>Outlet ($S_{out}$)</td><td>$\mathbf{v}\cdot\hat{n} &gt; 0$</td><td>Subtracts from system</td><td>Fluid exits — sink term</td></tr>
-                  <tr><td>Wall ($S_w$)</td><td>$\mathbf{v}\cdot\hat{n} = 0$</td><td>Zero — cancels out</td><td>Fluid slides, never penetrates</td></tr>
+                  <tr><td>Solid cylinder / disk</td><td>$\\frac{1}{2}MR^2$</td><td>$dm = \\rho h\\,2\\pi r\\,dr$; integrate $r^3$ from 0 to $R$</td></tr>
+                  <tr><td>Thin hollow shell</td><td>$MR^2$</td><td>All $dm$ at $r_\\perp = R$; factors out</td></tr>
+                  <tr><td>Solid sphere (through center)</td><td>$\\frac{2}{5}MR^2$</td><td>Concentric shells; $\\langle\\sin^2\\phi\\rangle = 2/3$</td></tr>
+                  <tr><td>Thin rod (through CM)</td><td>$\\frac{1}{12}ML^2$</td><td>$dm = \\lambda\\,dx$; integrate $x^2$ from $-L/2$ to $L/2$</td></tr>
+                  <tr><td>Annulus (inner $R_1$, outer $R_2$)</td><td>$\\frac{1}{2}M(R_1^2+R_2^2)$</td><td>Integrate between $R_1$ and $R_2$</td></tr>
                 </tbody>
               </table>
             </div>
-            <p style="margin-top:12px;">The partition is: $\partial\Omega = S_{in} \cup S_{out} \cup S_w$. Once labeled, the terrifying closed surface integral $\oiint$ collapses into a clean sum:</p>
-            <div class="math-display">$$\oiint_{\partial\Omega} (\cdot)\,dA = \iint_{S_{in}} (\cdot)\,dA + \iint_{S_{out}} (\cdot)\,dA + \cancelto{0}{\iint_{S_w} (\cdot)\,dA}$$</div>
-            <p><strong>The system is now bound. Proceed to Phase 1.</strong></p>
           </div>
-
+          <div class="sec bc-sec">
+            <div class="sec-label">Parallel Axis Theorem</div>
+            <p>Shifting the axis by distance $d$ from the CM: $I_P = I_{cm} + Md^2$.</p>
+            <p><strong>Proof:</strong> Expand $r_\\perp^2 = |\\mathbf{r}_{cm} + \\mathbf{d}|^2$ inside the integral. The cross term $\\int \\mathbf{r}_{cm}\\,dm = 0$ by definition of CM. Remaining: $I_{cm} + Md^2$.</p>
+          </div>
         </div>
       </div>
 
-      <!-- Card III: Workspace Primitives -->
       <div class="sop-card">
         <div class="sop-card-head">
           <div class="sop-card-head-icon">III.</div>
           <div>
-            <div class="sop-card-head-title">Workspace Primitives</div>
-            <div class="sop-card-head-sub">Load these into your mental workspace before initiating any procedure</div>
+            <div class="sop-card-head-title">Dynamic Torque Operator &amp; Scalar Invariants</div>
+            <div class="sop-card-head-sub">Definitions 4 and 5: the equation of motion and its integrals</div>
           </div>
         </div>
         <div class="sop-card-body">
-
           <div class="sec sop-p1-sec">
-            <div class="sec-label">Geometric Primitives</div>
-            <div class="primitives-grid">
-              <div class="prim-item">
-                <div class="prim-sym">$\Omega \subset \mathbb{R}^3$</div>
-                <div class="prim-desc">The <strong>Manifold Domain</strong>. The physical space occupied by the fluid.</div>
-              </div>
-              <div class="prim-item">
-                <div class="prim-sym">$\partial\Omega$</div>
-                <div class="prim-desc">The <strong>Boundary</strong>. The surface that encloses $\Omega$ — the "skin" of your system.</div>
-              </div>
-              <div class="prim-item">
-                <div class="prim-sym">$d\mathbf{A} = \hat{n}\,dA$</div>
-                <div class="prim-desc">The <strong>Oriented Area Element</strong>. The vector normal to the boundary, pointing outward.</div>
-              </div>
-            </div>
+            <div class="sec-label">Torque and the Equation of Motion</div>
+            <p>Torque: $\\boldsymbol{\\tau} = \\mathbf{r} \\times \\mathbf{F}$, scalar magnitude $\\tau = rF\\sin\\phi$. The system evolves as:</p>
+            <div class="math-display">$$\\boxed{\\tau(t) = I\\,\\alpha(t)}$$</div>
+            <p>This is the rotational analog of $F = ma$ &mdash; derived from Newton&rsquo;s Second Law, not assumed.</p>
           </div>
-
           <div class="sec sop-p2-sec">
-            <div class="sec-label">Operator &amp; Integral Dictionary</div>
-            <div class="primitives-grid">
-              <div class="prim-item">
-                <div class="prim-sym">$\nabla P$</div>
-                <div class="prim-desc">The <strong>Gradient</strong>. Points toward the steepest increase of pressure in space.</div>
-              </div>
-              <div class="prim-item">
-                <div class="prim-sym">$\oiint_{\partial\Omega}(\cdot)$</div>
-                <div class="prim-desc">A <strong>Closed Surface Integral</strong>. Measures the total flux crossing the system's skin.</div>
-              </div>
-              <div class="prim-item">
-                <div class="prim-sym">$\iiint_\Omega(\cdot)\,dV$</div>
-                <div class="prim-desc">A <strong>Volume Integral</strong>. Sums the quantity over every point inside the domain.</div>
-              </div>
-              <div class="prim-item">
-                <div class="prim-sym">$\mathbf{v}\cdot d\mathbf{A}$</div>
-                <div class="prim-desc">The <strong>Flux Dot Product</strong>. Measures only the fluid moving <em>through</em> a boundary, ignoring what slides along it.</div>
-              </div>
-            </div>
+            <div class="sec-label">Kinetic Energy and Angular Momentum</div>
+            <div class="math-display">$$K_{rot} = \\int \\tau\\,d\\theta = \\frac{1}{2}I\\omega^2$$</div>
+            <div class="math-display">$$L = I\\omega \\qquad \\text{If}\\;\\int\\tau\\,dt = 0 \\;\\Rightarrow\\; L_i = L_f$$</div>
           </div>
-
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Field Variables</div>
-            <div class="primitives-grid">
-              <div class="prim-item">
-                <div class="prim-sym">$P(\mathbf{r})$</div>
-                <div class="prim-desc"><strong>Scalar Pressure Field</strong>. Force per unit area at every point in space [Pa].</div>
-              </div>
-              <div class="prim-item">
-                <div class="prim-sym">$\mathbf{v}(\mathbf{r})$</div>
-                <div class="prim-desc"><strong>Vector Velocity Field</strong>. Speed and direction of fluid at every point [m/s].</div>
-              </div>
-              <div class="prim-item">
-                <div class="prim-sym">$\rho(\mathbf{r})$</div>
-                <div class="prim-desc"><strong>Scalar Density Field</strong>. Mass per unit volume at every point [kg/m³].</div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
 
-      <!-- Phase 1 Card -->
       <div class="sop-card">
         <div class="sop-card-head">
-          <div class="sop-card-head-icon">Φ₁</div>
+          <div class="sop-card-head-icon">&#934;</div>
           <div>
-            <div class="sop-card-head-title">Phase 1: Domain Archetyping</div>
-            <div class="sop-card-head-sub">Before a single digit is written, the manifold must be bound.</div>
+            <div class="sop-card-head-title">The Execution Protocol &mdash; Four Pathways</div>
+            <div class="sop-card-head-sub">Branch to the first pathway that applies</div>
           </div>
         </div>
         <div class="sop-card-body">
-
-          <div class="sec sop-p1-sec">
-            <div class="sec-label">Step 1 — Map the Manifold</div>
-            <p>Define the boundaries of $\Omega$. Identify all <strong>Inlets</strong> ($S_{in}$), <strong>Outlets</strong> ($S_{out}$), and <strong>Walls</strong> ($S_w$). Every fluidic problem lives inside a domain — your first job is to draw it.</p>
-          </div>
-
-          <div class="sec sop-p1-sec">
-            <div class="sec-label">Step 2 — Identify the State</div>
-            <p>Observe the Velocity Field $\mathbf{v}(\mathbf{r})$. This single observation routes you to the correct protocol:</p>
-            <div class="math-display">$$\mathbf{v} = \mathbf{0} \;\longrightarrow\; \textbf{Static Instance} \quad\text{(Go to Phase 2, Instance C)}$$</div>
-            <div class="math-display">$$\mathbf{v} \neq \mathbf{0} \;\longrightarrow\; \textbf{Dynamic Instance} \quad\text{(Proceed to Phase 2, Instances A \& B)}$$</div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Phase 2 Card -->
-      <div class="sop-card">
-        <div class="sop-card-head">
-          <div class="sop-card-head-icon">Φ₂</div>
-          <div>
-            <div class="sop-card-head-title">Phase 2: Protocol Invocation</div>
-            <div class="sop-card-head-sub">Force the physics to reduce into algebra through logical constraints.</div>
-          </div>
-        </div>
-        <div class="sop-card-body">
-
-          <div class="sop-divider">Instance A</div>
           <div class="sop-instance-box inst-a">
-            <div class="sop-instance-label">Instance A — The Mass-Flux Lock (Continuity)</div>
-            <p><strong>Goal:</strong> Relate cross-sectional area to flow speed.</p>
-            <p><strong>The Command:</strong></p>
-            <div class="math-display">$$\oiint_{\partial\Omega} \rho\,\mathbf{v} \cdot d\mathbf{A} = -\frac{\partial}{\partial t} \iiint_{\Omega} \rho \, dV$$</div>
-            <p><strong>The Constraint:</strong> Assume <em>Steady</em> ($\partial/\partial t = 0$) and <em>Incompressible</em> ($\rho = \text{const}$).</p>
-            <p><strong>The Result:</strong> $\displaystyle\iint_{S_1} \mathbf{v} \cdot d\mathbf{A} + \iint_{S_2} \mathbf{v} \cdot d\mathbf{A} = 0$</p>
-            <div class="sop-convergence">
-              <div class="sop-convergence-label">Convergence</div>
-              <div class="math-display" style="background:transparent;">$$\boxed{A_1 v_1 = A_2 v_2}$$</div>
-              <p style="font-size:0.78rem;opacity:0.6;margin-top:4px;">Use this to find an unknown $v$ or $A$.</p>
-            </div>
+            <div class="sop-instance-label">Phase 1 &mdash; State Space Initialization</div>
+            <p>Identify all fixed distances $r$ from the axis. Catalog known values for $t, \\theta, \\omega, \\alpha$ and boundary conditions. Define the target quantity.</p>
           </div>
-
-          <div class="sop-divider">Instance B</div>
           <div class="sop-instance-box inst-b">
-            <div class="sop-instance-label">Instance B — Streamline Energy Conservation (Bernoulli)</div>
-            <p><strong>Goal:</strong> Solve for Pressure or Velocity at specific points.</p>
-            <p><strong>The Command:</strong></p>
-            <div class="math-display">$$\int \nabla P \cdot d\mathbf{r} + \int \rho\,\mathbf{v} \cdot d\mathbf{v} + \int \rho\,\mathbf{g} \cdot d\mathbf{r} = 0$$</div>
-            <p><strong>The Constraint:</strong> Assume <em>Inviscid</em> (zero friction) and <em>Steady</em> flow along a streamline.</p>
-            <p><strong>The Result:</strong> $P + \tfrac{1}{2}\rho v^2 + \rho gz = \text{Constant}$</p>
-            <div class="sop-convergence">
-              <div class="sop-convergence-label">Convergence</div>
-              <div class="math-display" style="background:transparent;">$$\boxed{P_1 + \tfrac{1}{2}\rho v_1^2 + \rho g z_1 = P_2 + \tfrac{1}{2}\rho v_2^2 + \rho g z_2}$$</div>
-            </div>
+            <div class="sop-instance-label">Phase 2 &mdash; Mathematical Routing</div>
+            <p><strong>Pathway A (Spatial):</strong> Linear/tangential quantities on rim &rarr; $v = r\\omega$, $a_t = r\\alpha$.</p>
+            <p><strong>Pathway B (Temporal):</strong> Moving between $\\theta$, $\\omega$, $\\alpha$ &rarr; differentiate (upward) or integrate with BCs (downward).</p>
+            <p><strong>Pathway C (Inertial):</strong> Mass distribution or pivot change &rarr; evaluate $I$ via table, apply parallel axis.</p>
+            <p><strong>Pathway D (Dynamic):</strong> Forces or energy &rarr; $\\sum\\tau = I\\alpha$, $K_{rot} = \\frac{1}{2}I\\omega^2$, or $L_i = L_f$.</p>
           </div>
-
-          <div class="sop-divider">Instance C</div>
           <div class="sop-instance-box inst-c">
-            <div class="sop-instance-label">Instance C — The Gravitational Gradient (Statics)</div>
-            <p><strong>Goal:</strong> Determine pressure at depth in a static fluid.</p>
-            <p><strong>The Command:</strong></p>
-            <div class="math-display">$$\nabla P = \rho\,\mathbf{g}$$</div>
-            <p><strong>The Constraint:</strong> Set $\mathbf{v} = \mathbf{0}$. Gravity acts only in the $-\hat{k}$ direction, giving $dP/dz = -\rho g$.</p>
-            <div class="sop-convergence">
-              <div class="sop-convergence-label">Convergence</div>
-              <div class="math-display" style="background:transparent;">$$\boxed{P = P_0 + \rho g h}$$</div>
-            </div>
+            <div class="sop-instance-label">Phase 3 &mdash; Computational Convergence</div>
+            <p>Perform all symbolic calculus before substituting numbers. Normalize units. Evaluate at the target state.</p>
           </div>
-
         </div>
       </div>
 
-      <!-- Phase 3 Card -->
+    </div>
+    <div class="sol-footer">
+      Chapter 10 SOP &mdash; Rotation<br>
+      State Space &rarr; Kinematic Operators &rarr; Inertial Metric &rarr; Dynamic Invariants<br>
+      Every rotational formula is a special case of these four definitions.
+    </div>
+  </div>
+</div>
+""")
+
+additions.write("""
+<!-- ====== CH11 SOP PAGE ====== -->
+<div class="sol-page" id="page-ch11-sop">
+  <header class="site-header" style="position:sticky;top:0;z-index:100;">
+    <button class="back-btn" onclick="go('page-ch11')">&#8592; BACK</button>
+    <div class="breadcrumb">
+      <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
+      <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
+      <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
+      <span onclick="go('page-ch11')">CH. 11</span><span class="sep">/</span>
+      <span class="current">UNIFIED SOP</span>
+    </div>
+  </header>
+  <div class="solutions-wrap">
+    <div class="sol-header sop-header" data-symbol="SOP">
+      <div class="mode-badge sop-badge">ANGULAR MOMENTUM &mdash; STANDARD OPERATING PROCEDURE CH. 11</div>
+      <h1>The Standard Operating Procedure</h1>
+      <p>We accept exactly two axioms. Every equation in rotational mechanics is derived from them by calculus. We never memorize a physics formula &mdash; we derive it.</p>
+    </div>
+    <div class="sol-main">
+
       <div class="sop-card">
         <div class="sop-card-head">
-          <div class="sop-card-head-icon">Φ₃</div>
+          <div class="sop-card-head-icon">&#9889;</div>
           <div>
-            <div class="sop-card-head-title">Phase 3: Symbolic Synthesis</div>
-            <div class="sop-card-head-sub">Combine instances to collapse the system.</div>
+            <div class="sop-card-head-title">The Two Foundational Axioms</div>
+            <div class="sop-card-head-sub">Everything else follows by calculus</div>
           </div>
         </div>
         <div class="sop-card-body">
-
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Step 1 — The Link</div>
-            <p>If you have two unknowns (e.g., $P_2$ and $v_2$), use <strong>Instance A</strong> to find $v_2$, then plug it into <strong>Instance B</strong> to solve for $P_2$. The protocols chain together.</p>
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Axiom 1 &mdash; Newton&rsquo;s Second Law</div>
+            <p>For a particle of mass $m$ with position $\\mathbf{r}(t)$, subject to net force $\\mathbf{F}$:</p>
+            <div class="math-display">$$\\mathbf{F} = m\\ddot{\\mathbf{r}}$$</div>
           </div>
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Step 2 — Boundary Injection</div>
-            <p>Replace all symbolic parameters with known boundary conditions: $P_{atm} = 101{,}325\text{ Pa}$, $g = 9.8\text{ m/s}^2$, densities, geometry.</p>
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Axiom 2 &mdash; Conservation of Energy</div>
+            <p>For conservative forces, define potential $U$ such that $\\mathbf{F} = -\\nabla U$. Then:</p>
+            <div class="math-display">$$\\frac{d}{dt}\\!\\left(\\frac{1}{2}m|\\dot{\\mathbf{r}}|^2 + U\\right) = 0 \\qquad\\Longrightarrow\\qquad K + U = \\mathrm{const}$$</div>
           </div>
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Step 3 — Final Execution</div>
-            <p>Isolate the target variable. The math is now trivial arithmetic. The physics was fully resolved in Phases 1 and 2.</p>
-          </div>
-
         </div>
       </div>
 
-      <!-- Summary Table Card -->
       <div class="sop-card">
         <div class="sop-card-head">
-          <div class="sop-card-head-icon">∑</div>
+          <div class="sop-card-head-icon">P.</div>
           <div>
-            <div class="sop-card-head-title">Execution Summary</div>
-            <div class="sop-card-head-sub">When you need X, invoke Y with input Z.</div>
+            <div class="sop-card-head-title">Preliminaries &mdash; The Routing Logic</div>
+            <div class="sop-card-head-sub">Identify the Knowns; apply the corresponding derived operator</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">P1 &mdash; The Geometric Audit (Constraints)</div>
+            <p>Define $\\mathbf{r}(t)$ and differentiate. For circular motion: $|\\mathbf{v}| = r\\omega$. Rolling without slipping: $v_{cm} = R\\omega$.</p>
+          </div>
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">P2 &mdash; The Inertial Mapping</div>
+            <p>Compute $I = \\int r_\\perp^2\\,dm$. Apply Parallel Axis if pivot &ne; CM: $I_P = I_{cm} + Md^2$.</p>
+          </div>
+          <div class="sop-instance-box inst-a">
+            <div class="sop-instance-label">Path A &mdash; The Impulse Path (Time/Force Given)</div>
+            <p>Integrate $\\boldsymbol{\\tau} = d\\mathbf{L}/dt$ over time: $\\Delta\\mathbf{L} = \\int_{t_1}^{t_2}(\\mathbf{r}\\times\\mathbf{F})\\,dt$. Use when a time interval is given.</p>
+          </div>
+          <div class="sop-instance-box inst-b">
+            <div class="sop-instance-label">Path B &mdash; The Energy Path (Distance/Height Given)</div>
+            <p>$\\Delta K_{rot} + \\Delta K_{trans} + \\Delta U = 0$. Use for inclines, pulleys, falling masses.</p>
+            <div class="math-display">$$\\Delta\\!\\left(\\tfrac{1}{2}I\\omega^2 + \\tfrac{1}{2}Mv^2\\right) = -\\Delta U$$</div>
+          </div>
+          <div class="sop-instance-box inst-c">
+            <div class="sop-instance-label">Path C &mdash; The Conservation Path (System Reconfiguration)</div>
+            <p>If $\\boldsymbol{\\tau}_{ext} = \\mathbf{0}$: $I_i\\omega_i = I_f\\omega_f$. Use when mass distribution changes (collision, arms in/out, shape change).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">1</div>
+          <div>
+            <div class="sop-card-head-title">Step 1 &mdash; Kinematics via Calculus</div>
+            <div class="sop-card-head-sub">Parameterize, then differentiate</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Position and Velocity</div>
+            <div class="math-display">$$\\mathbf{r}(t) = r\\cos\\theta(t)\\,\\hat{x} + r\\sin\\theta(t)\\,\\hat{y} \\qquad |\\dot{\\mathbf{r}}| = r|\\dot\\theta| \\qquad \\boxed{v = r\\omega}$$</div>
+          </div>
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Acceleration</div>
+            <div class="math-display">$$\\ddot{\\mathbf{r}} = \\underbrace{r\\alpha\\,\\hat{t}}_{\\text{tangential}} - \\underbrace{r\\omega^2\\,\\hat{r}}_{\\text{centripetal}}$$</div>
+          </div>
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Kinematics Under Constant $\\alpha$ (Integrated, Not Memorized)</div>
+            <div class="math-display">$$\\omega = \\omega_0 + \\alpha t \\qquad \\theta = \\theta_0 + \\omega_0 t + \\tfrac{1}{2}\\alpha t^2 \\qquad \\omega^2 = \\omega_0^2 + 2\\alpha\\Delta\\theta$$</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">2</div>
+          <div>
+            <div class="sop-card-head-title">Step 2 &mdash; Angular Momentum and Torque</div>
+            <div class="sop-card-head-sub">Define L, then differentiate</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Definition and Theorem</div>
+            <div class="math-display">$$\\mathbf{L} \\coloneqq m(\\mathbf{r}\\times\\dot{\\mathbf{r}}) \\qquad \\boldsymbol{\\tau} \\coloneqq \\mathbf{r}\\times\\mathbf{F} \\qquad \\boldsymbol{\\tau} = \\frac{d\\mathbf{L}}{dt}$$</div>
+          </div>
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Proof (Product Rule on L)</div>
+            <div class="math-display">$$\\frac{d\\mathbf{L}}{dt} = m\\underbrace{(\\dot{\\mathbf{r}}\\times\\dot{\\mathbf{r}})}_{=\\,\\mathbf{0}} + m(\\mathbf{r}\\times\\ddot{\\mathbf{r}}) = \\mathbf{r}\\times(m\\ddot{\\mathbf{r}}) = \\mathbf{r}\\times\\mathbf{F} = \\boldsymbol{\\tau}$$</div>
+          </div>
+          <div class="sec bc-sec">
+            <div class="sec-label">Corollary</div>
+            <div class="math-display">$$\\boldsymbol{\\tau} = \\mathbf{0} \\;\\Longrightarrow\\; \\frac{d\\mathbf{L}}{dt} = \\mathbf{0} \\;\\Longrightarrow\\; \\mathbf{L} = \\mathrm{const}$$</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">3&ndash;5</div>
+          <div>
+            <div class="sop-card-head-title">Steps 3&ndash;5 &mdash; Inertia, Energy, Rolling, Addenda</div>
+            <div class="sop-card-head-sub">The remaining derived results</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Step 3 &mdash; Moment of Inertia</div>
+            <div class="math-display">$$I \\coloneqq \\int r_\\perp^2\\,dm \\;\\Longrightarrow\\; L_z = I\\omega \\;\\text{ and }\\; \\boxed{\\tau = I\\alpha}$$</div>
+          </div>
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Step 4 &mdash; Rotational Kinetic Energy</div>
+            <div class="math-display">$$K_{rot} = \\int\\tfrac{1}{2}(r_\\perp\\omega)^2\\,dm = \\frac{\\omega^2}{2}\\int r_\\perp^2\\,dm = \\boxed{\\frac{1}{2}I\\omega^2}$$</div>
+          </div>
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Step 5 &mdash; Rolling Without Slipping</div>
+            <div class="math-display">$$v_{cm} = R\\omega \\qquad K_{total} = \\frac{v^2}{2}\\!\\left(M + \\frac{I}{R^2}\\right) \\qquad \\boxed{v = \\sqrt{\\frac{2gh}{1+I/(MR^2)}}}$$</div>
+          </div>
+          <div class="sec bc-sec">
+            <div class="sec-label">Addendum &mdash; Angular Impulse and Internal Work</div>
+            <p><strong>Angular Impulse:</strong> $\\Delta\\mathbf{L} = \\int_{t_i}^{t_f}\\boldsymbol{\\tau}\\,dt$. Constant torque: $\\Delta\\mathbf{L} = \\boldsymbol{\\tau}\\,\\Delta t$.</p>
+            <p><strong>Internal Work:</strong> $W_{int} = \\Delta K_{rot} = \\frac{1}{2}I_f\\omega_f^2 - \\frac{1}{2}I_i\\omega_i^2$</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">&#8721;</div>
+          <div>
+            <div class="sop-card-head-title">Master Procedure &mdash; The Decision Tree</div>
+            <div class="sop-card-head-sub">Execute in order for every rotation problem</div>
           </div>
         </div>
         <div class="sop-card-body">
           <div class="sop-table-wrap">
             <table class="sop-table">
-              <thead>
-                <tr>
-                  <th>If you need…</th>
-                  <th>Invoke…</th>
-                  <th>Required Input</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Step</th><th>Action</th><th>Derived Tool</th></tr></thead>
               <tbody>
-                <tr>
-                  <td>Velocity or area ratios between two sections</td>
-                  <td>Instance A</td>
-                  <td>$A_1,\; v_1,\; A_2$</td>
-                </tr>
-                <tr>
-                  <td>Pressure at a point in moving flow</td>
-                  <td>Instance B</td>
-                  <td>$P_1,\; v_1,\; v_2,\; z_1,\; z_2$</td>
-                </tr>
-                <tr>
-                  <td>Pressure in a still or static fluid</td>
-                  <td>Instance C</td>
-                  <td>$P_0,\; \rho,\; h$</td>
-                </tr>
-                <tr>
-                  <td>Both pressure and velocity (complex pipe)</td>
-                  <td>A then B</td>
-                  <td>$Q,\; A_1,\; A_2,\; P_1,\; z_1,\; z_2$</td>
-                </tr>
-                <tr>
-                  <td>Stagnation / pitot pressure</td>
-                  <td>C then B</td>
-                  <td>$\rho_{fluid},\; \rho_{manometer},\; h$</td>
-                </tr>
+                <tr><td>P1</td><td>Identify all masses, radii, constraints. Name the axis. Write $\\mathbf{r}(t)$ and $\\dot{\\mathbf{r}}(t)$.</td><td>Geometry</td></tr>
+                <tr><td>P2</td><td>Compute $I = \\int r_\\perp^2\\,dm$ for all bodies. Apply parallel axis if needed.</td><td>Integration</td></tr>
+                <tr><td>P3a</td><td>Energy conserved? (no dissipation) &rarr; $K_i + U_i = K_f + U_f$</td><td>Path B</td></tr>
+                <tr><td>P3b</td><td>Angular momentum conserved? ($\\tau_{ext} = 0$) &rarr; $I_i\\omega_i = I_f\\omega_f$</td><td>Path C</td></tr>
+                <tr><td>P4</td><td>Torque / $\\alpha$ required &rarr; $\\tau = I\\alpha$</td><td>Step 3</td></tr>
+                <tr><td>P5</td><td>Free particle: $\\mathbf{L} = m(\\mathbf{r}\\times\\dot{\\mathbf{r}})$ by explicit cross product</td><td>Definition</td></tr>
+                <tr><td>P6</td><td>Rolling body: apply $v = R\\omega$</td><td>Step 5</td></tr>
+                <tr><td>P7</td><td>Solve the algebraic or differential equations and simplify</td><td>Algebra</td></tr>
               </tbody>
             </table>
           </div>
-          <div class="sec intuit" style="margin-top:8px;">
-            <div class="sec-label">Remember</div>
-            <p>The SOP is not a shortcut — it is the <em>complete logical structure</em> of fluid statics and dynamics. Every formula in your textbook is a special case of Phases 1–3. Master the framework, and every formula follows automatically.</p>
-          </div>
         </div>
       </div>
 
     </div>
-
     <div class="sol-footer">
-      The Grand Unified SOP — Fluid Mechanics Framework V6.0<br>
-      Domain Archetyping → Protocol Invocation → Symbolic Synthesis<br>
-      To see the SOP applied to every Exam III problem, select <em>Execute the Unified SOP</em> from the Exam III mode screen.
+      Chapter 11 SOP &mdash; Angular Momentum<br>
+      Two axioms. Infinite derivations. No memorization required.
     </div>
   </div>
 </div>
+""")
 
-
-<!-- ══════════════════════════ PAGE: SIMPLE PHYSICS I SOLUTIONS ═══════════ -->
-<div class="sol-page" id="page-ch14-hw-simple">
+additions.write("""
+<!-- ====== CH13 SOP PAGE ====== -->
+<div class="sol-page" id="page-ch13-sop">
   <header class="site-header" style="position:sticky;top:0;z-index:100;">
-    <button class="back-btn" onclick="go('page-ch14-hw')">← BACK</button>
+    <button class="back-btn" onclick="go('page-ch13')">&#8592; BACK</button>
     <div class="breadcrumb">
       <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
       <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
       <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
-      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
-      <span onclick="go('page-ch14-hw')">HW</span><span class="sep">/</span>
-      <span class="current">SIMPLE</span>
-    </div>
-  </header>
-  <div class="solutions-wrap" id="simple-wrap">
-
-    <div class="sol-header" data-symbol="F=ma">
-      <div class="mode-badge">MODE 1 — SIMPLE PHYSICS I</div>
-      <h1>Chapter 14: Fluid Mechanics</h1>
-      <p>Identify the relevant formula, substitute the given values, and compute. This is the standard Physics I approach — direct, efficient, and clear.</p>
-    </div>
-
-    <div class="toc-wrap">
-      <div class="toc-label">Jump to Problem</div>
-      <div class="toc-grid">
-        <div class="toc-item" onclick="scrollToProb('sp1')"><span class="toc-num">1</span>Nail Force</div>
-        <div class="toc-item" onclick="scrollToProb('sp2')"><span class="toc-num">2</span>Gas Tank</div>
-        <div class="toc-item" onclick="scrollToProb('sp3')"><span class="toc-num">3</span>Manometer</div>
-        <div class="toc-item" onclick="scrollToProb('sp4')"><span class="toc-num">4</span>Breathing</div>
-        <div class="toc-item" onclick="scrollToProb('sp5')"><span class="toc-num">5</span>Ice Buoyancy</div>
-        <div class="toc-item" onclick="scrollToProb('sp6')"><span class="toc-num">6</span>Cube Equil.</div>
-        <div class="toc-item" onclick="scrollToProb('sp7')"><span class="toc-num">7</span>Blood Flow</div>
-        <div class="toc-item" onclick="scrollToProb('sp8')"><span class="toc-num">8</span>Air Duct</div>
-        <div class="toc-item" onclick="scrollToProb('sp9')"><span class="toc-num">9</span>Pitot Tube</div>
-        <div class="toc-item" onclick="scrollToProb('sp10')"><span class="toc-num">10</span>Sump Pump</div>
-      </div>
-    </div>
-
-    <div class="sol-main">
-
-      <div class="problem-card" id="sp1">
-        <div class="prob-head"><div class="prob-num">1</div><div class="prob-title">Force on a Circular Nail Tip</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Nail tips exert tremendous pressures when hit by a hammer because they exert a large force over a small area. What force must be exerted on a nail with a circular tip of diameter $d = 1.17\text{ mm}$ to create a pressure of $P = 3.17 \times 10^9\text{ Pa}$?</p></div>
-          <div class="sec given-sec"><div class="sec-label">Given</div><p>$d = 1.17 \times 10^{-3}\text{ m}$, $\quad P = 3.17 \times 10^9\text{ Pa}$</p></div>
-          <div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$F = P \cdot A = P \cdot \pi\!\left(\frac{d}{2}\right)^{\!2}$$</div></div>
-          <div class="sec derive"><div class="sec-label">Step-by-Step</div>
-            <div class="math-display">$$r = 5.85 \times 10^{-4}\text{ m} \qquad A = \pi(5.85\times10^{-4})^2 = 1.0752\times10^{-6}\text{ m}^2$$</div>
-            <div class="math-display">$$F = (3.17\times10^9)(1.0752\times10^{-6}) = 3408\text{ N}$$</div></div>
-          <div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">F = 3408 N</div><div class="ans-sub">≈ 3.41 kN — tiny area amplifies force into enormous pressure</div></div>
-        </div>
-      </div>
-
-      <div class="problem-card" id="sp2">
-        <div class="prob-head"><div class="prob-num">2</div><div class="prob-title">Hydrostatic Load on a Gas Tank</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A $0.505\text{ m} \times 0.89\text{ m}$ gas tank holds $49\text{ kg}$ of gasoline. <strong>(a)</strong> Pressure on the bottom? <strong>(b)</strong> Ratio of atmospheric pressure to that pressure?</p></div>
-          <div class="sec given-sec"><div class="sec-label">Given</div><p>$w = 0.505\text{ m}$, $l = 0.89\text{ m}$, $m = 49\text{ kg}$, $P_0 = 1.013\times10^5\text{ Pa}$</p></div>
-          <div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$P = \frac{mg}{w \cdot l}$$</div></div>
-          <div class="sec derive"><div class="sec-label">Step-by-Step</div>
-            <div class="math-display">$$A = 0.4495\text{ m}^2 \qquad P = \frac{480.2}{0.4495} = 1068\text{ Pa} \qquad \frac{P_0}{P} = \frac{101325}{1068} = 94.9$$</div></div>
-          <div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">P = 1068 Pa</div><div class="ans-sub">Part (a)</div></div><div><div class="ans-val">P₀/P = 94.9</div><div class="ans-sub">Part (b)</div></div></div></div>
-        </div>
-      </div>
-
-      <div class="problem-card" id="sp3">
-        <div class="prob-head"><div class="prob-num">3</div><div class="prob-title">Mercury Manometer — Jar of Peanuts</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Open side of mercury manometer is $9.3\text{ cm}$ lower than the jar side. $\rho_{Hg} = 13{,}500\text{ kg/m}^3$. Find <strong>(a)</strong> gauge pressure and <strong>(b)</strong> absolute pressure in the jar.</p></div>
-          <div class="sec given-sec"><div class="sec-label">Given</div><p>$h = 0.093\text{ m}$, $\rho_{Hg} = 13{,}500\text{ kg/m}^3$, open side lower → sub-atmospheric</p></div>
-          <div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$P_g = -\rho g h \qquad P_{abs} = P_{atm} + P_g$$</div></div>
-          <div class="sec derive"><div class="sec-label">Step-by-Step</div>
-            <div class="math-display">$$P_g = -(13500)(9.8)(0.093) = -12304\text{ Pa} \qquad P_{abs} = 101325 - 12304 = 89021\text{ Pa}$$</div></div>
-          <div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">Pᵍ = −12,304 Pa</div><div class="ans-sub">Part (a)</div></div><div><div class="ans-val">Pₐᵦₛ = 89,021 Pa</div><div class="ans-sub">Part (b)</div></div></div></div>
-        </div>
-      </div>
-
-      <div class="problem-card" id="sp4">
-        <div class="prob-head"><div class="prob-num">4</div><div class="prob-title">Breathing Through a Reed Underwater</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>You cannot inhale if your lungs are more than $60.0\text{ cm}$ below the surface. Lung effort at $60\text{ cm}$ depth is $-3.15\text{ cm H}_2\text{O}$. What maximum negative gauge pressure can you create on dry land?</p></div>
-          <div class="sec formula-sec"><div class="sec-label">Key Concept</div><div class="math-display">$$P = -(60.0 + 3.15) = -63.15\text{ cm H}_2\text{O}$$</div></div>
-          <div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">P = −63.15 cm H₂O</div><div class="ans-sub">Physiologically impossible</div></div>
-        </div>
-      </div>
-
-      <div class="problem-card" id="sp5">
-        <div class="prob-head"><div class="prob-num">5</div><div class="prob-title">Fraction of Ice Submerged in Freshwater</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$\rho_{ice} = 910.9\text{ kg/m}^3$, $\rho_w = 1000\text{ kg/m}^3$. What fraction submerged when floating?</p></div>
-          <div class="sec formula-sec"><div class="sec-label">Formula — Archimedes</div><div class="math-display">$$f = \frac{\rho_{ice}}{\rho_w} = \frac{910.9}{1000} = 0.9109$$</div></div>
-          <div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">f = 0.9109</div><div class="ans-sub">91.09% submerged</div></div>
-        </div>
-      </div>
-
-      <div class="problem-card" id="sp6">
-        <div class="prob-head"><div class="prob-num">6</div><div class="prob-title">Half-Submerged Cube on a String</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Cube $L = 0.13\text{ m}$, $\rho_c = 3900\text{ kg/m}^3$, half submerged in $\rho_l = 810\text{ kg/m}^3$ on a string. Find <strong>(c)</strong> weight, <strong>(e)</strong> buoyant force, <strong>(g)</strong> tension. <strong>(h)</strong> What happens to $T$ if submerged more?</p></div>
-          <div class="sec formula-sec"><div class="sec-label">Formulas</div><div class="math-display">$$W = \rho_c g L^3 \qquad F_b = \rho_l g \frac{L^3}{2} \qquad T = W - F_b$$</div></div>
-          <div class="sec derive"><div class="sec-label">Step-by-Step</div>
-            <div class="math-display">$$W = 83.97\text{ N} \qquad F_b = 8.72\text{ N} \qquad T = 75.25\text{ N}$$</div></div>
-          <div class="sec answer"><div class="sec-label">Answers</div>
-            <div class="ans-row"><div><div class="ans-val">W = 83.97 N</div><div class="ans-sub">(c)</div></div><div><div class="ans-val">Fb = 8.72 N</div><div class="ans-sub">(e)</div></div><div><div class="ans-val">T = 75.25 N</div><div class="ans-sub">(g)</div></div></div>
-            <p style="margin-top:12px;font-size:0.85rem;color:#666;">(h) Tension <strong>decreases</strong> if submerged more.</p></div>
-        </div>
-      </div>
-
-      <div class="problem-card" id="sp7">
-        <div class="prob-head"><div class="prob-num">7</div><div class="prob-title">Blood Flow Through an Artery</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Artery $r = 2.3\text{ mm}$, $v = 42\text{ cm/s}$. <strong>(a)</strong> Flow rate $Q$ (cm³/s). <strong>(b)</strong> Volume over $30\text{ s}$.</p></div>
-          <div class="sec formula-sec"><div class="sec-label">Formulas</div><div class="math-display">$$Q = \pi r^2 v \qquad V = Q \cdot t$$</div></div>
-          <div class="sec derive"><div class="sec-label">Step-by-Step</div><div class="math-display">$$Q = \pi(0.23)^2(42) = 6.98\text{ cm}^3/\text{s} \qquad V = 6.98 \times 30 = 209.4\text{ cm}^3$$</div></div>
-          <div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">Q = 6.98 cm³/s</div><div class="ans-sub">(a)</div></div><div><div class="ans-val">V = 209.4 cm³</div><div class="ans-sub">(b)</div></div></div></div>
-        </div>
-      </div>
-
-      <div class="problem-card" id="sp8">
-        <div class="prob-head"><div class="prob-num">8</div><div class="prob-title">Air Speed in a Heating Duct</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Duct diameter $0.305\text{ m}$. House $12 \times 19.5 \times 2.8\text{ m}^3$. Air cycles every $15\text{ min}$. Find average air speed.</p></div>
-          <div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$v = \frac{V_{house}}{t \cdot A_{duct}}$$</div></div>
-          <div class="sec derive"><div class="sec-label">Step-by-Step</div><div class="math-display">$$Q = 655.2/900 = 0.728\text{ m}^3/\text{s} \qquad A = 0.07306\text{ m}^2 \qquad v = 9.96\text{ m/s}$$</div></div>
-          <div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">v = 9.96 m/s</div></div>
-        </div>
-      </div>
-
-      <div class="problem-card" id="sp9">
-        <div class="prob-head"><div class="prob-num">9</div><div class="prob-title">Pitot Tube — Airspeed from Stagnation Pressure</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Mercury manometer $h = 0.195\text{ m}$. $\rho_{Hg} = 13{,}600\text{ kg/m}^3$, $\rho_{air} = 1.29\text{ kg/m}^3$. Find airspeed.</p></div>
-          <div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$v = \sqrt{\frac{2\,\Delta P}{\rho_{air}}} \qquad \Delta P = \rho_{Hg}\,g\,h$$</div></div>
-          <div class="sec derive"><div class="sec-label">Step-by-Step</div><div class="math-display">$$\Delta P = 25989.6\text{ Pa} \qquad v = \sqrt{40294} = 200.7\text{ m/s}$$</div></div>
-          <div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">v = 200.7 m/s</div></div>
-        </div>
-      </div>
-
-      <div class="problem-card" id="sp10">
-        <div class="prob-head"><div class="prob-num">10</div><div class="prob-title">Sump Pump — Bernoulli with Elevation &amp; Diameter Change</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$Q = 0.599\text{ L/s}$, $P_1 = 1.62\times10^5\text{ Pa}$, $d = 2.63\text{ cm}$. <strong>(a)</strong> Water rises $H = 2.09\text{ m}$, same $d$ — find $P_2$. <strong>(b)</strong> Pipe widens to $D = 6.11\text{ cm}$, drops $h = 0.51\text{ m}$ — find $P_3$.</p></div>
-          <div class="sec formula-sec"><div class="sec-label">Formula — Bernoulli</div><div class="math-display">$$P_1 + \tfrac{1}{2}\rho v_1^2 + \rho g z_1 = P_2 + \tfrac{1}{2}\rho v_2^2 + \rho g z_2$$</div></div>
-          <div class="sec derive"><div class="sec-label">Step-by-Step</div>
-            <div class="math-block">v₁ = 1.103 m/s
-(a): same d → v₂=v₁ → KE cancels → P₂ = 162000 − (1000)(9.8)(2.09) = 141518 Pa
-(b): v₃ = 0.2043 m/s, z₃=1.58 m → P₃ = 147104 Pa</div></div>
-          <div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">P₂ = 141,518 Pa</div><div class="ans-sub">(a)</div></div><div><div class="ans-val">P₃ = 147,104 Pa</div><div class="ans-sub">(b)</div></div></div></div>
-        </div>
-      </div>
-
-    </div>
-    <div class="sol-footer">The Physics I method: find the formula, identify knowns and unknowns, substitute, compute.</div>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════ PAGE: MATHEMATICIAN'S SOLUTIONS ═════════════ -->
-<div class="sol-page" id="page-ch14-hw-math">
-  <header class="site-header" style="position:sticky;top:0;z-index:100;">
-    <button class="back-btn" onclick="go('page-ch14-hw')">← BACK</button>
-    <div class="breadcrumb">
-      <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
-      <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
-      <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
-      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
-      <span onclick="go('page-ch14-hw')">HW</span><span class="sep">/</span>
-      <span class="current">MATHEMATICIAN'S WAY</span>
-    </div>
-  </header>
-  <div class="solutions-wrap" id="math-wrap">
-
-    <div class="sol-header" data-symbol="∫∂∇∆">
-      <div class="mode-badge">MODE 2 — A MATHEMATICIAN'S WAY</div>
-      <h1>Fluid Mechanics — A Mathematician's Lens</h1>
-      <p>Every physics problem is secretly a calculus problem in disguise.</p>
-    </div>
-
-    <div class="toc-wrap">
-      <div class="toc-label">Problems</div>
-      <div class="toc-grid">
-        <div class="toc-item" onclick="scrollToProb('mp1')"><span class="toc-num">1</span>Nail Force</div>
-        <div class="toc-item" onclick="scrollToProb('mp2')"><span class="toc-num">2</span>Gas Tank</div>
-        <div class="toc-item" onclick="scrollToProb('mp3')"><span class="toc-num">3</span>Manometer</div>
-        <div class="toc-item" onclick="scrollToProb('mp4')"><span class="toc-num">4</span>Breathing</div>
-        <div class="toc-item" onclick="scrollToProb('mp5')"><span class="toc-num">5</span>Ice Buoyancy</div>
-        <div class="toc-item" onclick="scrollToProb('mp6')"><span class="toc-num">6</span>Cube Equil.</div>
-        <div class="toc-item" onclick="scrollToProb('mp7')"><span class="toc-num">7</span>Blood Flow</div>
-        <div class="toc-item" onclick="scrollToProb('mp8')"><span class="toc-num">8</span>Air Duct</div>
-        <div class="toc-item" onclick="scrollToProb('mp9')"><span class="toc-num">9</span>Pitot Tube</div>
-        <div class="toc-item" onclick="scrollToProb('mp10')"><span class="toc-num">10</span>Sump Pump</div>
-      </div>
-    </div>
-
-    <div class="sol-main">
-      <div class="problem-card" id="mp1"><div class="prob-head"><div class="prob-num">1</div><div class="prob-title">Force on a Circular Nail Tip — Uniform Pressure on a Disk</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$d = 1.17\text{ mm}$, $P = 3.17\times10^9\text{ Pa}$. Find total normal force.</p></div><div class="sec think"><div class="sec-label">① How a Mathematician Reads This</div><p>Pressure is $P = dF/dA$. Integrating $P$ over the circular disk $D$ recovers $F$.</p></div><div class="sec derive"><div class="sec-label">③ Derivation</div><div class="math-display">$$F = \iint_D P\,dA = P_0 \cdot \pi r^2 = (3.17\times10^9)(1.0752\times10^{-6}) = 3408\text{ N}$$</div></div><div class="sec answer"><div class="sec-label">④ Answer</div><div class="ans-val">F = 3408 N</div></div><div class="sec intuit"><div class="sec-label">⑤ Intuition</div><p>Fix $F$, shrink $A\to0$: pressure $F/A$ blows up. This is exactly why nails work.</p></div></div></div>
-      <div class="problem-card" id="mp2"><div class="prob-head"><div class="prob-num">2</div><div class="prob-title">Hydrostatic Load — Weight as a Surface Force</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$0.505\text{ m}\times0.89\text{ m}$ tank, $49\text{ kg}$ gasoline. <strong>(a)</strong> pressure on bottom, <strong>(b)</strong> ratio $P_0/P$.</p></div><div class="sec derive"><div class="sec-label">③ Derivation</div><div class="math-display">$$P = \frac{mg}{A} = \frac{480.2}{0.44945} = 1068\text{ Pa} \qquad \mathcal{R} = \frac{101325}{1068} = 94.84$$</div></div><div class="sec answer"><div class="sec-label">④ Answers</div><div class="ans-row"><div><div class="ans-val">P = 1068 Pa</div></div><div><div class="ans-val">𝓡 = 94.84</div></div></div></div><div class="sec intuit"><div class="sec-label">⑤ Intuition</div><p>Ratio ≈95: a full tank of gasoline exerts less than 1% of atmospheric pressure.</p></div></div></div>
-      <div class="problem-card" id="mp3"><div class="prob-head"><div class="prob-num">3</div><div class="prob-title">Differential Manometry — Integrating the Hydrostatic Gradient</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Mercury manometer, open side $9.3\text{ cm}$ lower. Find gauge and absolute pressure.</p></div><div class="sec think"><div class="sec-label">① How a Mathematician Reads This</div><p>A BVP for a first-order ODE: $dP/dz = -\rho g$. Integrate the gradient.</p></div><div class="sec derive"><div class="sec-label">③ Derivation</div><div class="math-display">$$P_g = -\rho g h = -(13500)(9.8)(0.093) = -12304\text{ Pa} \qquad P_{abs} = 89021\text{ Pa}$$</div></div><div class="sec answer"><div class="sec-label">④ Answers</div><div class="ans-row"><div><div class="ans-val">Pᵍ = −12,304 Pa</div></div><div><div class="ans-val">Pₐᵦₛ = 89,021 Pa</div></div></div></div></div></div>
-      <div class="problem-card" id="mp4"><div class="prob-head"><div class="prob-num">4</div><div class="prob-title">Physiological Pressure Limits</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Lungs $60\text{ cm}$ underwater, effort $-3.15\text{ cm H}_2\text{O}$. Max negative gauge pressure on land?</p></div><div class="sec derive"><div class="sec-label">③ Derivation</div><div class="math-display">$$P = -(60 + 3.15) = -63.15\text{ cm H}_2\text{O}$$</div></div><div class="sec answer"><div class="sec-label">④ Answer</div><div class="ans-val">P = −63.15 cm H₂O</div></div></div></div>
-      <div class="problem-card" id="mp5"><div class="prob-head"><div class="prob-num">5</div><div class="prob-title">Buoyancy Fraction — Equilibrium as a Fixed-Point Equation</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$\rho_{ice}=910.9$, $\rho_w=1000$. Submerged fraction when floating?</p></div><div class="sec derive"><div class="sec-label">③ Derivation</div><div class="math-display">$$\rho_w V_{sub} g = \rho_i V_{total} g \;\Rightarrow\; f = \frac{\rho_i}{\rho_w} = 0.9109$$</div></div><div class="sec answer"><div class="sec-label">④ Answer</div><div class="ans-val">f = 0.9109</div></div></div></div>
-      <div class="problem-card" id="mp6"><div class="prob-head"><div class="prob-num">6</div><div class="prob-title">Static Equilibrium of a Suspended Cube</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$L=0.13\text{ m}$, $\rho_c=3900$, $\rho_l=810$, half submerged on string. Find $W$, $F_b$, $T$.</p></div><div class="sec derive"><div class="sec-label">③ Derivation</div><div class="math-display">$$W = \rho_c g L^3 = 83.97\text{ N} \qquad F_b = \rho_l g \frac{L^3}{2} = 8.72\text{ N} \qquad T = 75.25\text{ N}$$</div></div><div class="sec answer"><div class="sec-label">④ Answers</div><div class="ans-row"><div><div class="ans-val">W = 83.97 N</div></div><div><div class="ans-val">Fb = 8.72 N</div></div><div><div class="ans-val">T = 75.25 N</div></div></div></div></div></div>
-      <div class="problem-card" id="mp7"><div class="prob-head"><div class="prob-num">7</div><div class="prob-title">Arterial Blood Flow — Flux Integral</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$r=2.3\text{ mm}$, $v=42\text{ cm/s}$. Find $Q$ and volume in $30\text{ s}$.</p></div><div class="sec derive"><div class="sec-label">③ Derivation</div><div class="math-display">$$Q = \iint_D \mathbf{v}\cdot\hat{n}\,dA = v\pi r^2 = 6.98\text{ cm}^3/\text{s} \qquad V = 209.4\text{ cm}^3$$</div></div><div class="sec answer"><div class="sec-label">④ Answers</div><div class="ans-row"><div><div class="ans-val">Q = 6.98 cm³/s</div></div><div><div class="ans-val">V = 209.4 cm³</div></div></div></div></div></div>
-      <div class="problem-card" id="mp8"><div class="prob-head"><div class="prob-num">8</div><div class="prob-title">Air Duct — Conservation of Volume</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$d=0.305\text{ m}$, house $655.2\text{ m}^3$, cycle every $900\text{ s}$. Find air speed.</p></div><div class="sec derive"><div class="sec-label">③ Derivation</div><div class="math-display">$$v = \frac{Q}{A} = \frac{0.728}{0.07306} = 9.96\text{ m/s}$$</div></div><div class="sec answer"><div class="sec-label">④ Answer</div><div class="ans-val">v = 9.96 m/s</div></div></div></div>
-      <div class="problem-card" id="mp9"><div class="prob-head"><div class="prob-num">9</div><div class="prob-title">Pitot Tube — Bernoulli as a First Integral</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$h=0.195\text{ m}$, $\rho_{Hg}=13600$, $\rho_{air}=1.29$. Find airspeed.</p></div><div class="sec think"><div class="sec-label">① How a Mathematician Reads This</div><p>Bernoulli is the first integral of Euler's equation — a conserved mechanical energy per unit volume.</p></div><div class="sec derive"><div class="sec-label">③ Derivation</div><div class="math-display">$$\tfrac{1}{2}\rho_{air}v^2 = \rho_{Hg}gh = 25989.6\text{ Pa} \;\Rightarrow\; v = 200.7\text{ m/s}$$</div></div><div class="sec answer"><div class="sec-label">④ Answer</div><div class="ans-val">v = 200.7 m/s</div></div></div></div>
-      <div class="problem-card" id="mp10"><div class="prob-head"><div class="prob-num">10</div><div class="prob-title">Sump Pump — Full Bernoulli</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$Q=5.99\times10^{-4}\text{ m}^3/\text{s}$, $P_1=162000\text{ Pa}$. Parts (a) and (b).</p></div><div class="sec derive"><div class="sec-label">③ Derivation</div><div class="math-display">$$P + \tfrac{1}{2}\rho v^2 + \rho gz = \text{const}$$</div><div class="math-block">v₁=1.103 m/s
-(a): v₂=v₁ → P₂=141518 Pa
-(b): v₃=0.2043 m/s → P₃=147103 Pa</div></div><div class="sec answer"><div class="sec-label">④ Answers</div><div class="ans-row"><div><div class="ans-val">P₂ = 141,518 Pa</div></div><div><div class="ans-val">P₃ = 147,103 Pa</div></div></div></div><div class="sec intuit"><div class="sec-label">⑤ Intuition</div><p>Wider pipe: fluid slows → KE converts back to pressure, partially compensating elevation loss.</p></div></div></div>
-    </div>
-
-    <div class="sol-footer">
-      All derivations reduce to: $F = \iint P\,dA$ and $\frac{d}{ds}[P + \tfrac{1}{2}\rho v^2 + \rho gz] = 0$. Everything else is calculus.
-    </div>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════ PAGE: EXAM III — SIMPLE ════════════════════ -->
-<div class="sol-page" id="page-exam3-simple">
-  <header class="site-header" style="position:sticky;top:0;z-index:100;">
-    <button class="back-btn" onclick="go('page-ch14-exam3')">← BACK</button>
-    <div class="breadcrumb">
-      <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
-      <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
-      <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
-      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
-      <span onclick="go('page-ch14-exam3')">EXAM III</span><span class="sep">/</span>
-      <span class="current">SIMPLE</span>
-    </div>
-  </header>
-  <div class="solutions-wrap">
-    <div class="sol-header" data-symbol="P=F/A">
-      <div class="mode-badge">EXAM III — MODE 1 · SIMPLE PHYSICS I</div>
-      <h1>Exam III Review: Fluid Mechanics</h1>
-      <p>Ten review problems solved the Physics I way: find the formula, plug in the numbers, get the answer.</p>
-    </div>
-    <div class="toc-wrap">
-      <div class="toc-label">Jump to Problem</div>
-      <div class="toc-grid">
-        <div class="toc-item" onclick="scrollToProb('es1')"><span class="toc-num">1</span>Nail Tip</div>
-        <div class="toc-item" onclick="scrollToProb('es2')"><span class="toc-num">2</span>Gas Tank</div>
-        <div class="toc-item" onclick="scrollToProb('es3')"><span class="toc-num">3</span>Manometer</div>
-        <div class="toc-item" onclick="scrollToProb('es4')"><span class="toc-num">4</span>Breathing</div>
-        <div class="toc-item" onclick="scrollToProb('es5')"><span class="toc-num">5</span>Ice Float</div>
-        <div class="toc-item" onclick="scrollToProb('es6')"><span class="toc-num">6</span>Cube &amp; String</div>
-        <div class="toc-item" onclick="scrollToProb('es7')"><span class="toc-num">7</span>Artery Flow</div>
-        <div class="toc-item" onclick="scrollToProb('es8')"><span class="toc-num">8</span>Air Duct</div>
-        <div class="toc-item" onclick="scrollToProb('es9')"><span class="toc-num">9</span>Pitot Tube</div>
-        <div class="toc-item" onclick="scrollToProb('es10')"><span class="toc-num">10</span>Sump Pump</div>
-      </div>
-    </div>
-    <div class="sol-main">
-      <div class="problem-card" id="es1"><div class="prob-head"><div class="prob-num">1</div><div class="prob-title">Pressure-Force Mapping on a Circular Nail Tip</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Diameter $d=1.17\times10^{-3}\text{ m}$, $P=3.17\times10^9\text{ Pa}$. Find $F$.</p></div><div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$F = P\cdot\pi r^2 = (3.17\times10^9)(1.075\times10^{-6}) = 3408.2\text{ N}$$</div></div><div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">F = 3408.2 N</div></div></div></div>
-      <div class="problem-card" id="es2"><div class="prob-head"><div class="prob-num">2</div><div class="prob-title">Hydrostatic Load in a Rectangular Tank</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Base $0.505\times0.89\text{ m}$, gasoline $49\text{ kg}$. <strong>(a)</strong> $P$, <strong>(b)</strong> $P_{atm}/P$.</p></div><div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$P = \frac{mg}{A} = 1068.4\text{ Pa} \qquad \mathcal{R} = \frac{101325}{1068.4} = 94.84$$</div></div><div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">P = 1068.4 Pa</div><div class="ans-sub">(a)</div></div><div><div class="ans-val">𝓡 = 94.84</div><div class="ans-sub">(b)</div></div></div></div></div></div>
-      <div class="problem-card" id="es3"><div class="prob-head"><div class="prob-num">3</div><div class="prob-title">Differential Manometry</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$\rho_{Hg}=13500$, $\Delta z=0.093\text{ m}$, open side lower. Find gauge and absolute pressure.</p></div><div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$P_g = -\rho g\Delta z = -12303.9\text{ Pa} \qquad P_{abs} = 89021.1\text{ Pa}$$</div></div><div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">P_g = −12,304 Pa</div></div><div><div class="ans-val">P_abs = 89,021 Pa</div></div></div></div></div></div>
-      <div class="problem-card" id="es4"><div class="prob-head"><div class="prob-num">4</div><div class="prob-title">Physiological Gauge Constraints</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Lungs $60\text{ cm}$ below surface, effort $-3.15\text{ cm H}_2\text{O}$ at depth. Max negative gauge on dry land?</p></div><div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$P = -(60 + 3.15) = -63.15\text{ cm H}_2\text{O}$$</div></div><div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">P_gauge = −63.15 cm H₂O</div></div></div></div>
-      <div class="problem-card" id="es5"><div class="prob-head"><div class="prob-num">5</div><div class="prob-title">Buoyancy — Archimedes' Principle</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$\rho_i=910.9$, $\rho_w=1000$. Submerged fraction when floating?</p></div><div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$f = \frac{\rho_i}{\rho_w} = 0.9109$$</div></div><div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">f = 0.9109</div></div></div></div>
-      <div class="problem-card" id="es6"><div class="prob-head"><div class="prob-num">6</div><div class="prob-title">Half-Submerged Cube on a String</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$L=0.13\text{ m}$, $\rho_c=3900$, $\rho_l=810$. Find $w$, $F_B$, $T$. Effect of deeper submersion?</p></div><div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$w=83.97\text{ N} \qquad F_B=8.72\text{ N} \qquad T=75.25\text{ N}$$</div></div><div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">w = 83.97 N</div></div><div><div class="ans-val">F_B = 8.72 N</div></div><div><div class="ans-val">T = 75.25 N</div></div></div><p style="margin-top:10px;font-size:0.85rem;color:#666;">(h) Deeper → $F_B$↑ → T decreases.</p></div></div></div>
-      <div class="problem-card" id="es7"><div class="prob-head"><div class="prob-num">7</div><div class="prob-title">Arterial Blood Flow</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$r=0.0023\text{ m}$, $v=0.42\text{ m/s}$, $t=30\text{ s}$. Find $Q$ and $V$.</p></div><div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$Q = v\pi r^2 = 6.98\text{ cm}^3/\text{s} \qquad V = 209.4\text{ cm}^3$$</div></div><div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">Q = 6.98 cm³/s</div></div><div><div class="ans-val">V = 209.4 cm³</div></div></div></div></div></div>
-      <div class="problem-card" id="es8"><div class="prob-head"><div class="prob-num">8</div><div class="prob-title">Air Duct Velocity</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$d=0.305\text{ m}$, $V_R=655.2\text{ m}^3$, cycle every $900\text{ s}$. Find $v$.</p></div><div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$v = \frac{V_R}{\Delta t\cdot A} = \frac{655.2}{900\times0.07306} = 9.96\text{ m/s}$$</div></div><div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">v = 9.96 m/s</div></div></div></div>
-      <div class="problem-card" id="es9"><div class="prob-head"><div class="prob-num">9</div><div class="prob-title">Pitot Tube Stagnation Pressure</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$h=0.195\text{ m}$, $\rho_{Hg}=13600$, $\rho_a=1.29$. Find airspeed.</p></div><div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$v = \sqrt{\frac{2\rho_{Hg}gh}{\rho_a}} = \sqrt{40294} = 200.7\text{ m/s}$$</div></div><div class="sec answer"><div class="sec-label">Answer</div><div class="ans-val">v = 200.7 m/s</div></div></div></div>
-      <div class="problem-card" id="es10"><div class="prob-head"><div class="prob-num">10</div><div class="prob-title">Sump Pump — Bernoulli</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$Q=5.99\times10^{-4}$, $P_1=162000\text{ Pa}$. <strong>(a)</strong> Same $d$, rises $2.09\text{ m}$. <strong>(b)</strong> Wider pipe, drops $0.51\text{ m}$.</p></div><div class="sec formula-sec"><div class="sec-label">Formula</div><div class="math-display">$$P_1+\tfrac{1}{2}\rho v_1^2+\rho gz_1 = P_n+\tfrac{1}{2}\rho v_n^2+\rho gz_n$$</div></div><div class="sec derive"><div class="sec-label">Evaluation</div><div class="math-block">v₁=1.103 m/s
-(a): P₂=141518 Pa  |  (b): P₃=147103 Pa</div></div><div class="sec answer"><div class="sec-label">Answers</div><div class="ans-row"><div><div class="ans-val">P₂ = 141,518 Pa</div></div><div><div class="ans-val">P₃ = 147,103 Pa</div></div></div></div></div></div>
-    </div>
-    <div class="sol-footer">Exam III Review — Simple Physics I method.</div>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════ PAGE: EXAM III — UNIFIED SOP ═══════════════ -->
-<div class="sol-page" id="page-exam3-sop">
-  <header class="site-header" style="position:sticky;top:0;z-index:100;">
-    <button class="back-btn" onclick="go('page-ch14-exam3')">← BACK</button>
-    <div class="breadcrumb">
-      <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
-      <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
-      <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
-      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
-      <span onclick="go('page-ch14-exam3')">EXAM III</span><span class="sep">/</span>
+      <span onclick="go('page-ch13')">CH. 13</span><span class="sep">/</span>
       <span class="current">UNIFIED SOP</span>
     </div>
   </header>
   <div class="solutions-wrap">
-
-    <div class="sol-header sop-header" data-symbol="Φ₁Φ₂Φ₃">
-      <div class="mode-badge sop-badge">EXAM III — MODE 2 · EXECUTE THE UNIFIED SOP</div>
-      <h1>Fluid Mechanics — The Framework in Action</h1>
-      <p>Every problem attacked identically: Phase 1 binds the domain, Phase 2 invokes the correct protocol, Phase 3 synthesizes the answer. Watch the SOP demolish all ten problems in sequence.</p>
+    <div class="sol-header sop-header" data-symbol="SOP">
+      <div class="mode-badge sop-badge">GRAVITATION &mdash; STANDARD OPERATING PROCEDURE CH. 13</div>
+      <h1>The Standard Operating Procedure</h1>
+      <p>Five phases that transform any gravitational problem &mdash; from a falling apple to an orbital transfer &mdash; into a solvable ODE. Potential fields, first integrals, boundary analysis: the complete framework.</p>
     </div>
-
-    <div class="toc-wrap">
-      <div class="toc-label">Problems</div>
-      <div class="toc-grid">
-        <div class="toc-item" onclick="scrollToProb('sop1')"><span class="toc-num">1</span>Nail Tip</div>
-        <div class="toc-item" onclick="scrollToProb('sop2')"><span class="toc-num">2</span>Gas Tank</div>
-        <div class="toc-item" onclick="scrollToProb('sop3')"><span class="toc-num">3</span>Manometer</div>
-        <div class="toc-item" onclick="scrollToProb('sop4')"><span class="toc-num">4</span>Breathing</div>
-        <div class="toc-item" onclick="scrollToProb('sop5')"><span class="toc-num">5</span>Ice Float</div>
-        <div class="toc-item" onclick="scrollToProb('sop6')"><span class="toc-num">6</span>Cube &amp; String</div>
-        <div class="toc-item" onclick="scrollToProb('sop7')"><span class="toc-num">7</span>Artery Flow</div>
-        <div class="toc-item" onclick="scrollToProb('sop8')"><span class="toc-num">8</span>Air Duct</div>
-        <div class="toc-item" onclick="scrollToProb('sop9')"><span class="toc-num">9</span>Pitot Tube</div>
-        <div class="toc-item" onclick="scrollToProb('sop10')"><span class="toc-num">10</span>Sump Pump</div>
-      </div>
-    </div>
-
     <div class="sol-main">
 
-      <!-- ── SOP1 ── -->
-      <div class="problem-card" id="sop1">
-        <div class="prob-head"><div class="prob-num">1</div><div class="prob-title">Circular Pressure-Force Mapping</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A nail tip has a circular cross-section of diameter $d = 1.17 \times 10^{-3}\text{ m}$. A uniform pressure field $P = 3.17 \times 10^9\text{ Pa}$ is applied. Find the total normal force $F$.</p></div>
-
-          <div class="sec sop-p1-sec">
-            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
-            <p>Before touching a single number, we need to ask: what kind of domain are we working with? Look at this problem carefully. The nail tip is a flat, circular surface — a two-dimensional disk embedded in three-dimensional space. There are no pipes, no flow, no outlets. The fluid (or more precisely, the medium transmitting the force) is not moving anywhere. We check the velocity field: $\mathbf{v} = \mathbf{0}$. That single observation routes us immediately — this is a <strong>Static Instance</strong>. There is no flow to track, no continuity to enforce, no streamlines to follow. All we have is a pressure value distributed across a bounded surface, and we need to know the resultant force it produces.</p>
-          </div>
-
-          <div class="sec sop-p2-sec">
-            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
-            <p>Because we have confirmed a Static Instance, we invoke <strong>Instance C — The Gravitational Gradient</strong>. Now, you might wonder: this is a nail, not a fluid column. Why use the static fluid protocol? The answer is that Instance C gives us the general rule governing how pressure fields behave when there is no flow — pressure is a scalar that acts uniformly on every area element. In this particular case, the pressure is <em>uniform</em> across the entire surface, meaning $P(\mathbf{r}) = P_0$ everywhere on the disk. When that happens, the surface integral $F = \iint_S P\,dA$ collapses beautifully — $P_0$ factors right out of the integral, and we are left simply multiplying the pressure by the total area. The entire calculation reduces to a single scalar multiplication. The governing result is:</p>
-            <div class="math-display">$$F = \iint_S P\,dA = P \cdot A$$</div>
-          </div>
-
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
-            <p>Now we inject our boundary conditions. The diameter gives us radius $r = d/2 = 5.85 \times 10^{-4}\text{ m}$. We compute the circular area using $A = \pi r^2$, then multiply directly by the given pressure. The arithmetic is the easy part — all the physics was resolved in Phase 1 and 2:</p>
-            <div class="math-display">$$A = \pi(5.85\times10^{-4})^2 = 1.075\times10^{-6}\text{ m}^2$$</div>
-            <div class="math-display">$$F = (3.17\times10^9)(1.075\times10^{-6}) = 3408.2\text{ N}$$</div>
-          </div>
-
-          <div class="sec sop-answer">
-            <div class="sec-label">Convergence</div>
-            <div class="ans-val">F = 3408.2 N</div>
-            <div class="ans-sub">A tiny 1.17 mm tip transmits over 3400 newtons — the area is the amplifier</div>
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">&#934;&#8321;</div>
+          <div>
+            <div class="sop-card-head-title">Phase I &mdash; Manifold and Coordinate Selection</div>
+            <div class="sop-card-head-sub">Before writing a single equation, bind the domain</div>
           </div>
         </div>
-      </div>
-
-      <!-- ── SOP2 ── -->
-      <div class="problem-card" id="sop2">
-        <div class="prob-head"><div class="prob-num">2</div><div class="prob-title">Rectangular Hydrostatic Load</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A rectangular base $0.505\text{ m} \times 0.89\text{ m}$ supports static gasoline of mass $49\text{ kg}$. <strong>(a)</strong> Find pressure $P$ on the base. <strong>(b)</strong> Find $\mathcal{R} = P_{atm}/P$.</p></div>
-
+        <div class="sop-card-body">
           <div class="sec sop-p1-sec">
-            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
-            <p>We are looking at a sealed rectangular tank containing gasoline at rest. The question asks about the pressure at the very bottom of that tank — the force the weight of the gasoline exerts on its base. Since the gasoline is not flowing anywhere, not entering or exiting — it is simply sitting there under gravity — we observe $\mathbf{v} = \mathbf{0}$ throughout the domain. This is unmistakably a <strong>Static Instance</strong>. The manifold is a rectangular slab of fluid whose only interesting boundary is the bottom face $S_{base}$, against which the full gravitational load is pressing. Map the manifold: the walls and top face are irrelevant to us here — only the base matters, and that is where we will apply our protocol.</p>
-          </div>
-
-          <div class="sec sop-p2-sec">
-            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
-            <p>Static Instance confirmed — invoke <strong>Instance C</strong>. What Instance C tells us is that in a static fluid, pressure at any point is simply the weight of the fluid column above it per unit area. Here, the entire mass of gasoline ($m = 49\text{ kg}$) is pressing down on the rectangular base with area $A = 0.505 \times 0.89\text{ m}^2$. The gravitational force $F = mg$ distributes itself evenly across that area, giving us a scalar pressure $P = mg/A$. For Part (b), we then compare this gasoline pressure against the atmospheric boundary condition ($P_{atm} = 101{,}325\text{ Pa}$) to find the ratio $\mathcal{R}$:</p>
-            <div class="math-display">$$P = \frac{mg}{A} \qquad \mathcal{R} = \frac{P_{atm}}{P}$$</div>
-          </div>
-
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
-            <p>Inject the boundary conditions: $A = 0.44945\text{ m}^2$, $m = 49\text{ kg}$, $g = 9.8\text{ m/s}^2$. The gravitational force is $F = 480.2\text{ N}$. Dividing by area gives the pressure, and then dividing the atmospheric boundary condition by our result yields the ratio:</p>
-            <div class="math-display">$$P = \frac{480.2}{0.44945} = 1068.4\text{ Pa} \qquad \mathcal{R} = \frac{101{,}325}{1068.4} = 94.84$$</div>
-          </div>
-
-          <div class="sec sop-answer">
-            <div class="sec-label">Convergence</div>
-            <div class="ans-row">
-              <div><div class="ans-val">P = 1068.4 Pa</div><div class="ans-sub">(a)</div></div>
-              <div><div class="ans-val">𝓡 = 94.84</div><div class="ans-sub">(b) — atmosphere is nearly 95× stronger than a full tank</div></div>
+            <div class="sec-label">Step 1 &mdash; Identify the Domain</div>
+            <div class="sop-table-wrap">
+              <table class="sop-table">
+                <thead><tr><th>Domain</th><th>Symbol</th><th>When to Use</th></tr></thead>
+                <tbody>
+                  <tr><td>Linear</td><td>$\\mathbb{R}^1$</td><td>Radial free-fall, vertical motion near a surface</td></tr>
+                  <tr><td>Planar / Orbital</td><td>$\\mathbb{R}^2$</td><td>Two-body orbits, satellite motion, escape trajectories</td></tr>
+                  <tr><td>General Spatial</td><td>$\\mathbb{R}^3$</td><td>Multi-body systems, 3D gravitational fields</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Step 2 &mdash; Choose a Coordinate Basis</div>
+            <p><strong>Cartesian $(x, y, z)$:</strong> Forces along fixed axes.</p>
+            <p><strong>Polar / Spherical $(r, \\theta, \\phi)$:</strong> Orbital mechanics. Gravity is purely radial, so polar coordinates diagonalize the problem.</p>
+          </div>
         </div>
       </div>
 
-      <!-- ── SOP3 ── -->
-      <div class="problem-card" id="sop3">
-        <div class="prob-head"><div class="prob-num">3</div><div class="prob-title">U-Manifold Differential Manometry</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Mercury manometer ($\rho = 13{,}500\text{ kg/m}^3$), open side $0.093\text{ m}$ lower than jar side. Find gauge and absolute pressure in the jar.</p></div>
-
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">&#934;&#8322;</div>
+          <div>
+            <div class="sop-card-head-title">Phase II &mdash; Field Derivation from Scalar Potential &#934;</div>
+            <div class="sop-card-head-sub">Gravity as a conservative vector field derived from a scalar</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
           <div class="sec sop-p1-sec">
-            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
-            <p>Here we have a U-shaped tube filled with mercury. One side is open to the atmosphere; the other is connected to a sealed jar of peanuts. The mercury is sitting completely still — no flow, no circulation. The domain is a 1D vertical path through that mercury column, and the velocity field is $\mathbf{v} = \mathbf{0}$ everywhere. This is a <strong>Static Instance</strong>. The key observation is the <em>height difference</em> between the two mercury levels: the open side sits $0.093\text{ m}$ lower than the jar side. This tells us immediately that the jar is at a <em>lower</em> pressure than the atmosphere — if the jar were at higher pressure, mercury would have been pushed toward the open side, making the open side higher. The geometry of the manometer encodes the pressure difference directly.</p>
+            <div class="sec-label">Step 1 &mdash; Define the Gravitational Potential</div>
+            <p>For $N$ point masses $M_i$ at positions $\\mathbf{r}_i$:</p>
+            <div class="math-display">$$\\Phi(\\mathbf{r}) = -\\sum_{i=1}^{N} \\frac{GM_i}{\\|\\mathbf{r} - \\mathbf{r}_i\\|}$$</div>
+            <p>For a single dominant body: $\\Phi(r) = -GM/r$. This is the potential energy per unit mass at any point in space.</p>
           </div>
-
           <div class="sec sop-p2-sec">
-            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
-            <p>Static Instance confirmed — invoke <strong>Instance C</strong>. The governing command is $\nabla P = \rho\mathbf{g}$, which in one dimension integrates to $P = P_0 - \rho g h$. We are walking vertically through the mercury: every meter we descend, pressure increases by $\rho g$ per unit height. The height difference $\Delta z = 0.093\text{ m}$ is the geometric encoding of the pressure difference between the jar and the atmosphere. Because the open side is <em>lower</em>, and pressure increases as we go down, the jar must be at a pressure <em>below</em> atmospheric — meaning the gauge pressure is negative. Once we have the gauge pressure, absolute pressure is simply $P_{atm}$ plus (or in this case, minus) the gauge value:</p>
-            <div class="math-display">$$P_{gauge} = -\rho g\,\Delta z \qquad P_{abs} = P_{atm} + P_{gauge}$$</div>
+            <div class="sec-label">Step 2 &mdash; Apply the Gradient Operation</div>
+            <p>The gravitational acceleration field is the negative gradient of the potential:</p>
+            <div class="math-display">$$\\mathbf{g}(\\mathbf{r}) = -\\nabla\\Phi = -\\frac{GM}{r^2}\\hat{r}$$</div>
+            <p>Newton&rsquo;s Law of Gravitation &mdash; derived from the potential, not assumed.</p>
           </div>
+        </div>
+      </div>
 
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">&#934;&#8323;</div>
+          <div>
+            <div class="sop-card-head-title">Phase III &mdash; The Governing Second-Order ODE</div>
+            <div class="sop-card-head-sub">The equation of motion &mdash; the heart of the problem</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">The Equation of Motion</div>
+            <p>From Axiom 1 ($\\mathbf{F} = m\\ddot{\\mathbf{r}}$) and Phase II:</p>
+            <div class="math-display">$$\\ddot{\\mathbf{r}} = \\mathbf{g}(\\mathbf{r}) + \\frac{1}{m}\\mathbf{F}_{con}$$</div>
+            <p>where $\\mathbf{F}_{con}$ is any constraint force (tension, normal, thrust). Phase IV solves this without direct integration of the second-order system.</p>
+          </div>
           <div class="sec sop-p3-sec">
-            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
-            <p>Inject the boundary conditions: $\rho = 13{,}500\text{ kg/m}^3$, $g = 9.8\text{ m/s}^2$, $\Delta z = 0.093\text{ m}$, $P_{atm} = 101{,}325\text{ Pa}$. The arithmetic completes the system:</p>
-            <div class="math-display">$$P_{gauge} = -(13{,}500)(9.8)(0.093) = -12{,}303.9\text{ Pa}$$</div>
-            <div class="math-display">$$P_{abs} = 101{,}325 + (-12{,}303.9) = 89{,}021.1\text{ Pa}$$</div>
+            <div class="sec-label">In Polar Coordinates (Orbital Case)</div>
+            <div class="math-display">$$\\ddot{r} - r\\dot\\theta^2 = -\\frac{GM}{r^2} \\qquad \\frac{d}{dt}(r^2\\dot\\theta) = 0$$</div>
+            <p>The second equation is the angular momentum conservation law &mdash; the orbit is already conserving $L = mr^2\\dot\\theta$.</p>
           </div>
+        </div>
+      </div>
 
-          <div class="sec sop-answer">
-            <div class="sec-label">Convergence</div>
-            <div class="ans-row">
-              <div><div class="ans-val">P_g = −12,303.9 Pa</div><div class="ans-sub">(a) gauge — below atmospheric</div></div>
-              <div><div class="ans-val">P_abs = 89,021.1 Pa</div><div class="ans-sub">(b) absolute</div></div>
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">&#934;&#8324;</div>
+          <div>
+            <div class="sop-card-head-title">Phase IV &mdash; Integration via First Integrals</div>
+            <div class="sop-card-head-sub">Replace the ODE with two algebraic conservation laws</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sop-instance-box inst-b">
+            <div class="sop-instance-label">The Energy Integral (Hamiltonian)</div>
+            <p>Total specific mechanical energy $\\mathcal{E}$:</p>
+            <div class="math-display">$$\\mathcal{E} = \\frac{1}{2}v^2 - \\frac{GM}{r} = \\mathrm{const}$$</div>
+            <div class="sop-table-wrap" style="margin-top:12px;">
+              <table class="sop-table">
+                <thead><tr><th>$\\mathcal{E}$ Sign</th><th>Orbit Type</th><th>Shape</th></tr></thead>
+                <tbody>
+                  <tr><td>$\\mathcal{E} &lt; 0$</td><td>Bound orbit</td><td>Ellipse</td></tr>
+                  <tr><td>$\\mathcal{E} = 0$</td><td>Escape (barely)</td><td>Parabola &mdash; defines escape velocity</td></tr>
+                  <tr><td>$\\mathcal{E} &gt; 0$</td><td>Unbound</td><td>Hyperbola</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="math-display">$$v_{esc} = \\sqrt{\\frac{2GM}{r}} \\qquad \\text{(from }\\mathcal{E} = 0\\text{)}$$</div>
+          </div>
+          <div class="sop-instance-box inst-c">
+            <div class="sop-instance-label">The Angular Momentum Integral</div>
+            <p>Gravity is purely radial &rarr; $\\mathbf{r}\\times\\mathbf{F}_{grav} = \\mathbf{0}$ &rarr; $\\mathbf{L}$ is conserved:</p>
+            <div class="math-display">$$\\ell = r^2\\dot\\theta = \\mathrm{const} \\qquad \\text{(Kepler&rsquo;s Second Law)}$$</div>
+            <p><strong>Circular orbits</strong> ($\\ddot{r} = 0$):</p>
+            <div class="math-display">$$v_{circ} = \\sqrt{\\frac{GM}{r}} \\qquad T^2 = \\frac{4\\pi^2}{GM}\\,r^3 \\;\\text{(Kepler&rsquo;s Third Law)}$$</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">&#934;&#8325;</div>
+          <div>
+            <div class="sop-card-head-title">Phase V &mdash; Boundary Value and Limiting Analysis</div>
+            <div class="sop-card-head-sub">Inject physical constraints and solve the system</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Routing Table &mdash; Gravitation</div>
+            <div class="sop-table-wrap">
+              <table class="sop-table">
+                <thead><tr><th>If you need&hellip;</th><th>Use&hellip;</th><th>Phase</th></tr></thead>
+                <tbody>
+                  <tr><td>Speed at given $r$</td><td>$\\mathcal{E} = \\frac{1}{2}v^2 - GM/r = \\mathrm{const}$</td><td>IV</td></tr>
+                  <tr><td>Escape velocity</td><td>$v_{esc} = \\sqrt{2GM/R}$</td><td>IV</td></tr>
+                  <tr><td>Orbital period</td><td>$T^2 = 4\\pi^2 r^3/(GM)$</td><td>IV</td></tr>
+                  <tr><td>Gravitational field $g$</td><td>$\\mathbf{g} = -\\nabla\\Phi = -GM/r^2\\,\\hat{r}$</td><td>II</td></tr>
+                  <tr><td>Orbit classification</td><td>Sign of $\\mathcal{E}$</td><td>IV</td></tr>
+                  <tr><td>Geosynchronous radius</td><td>Set $T = 24\\text{ hr}$ in Kepler&rsquo;s Third</td><td>IV</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- ── SOP4 ── -->
-      <div class="problem-card" id="sop4">
-        <div class="prob-head"><div class="prob-num">4</div><div class="prob-title">Physiological Lung Constraints</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Breathing through a tube $60\text{ cm}$ underwater with residual lung effort $-3.15\text{ cm H}_2\text{O}$. Find maximum negative gauge pressure the lungs must produce on dry land.</p></div>
-
-          <div class="sec sop-p1-sec">
-            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
-            <p>This problem is more subtle than it first appears. We have two domains: the <em>internal</em> lung manifold (a biological pressure chamber) and the <em>external</em> water column pressing down from the surface. The lungs are not pumping fluid through a pipe — they are trying to create a low-pressure zone to draw air in. Since no fluid is actually flowing (the question is about the <em>threshold</em> for inhalation, not active flow), we treat this as a <strong>Static Instance</strong> of differential pressure equilibrium. We are essentially asking: for the lung pressure to overcome both the water column weight and the natural breathing resistance, how strong does the internal suction need to be? The velocity field is zero — we are at the balance point, the critical limit, not analyzing active flow.</p>
-          </div>
-
-          <div class="sec sop-p2-sec">
-            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
-            <p>Invoke <strong>Instance C</strong>. The water column above the lungs ($h = 60\text{ cm H}_2\text{O}$) exerts a hydrostatic pressure that the lungs must overcome just to break even. But the lungs are also working against their own mechanical resistance: even on dry land, they require $-3.15\text{ cm H}_2\text{O}$ of effort just to breathe. Underwater, these two resistances <em>add together</em>. The lung must fight the water pressure differential AND overcome the mechanical breathing threshold simultaneously. Instance C lets us compute the water pressure contribution; then we simply sum the two constraints to find the total required suction:</p>
-            <div class="math-display">$$\Delta P_{required} = h_{water} + |h_{breathing}| = 60 + 3.15 = 63.15\text{ cm H}_2\text{O}$$</div>
-          </div>
-
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
-            <p>The boundary conditions are already in consistent units (cm H₂O), so synthesis is direct. On dry land, the external pressure is 0 gauge. The lung must generate $-63.15\text{ cm H}_2\text{O}$ of internal suction to replicate what it would need to do $60\text{ cm}$ underwater. Since the human diaphragm can only produce approximately $-3.15\text{ cm H}_2\text{O}$, this requirement is biologically impossible — which is exactly why the movie trick doesn't work in real life:</p>
-            <div class="math-display">$$P_{gauge,land} = 0 - 63.15 = -63.15\text{ cm H}_2\text{O}$$</div>
-          </div>
-
-          <div class="sec sop-answer">
-            <div class="sec-label">Convergence</div>
-            <div class="ans-val">P_gauge = −63.15 cm H₂O</div>
-            <div class="ans-sub">20× beyond what the human lung can produce — physiologically impossible</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── SOP5 ── -->
-      <div class="problem-card" id="sop5">
-        <div class="prob-head"><div class="prob-num">5</div><div class="prob-title">Divergence Theorem and Buoyancy</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>An ice block with $\rho_i = 910.9\text{ kg/m}^3$ floats in freshwater $\rho_w = 1000\text{ kg/m}^3$. Find the submerged fraction.</p></div>
-
-          <div class="sec sop-p1-sec">
-            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
-            <p>We have an ice block sitting motionless in water. It is not sinking, not rising — it has found its equilibrium. The water surrounding it is still, the ice is still, and there is no velocity field to speak of anywhere in the system. This is a <strong>Static Instance</strong>. Our domain is the ice manifold $\Omega_i$ sitting inside the surrounding water domain $\Omega_w$. The critical insight for mapping the manifold here is recognizing that the submerged portion of the ice has a boundary where the water pressure field directly presses against it. That boundary is the interface between water and ice — it is where the buoyant force originates. We need to relate the geometry of that submerged interface to the forces that keep the block afloat.</p>
-          </div>
-
-          <div class="sec sop-p2-sec">
-            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
-            <p>Invoke <strong>Instance C</strong>. The water surrounding the submerged portion of the ice exerts a pressure that varies with depth according to the hydrostatic gradient $\nabla P = \rho_w \mathbf{g}$. If we integrated this pressure field over the entire submerged surface, we would recover the upward buoyant force — and by the Divergence Theorem, that surface integral equals the weight of the fluid displaced by the submerged volume. This is Archimedes' principle, rigorously derived. At equilibrium, the upward buoyant force must exactly equal the downward weight of the entire ice block. Setting those equal and canceling $g$ and $V_{total}$ from both sides leaves us with a beautifully clean relationship between the two densities and the submerged fraction:</p>
-            <div class="math-display">$$F_B = W \;\Rightarrow\; \rho_w V_{sub}\,g = \rho_i V_{total}\,g \;\Rightarrow\; \frac{V_{sub}}{V_{total}} = \frac{\rho_i}{\rho_w}$$</div>
-          </div>
-
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
-            <p>The synthesis could not be more elegant. Notice that both $g$ and $V_{total}$ cancelled out in Phase 2 — the result is universal, independent of the size or shape of the block. All we need are the two densities. Inject the boundary conditions:</p>
-            <div class="math-display">$$\frac{V_{sub}}{V_{total}} = \frac{910.9}{1000} = 0.9109$$</div>
-          </div>
-
-          <div class="sec sop-answer">
-            <div class="sec-label">Convergence</div>
-            <div class="ans-val">Submerged Fraction = 0.9109</div>
-            <div class="ans-sub">91.09% submerged — only a thin sliver peeks above the water line</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── SOP6 ── -->
-      <div class="problem-card" id="sop6">
-        <div class="prob-head"><div class="prob-num">6</div><div class="prob-title">Partially Submerged Cubic Manifold</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A cube $L = 0.13\text{ m}$, $\rho_c = 3900\text{ kg/m}^3$, half submerged in liquid $\rho_l = 810\text{ kg/m}^3$, held on a string. Find $w$, $F_B$, $T$. What happens to $T$ if submerged deeper?</p></div>
-
-          <div class="sec sop-p1-sec">
-            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
-            <p>A dense cube is tethered by a string and held exactly half-submerged in a liquid. Everything is in equilibrium — the cube is not accelerating, nothing is flowing. The velocity field is zero throughout: $\mathbf{v} = \mathbf{0}$. This is a <strong>Static Instance</strong>. Before invoking any protocol, let's think about what forces are acting on this system and map them cleanly. There are exactly three forces on the cube: the downward gravitational weight $w$ acting through the center of mass, the upward hydrostatic pressure from the liquid acting on the submerged bottom half (which we call $F_B$, the buoyant force), and the upward tension $T$ in the string connecting the cube to the floor below. These three forces must sum to zero for the cube to remain stationary. We need Instance C to compute both $w$ and $F_B$ from first principles, and then a simple force balance closes the problem.</p>
-          </div>
-
-          <div class="sec sop-p2-sec">
-            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C)</div>
-            <p>Invoke <strong>Instance C</strong> to extract the two key force values. For the weight: the entire cube volume is filled with dense material at $\rho_c = 3900\text{ kg/m}^3$, so $w = \rho_c g L^3$ — this is the integral of the gravitational body force over the full cube volume. For the buoyant force: only <em>half</em> the cube is submerged, meaning the liquid only displaces half the cube's volume. By Archimedes (from Instance C), that buoyant force equals the weight of the half-volume of liquid displaced: $F_B = \rho_l g (L^3/2)$. With both forces known, the equilibrium condition $T + F_B = w$ immediately gives us the tension:</p>
-            <div class="math-display">$$w = \rho_c g L^3 \qquad F_B = \rho_l g\,\frac{L^3}{2} \qquad T = w - F_B$$</div>
-          </div>
-
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
-            <p>Inject the boundary conditions — $L = 0.13\text{ m}$, $\rho_c = 3900\text{ kg/m}^3$, $\rho_l = 810\text{ kg/m}^3$, $g = 9.8\text{ m/s}^2$ — and evaluate each quantity. Notice that the cube is very dense (nearly 5× the liquid), which is why the string needs to be <em>pulling down</em>: the cube would sink without it. For Part (h): if the cube is pushed deeper, $V_{sub}$ increases, which makes $F_B$ larger, which reduces the difference $T = w - F_B$, meaning tension decreases.</p>
-            <div class="math-display">$$w = (3900)(9.8)(0.13)^3 = 83.97\text{ N} \qquad F_B = (810)(9.8)(0.5)(0.13)^3 = 8.72\text{ N}$$</div>
-            <div class="math-display">$$T = 83.97 - 8.72 = 75.25\text{ N}$$</div>
-            <p style="font-size:0.88rem;margin-top:6px;">Deeper: $V_{sub}\uparrow \;\Rightarrow\; F_B\uparrow \;\Rightarrow\; T = w - F_B\downarrow$</p>
-          </div>
-
-          <div class="sec sop-answer">
-            <div class="sec-label">Convergence</div>
-            <div class="ans-row">
-              <div><div class="ans-val">w = 83.97 N</div><div class="ans-sub">(c)</div></div>
-              <div><div class="ans-val">F_B = 8.72 N</div><div class="ans-sub">(e)</div></div>
-              <div><div class="ans-val">T = 75.25 N</div><div class="ans-sub">(g)</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── SOP7 ── -->
-      <div class="problem-card" id="sop7">
-        <div class="prob-head"><div class="prob-num">7</div><div class="prob-title">Flux Integrals in Arterial Domains</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A cylindrical manifold (artery) with $r = 0.0023\text{ m}$, $v = 0.42\text{ m/s}$. Find $Q$ (cm³/s) and volume over $30\text{ s}$.</p></div>
-
-          <div class="sec sop-p1-sec">
-            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
-            <p>Blood is actively flowing through a cylindrical artery at constant speed. The velocity field is clearly nonzero — $\mathbf{v} \neq \mathbf{0}$ — and the blood is entering the artery on one side and exiting on the other. This is a <strong>Dynamic Instance</strong>. Mapping the manifold: the artery cross-section is a circular domain $S$ with radius $r = 0.0023\text{ m}$. The blood enters through one circular face $S_{in}$ and exits through the other $S_{out}$; the cylindrical wall $S_w$ is impenetrable with $\mathbf{v}\cdot\hat{n} = 0$. We have all we need to invoke Instance A. The question is asking us to compute how much volume crosses the cross-sectional boundary per second — which is exactly the flux integral definition of volumetric flow rate.</p>
-          </div>
-
-          <div class="sec sop-p2-sec">
-            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance A)</div>
-            <p>Dynamic Instance confirmed — invoke <strong>Instance A, the Mass-Flux Lock</strong>. For a steady, incompressible flow with uniform velocity across a circular cross-section, the volumetric flow rate $Q$ is the surface flux integral $\iint_S \mathbf{v}\cdot d\mathbf{A}$. Since the velocity is perfectly parallel to the normal vector of the cross-sectional face (blood flows along the axis), the dot product is simply $|\mathbf{v}|$, and the integral collapses to $Q = v \cdot A$. The volume that passes a fixed cross-section in time $t$ is then just $V = Q \cdot t$ — a simple temporal integration of a constant flow rate:</p>
-            <div class="math-display">$$Q = \iint_S \mathbf{v}\cdot d\mathbf{A} = v\cdot\pi r^2 \qquad V = \int_0^t Q\,dt = Q\cdot t$$</div>
-          </div>
-
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
-            <p>Working in centimeters for convenience (as is standard for biological flows): $r = 0.23\text{ cm}$, $v = 42\text{ cm/s}$. Compute the cross-sectional area, multiply by speed to get instantaneous flow, then multiply by $30\text{ s}$ to get total volume. All boundary conditions are explicit:</p>
-            <div class="math-display">$$Q = 42 \times \pi(0.23)^2 = 6.980\text{ cm}^3/\text{s} \qquad V = 6.980 \times 30 = 209.4\text{ cm}^3$$</div>
-          </div>
-
-          <div class="sec sop-answer">
-            <div class="sec-label">Convergence</div>
-            <div class="ans-row">
-              <div><div class="ans-val">Q = 6.98 cm³/s</div><div class="ans-sub">(a)</div></div>
-              <div><div class="ans-val">V = 209.4 cm³</div><div class="ans-sub">(b) — roughly a cup of blood per half-minute</div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── SOP8 ── -->
-      <div class="problem-card" id="sop8">
-        <div class="prob-head"><div class="prob-num">8</div><div class="prob-title">Continuity in Air Duct Manifolds</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A control volume (room) $V_R = 655.2\text{ m}^3$ coupled to a circular duct $d = 0.305\text{ m}$. Air cycles every $900\text{ s}$. Find air velocity in the duct.</p></div>
-
-          <div class="sec sop-p1-sec">
-            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
-            <p>Air is actively flowing through a duct to ventilate a house. The velocity field is nonzero — $\mathbf{v} \neq \mathbf{0}$ — so this is a <strong>Dynamic Instance</strong>. The clever thing here is recognizing that we have <em>two coupled domains</em>: the large primary domain (the house, volume $655.2\text{ m}^3$) and the secondary manifold (the circular duct, diameter $0.305\text{ m}$). The house is the control volume whose air is being exchanged; the duct is the pathway through which that exchange occurs. The boundary that matters is the cross-section of the duct, which acts as the outlet for stale air and inlet for fresh air. We need to connect the rate of volume change in the primary domain to the flux through the secondary manifold's cross-section.</p>
-          </div>
-
-          <div class="sec sop-p2-sec">
-            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance A)</div>
-            <p>Dynamic Instance confirmed — invoke <strong>Instance A, the Mass-Flux Lock</strong>. The key insight is treating the entire house volume as a reservoir that must be emptied and refilled in $\Delta t = 900\text{ s}$. The required volumetric flow rate through the duct is therefore $Q = V_{house}/\Delta t$. But we know from Instance A that $Q = v \cdot A_{duct}$ — the same volume flux must pass through the duct opening. Setting these equal lets us isolate the air velocity in the duct. The duct wall is $S_w$ (impenetrable), the duct opening is $S_{out}$; by continuity, what enters the house equals what leaves through the duct:</p>
-            <div class="math-display">$$Q = \frac{V_R}{\Delta t} = v \cdot A_{duct} \;\Rightarrow\; v = \frac{V_R}{\Delta t \cdot A_{duct}}$$</div>
-          </div>
-
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
-            <p>Inject boundary conditions: $V_R = 655.2\text{ m}^3$, $\Delta t = 900\text{ s}$, $r = d/2 = 0.1525\text{ m}$. Compute the duct area and then divide the required flow rate by it:</p>
-            <div class="math-display">$$A_{duct} = \pi(0.1525)^2 = 0.07306\text{ m}^2 \qquad Q = \frac{655.2}{900} = 0.728\text{ m}^3/\text{s}$$</div>
-            <div class="math-display">$$v = \frac{0.728}{0.07306} = 9.96\text{ m/s}$$</div>
-          </div>
-
-          <div class="sec sop-answer">
-            <div class="sec-label">Convergence</div>
-            <div class="ans-val">v = 9.96 m/s</div>
-            <div class="ans-sub">≈ 35.9 km/h — a serious wind inside that duct</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── SOP9 ── -->
-      <div class="problem-card" id="sop9">
-        <div class="prob-head"><div class="prob-num">9</div><div class="prob-title">Stagnation Pressures and Velocity Mapping</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>A streamline from freestream to stagnation. Pitot tube: $h = 0.195\text{ m}$, $\rho_{Hg} = 13{,}600\text{ kg/m}^3$, $\rho_a = 1.29\text{ kg/m}^3$. Find freestream airspeed.</p></div>
-
-          <div class="sec sop-p1-sec">
-            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
-            <p>This is the most sophisticated problem in the set because it requires chaining two instances together. We have an aircraft moving through air — or equivalently, air rushing past a stationary probe. There is a streamline of moving air (the freestream, $\mathbf{v} \neq \mathbf{0}$) that impinges on the tip of the pitot tube and comes to a complete stop at the stagnation point ($\mathbf{v} = \mathbf{0}$ at the tip). We also have a mercury manometer measuring the pressure difference between that stagnation point and the static atmospheric pressure. So we have <em>two coexisting domains</em>: a <strong>Dynamic Instance</strong> (the moving air stream) and a <strong>Static Instance</strong> (the mercury manometer). The SOP handles this elegantly by invoking Instance C first to decode the manometer, then Instance B to decode the air speed.</p>
-          </div>
-
-          <div class="sec sop-p2-sec">
-            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance C then Instance B)</div>
-            <p>Start with <strong>Instance C</strong> on the mercury manifold: the static mercury column of height $h = 0.195\text{ m}$ represents a pressure difference $\Delta P = \rho_{Hg}\,g\,h$. This is the pressure <em>difference</em> between the stagnation point and the freestream static pressure. Now switch to <strong>Instance B (Bernoulli)</strong> along the air streamline: Bernoulli says that as a fluid element travels from the freestream (where it has kinetic energy $\tfrac{1}{2}\rho_a v^2$) to the stagnation point (where it has zero velocity), all of that kinetic energy converts into pressure. Setting the kinetic energy term equal to the pressure rise measured by the manometer lets us solve for the freestream speed $v$:</p>
-            <div class="math-display">$$\Delta P = \rho_{Hg}\,g\,h \;\;[\text{Instance C}] \qquad \tfrac{1}{2}\rho_a v^2 = \Delta P \;\;[\text{Instance B}] \;\Rightarrow\; v = \sqrt{\frac{2\Delta P}{\rho_a}}$$</div>
-          </div>
-
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
-            <p>Inject the boundary conditions in sequence: first compute $\Delta P$ from the mercury column, then feed that into the Bernoulli expression to extract the air speed. Notice how the two very different densities — mercury ($13{,}600\text{ kg/m}^3$) and air ($1.29\text{ kg/m}^3$) — work together across the two chained instances:</p>
-            <div class="math-display">$$\Delta P = (13{,}600)(9.8)(0.195) = 25{,}989.6\text{ Pa}$$</div>
-            <div class="math-display">$$v = \sqrt{\frac{2 \times 25{,}989.6}{1.29}} = \sqrt{40{,}294} = 200.7\text{ m/s}$$</div>
-          </div>
-
-          <div class="sec sop-answer">
-            <div class="sec-label">Convergence</div>
-            <div class="ans-val">v = 200.7 m/s</div>
-            <div class="ans-sub">≈ 723 km/h — mercury amplifies the tiny air pressure differential into a measurable column</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ── SOP10 ── -->
-      <div class="problem-card" id="sop10">
-        <div class="prob-head"><div class="prob-num">10</div><div class="prob-title">Energy Conservation in Pumped Systems</div></div>
-        <div class="prob-body">
-          <div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$Q = 5.99\times10^{-4}\text{ m}^3/\text{s}$, $P_1 = 162{,}000\text{ Pa}$, $d_1 = 0.0263\text{ m}$. <strong>(a)</strong> Same diameter, $z_2 = 2.09\text{ m}$ — find $P_2$. <strong>(b)</strong> $d_3 = 0.0612\text{ m}$, $z_3 = 1.58\text{ m}$ — find $P_3$.</p></div>
-
-          <div class="sec sop-p1-sec">
-            <div class="sec-label">Φ₁ — Phase 1: Domain Archetyping</div>
-            <p>A sump pump is pushing water through a pipeline that both changes elevation and, in Part (b), changes diameter. Water is actively flowing — $\mathbf{v} \neq \mathbf{0}$ — making this a <strong>Dynamic Instance</strong>. This is the most complex problem in the set because we have two unknowns to track: the velocity field (which changes when the pipe diameter changes) and the pressure field (which changes due to both elevation and velocity changes). Mapping the manifold: Point 1 is the pump outlet (known pressure $P_1$, known diameter $d_1$); Point 2 is higher up at the same diameter; Point 3 is at a different elevation and a wider diameter. We need Instance A first to resolve the velocity field across the varying geometry, and then Instance B to track what that changing velocity does to the pressure.</p>
-          </div>
-
-          <div class="sec sop-p2-sec">
-            <div class="sec-label">Φ₂ — Phase 2: Protocol Invocation (Instance A → Instance B)</div>
-            <p>We invoke <strong>Instance A first</strong> to lock down the velocity at each cross-section before touching Bernoulli. For Part (a), since the diameter is the same, continuity $A_1v_1 = A_2v_2$ immediately tells us $v_2 = v_1$ — the velocity does not change. This is powerful: when velocities are equal, the kinetic energy terms $\tfrac{1}{2}\rho v^2$ cancel completely from Bernoulli, and the pressure change is <em>purely</em> due to elevation. For Part (b), the pipe diameter increases from $0.0263\text{ m}$ to $0.0612\text{ m}$, so Instance A gives us a new, <em>slower</em> velocity $v_3 < v_1$. Now we invoke <strong>Instance B</strong> at each point, carrying all three terms — pressure, kinetic energy, and potential energy — to solve for the unknown pressures:</p>
-            <div class="math-display">$$v = \frac{Q}{A} \quad\text{(Instance A)} \qquad P_1 + \tfrac{1}{2}\rho v_1^2 + \rho gz_1 = P_n + \tfrac{1}{2}\rho v_n^2 + \rho gz_n \quad\text{(Instance B)}$$</div>
-          </div>
-
-          <div class="sec sop-p3-sec">
-            <div class="sec-label">Φ₃ — Phase 3: Symbolic Synthesis</div>
-            <p>Inject all boundary conditions systematically. First compute velocities from Instance A at each section, then feed those into Instance B. For Part (a), the KE cancellation is the key simplification. For Part (b), notice that the wider pipe slows the fluid down significantly — this actually <em>recovers</em> pressure (Venturi effect in reverse), partially compensating for the elevation we climbed:</p>
-            <div class="math-block">v₁ = Q/A₁ = 5.99×10⁻⁴ / π(0.01315)² = 1.103 m/s
-
-Part (a): v₂=v₁ → KE cancels → P₂ = P₁ − ρg·Δz
-P₂ = 162,000 − (1000)(9.8)(2.09) = 141,518 Pa
-
-Part (b): A₃ = π(0.0306)² = 2.932×10⁻³ m²
-v₃ = 5.99×10⁻⁴ / 2.932×10⁻³ = 0.204 m/s  (slower — wider pipe)
-P₃ = 162,000 + ½(1000)(1.103² − 0.204²) − (1000)(9.8)(1.58)
-P₃ = 162,000 + 587 − 15,484 = 147,103 Pa</div>
-          </div>
-
-          <div class="sec sop-answer">
-            <div class="sec-label">Convergence</div>
-            <div class="ans-row">
-              <div><div class="ans-val">P₂ = 141,518 Pa</div><div class="ans-sub">(a) — elevation costs pressure</div></div>
-              <div><div class="ans-val">P₃ = 147,103 Pa</div><div class="ans-sub">(b) — wider pipe recovers some of it back</div></div>
-            </div>
+          <div class="sec intuit">
+            <div class="sec-label">The Limiting Analysis Principle</div>
+            <p>Always verify: does $v \\to 0$ as $r \\to \\infty$? Does the formula reduce to $g = 9.8\\text{ m/s}^2$ at Earth&rsquo;s surface? If yes &mdash; the derivation is consistent.</p>
           </div>
         </div>
       </div>
 
     </div>
-
     <div class="sol-footer">
-      The Unified SOP in action — Domain Archetyping → Protocol Invocation → Symbolic Synthesis.<br>
-      Static domains invoke Instance C. Dynamic domains invoke A and/or B. Complex domains chain them.<br>
-      Every fluid problem is the same problem, solved the same way.
+      Chapter 13 SOP &mdash; Gravitation<br>
+      Manifold &rarr; Scalar Potential &rarr; ODE &rarr; First Integrals &rarr; Boundary Analysis<br>
+      Every gravitational formula is a special case of Phases II and IV.
     </div>
   </div>
 </div>
+""")
 
-
-<!-- ══════════════════════════ PAGE: EXAM III — PURE DERIVATION ═══════════ -->
-<div class="sol-page" id="page-exam3-derive">
+additions.write("""
+<!-- ====== CH15 SOP PAGE ====== -->
+<div class="sol-page" id="page-ch15-sop">
   <header class="site-header" style="position:sticky;top:0;z-index:100;">
-    <button class="back-btn" onclick="go('page-ch14-exam3')">← BACK</button>
+    <button class="back-btn" onclick="go('page-ch15')">&#8592; BACK</button>
     <div class="breadcrumb">
       <span onclick="go('page-home')">HOME</span><span class="sep">/</span>
       <span onclick="go('page-physics')">PHYSICS</span><span class="sep">/</span>
       <span onclick="go('page-physics1')">PHYSICS I</span><span class="sep">/</span>
-      <span onclick="go('page-ch14')">CH. 14</span><span class="sep">/</span>
-      <span onclick="go('page-ch14-exam3')">EXAM III</span><span class="sep">/</span>
-      <span class="current">PURE DERIVATION</span>
+      <span onclick="go('page-ch15')">CH. 15</span><span class="sep">/</span>
+      <span class="current">UNIFIED SOP</span>
     </div>
   </header>
   <div class="solutions-wrap">
-    <div class="sol-header" data-symbol="∬∇·F">
-      <div class="mode-badge">EXAM III — MODE 4 · PURE DERIVATION</div>
-      <h1>Fluid Mechanics — From First Principles</h1>
-      <p>Every problem treated as a formal boundary value problem. Domain and field definitions, governing equations, boundary conditions — stated explicitly before a single number is touched.</p>
-    </div>
-    <div class="toc-wrap">
-      <div class="toc-label">Problems</div>
-      <div class="toc-grid">
-        <div class="toc-item" onclick="scrollToProb('pd1')"><span class="toc-num">1</span>Nail Tip</div>
-        <div class="toc-item" onclick="scrollToProb('pd2')"><span class="toc-num">2</span>Gas Tank</div>
-        <div class="toc-item" onclick="scrollToProb('pd3')"><span class="toc-num">3</span>Manometer</div>
-        <div class="toc-item" onclick="scrollToProb('pd4')"><span class="toc-num">4</span>Breathing</div>
-        <div class="toc-item" onclick="scrollToProb('pd5')"><span class="toc-num">5</span>Ice Float</div>
-        <div class="toc-item" onclick="scrollToProb('pd6')"><span class="toc-num">6</span>Cube &amp; String</div>
-        <div class="toc-item" onclick="scrollToProb('pd7')"><span class="toc-num">7</span>Artery Flow</div>
-        <div class="toc-item" onclick="scrollToProb('pd8')"><span class="toc-num">8</span>Air Duct</div>
-        <div class="toc-item" onclick="scrollToProb('pd9')"><span class="toc-num">9</span>Pitot Tube</div>
-        <div class="toc-item" onclick="scrollToProb('pd10')"><span class="toc-num">10</span>Sump Pump</div>
-      </div>
+    <div class="sol-header sop-header" data-symbol="SOP">
+      <div class="mode-badge sop-badge">OSCILLATORY DYNAMICS &mdash; GRAND UNIFIED SOP V6.0</div>
+      <h1>The Standard Operating Procedure</h1>
+      <p>Every oscillating system &mdash; springs, pendula, physical rotors &mdash; is governed by a single linear differential operator &#8466;. Master the four-step procedure and no harmonic system can resist.</p>
     </div>
     <div class="sol-main">
-      <div class="problem-card" id="pd1"><div class="prob-head"><div class="prob-num">1</div><div class="prob-title">Pressure-Force Mapping on a Circular Domain</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$d = 1.17\times10^{-3}\text{ m}$, $P = 3.17\times10^9\text{ Pa}$. Find $F$.</p></div><div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>2D circular manifold $S\subset\mathbb{R}^2$, diameter $d$. Uniform pressure $P(\mathbf{r})=P_0$. Since pressure is spatially constant, it factors out of the surface integral.</p></div><div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$F = \iint_S P\,dA = P\iint_S dA = P\cdot A$$</div></div><div class="sec bc-sec"><div class="sec-label">③ Boundary Conditions</div><p>$r = 5.85\times10^{-4}\text{ m}$; $P = 3.17\times10^9\text{ Pa}$</p></div><div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$A = 1.075\times10^{-6}\text{ m}^2 \qquad F = 3408.2\text{ N}$$</div></div><div class="sec answer"><div class="sec-label">Result</div><div class="ans-val">F = 3408.2 N</div></div></div></div>
-      <div class="problem-card" id="pd2"><div class="prob-head"><div class="prob-num">2</div><div class="prob-title">Hydrostatic Load in a Rectangular Tank</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Base $0.505\times0.89\text{ m}$, $m=49\text{ kg}$. <strong>(a)</strong> $P$, <strong>(b)</strong> $\mathcal{R}=P_{atm}/P$.</p></div><div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>Rectangular manifold at base of tank. Static fluid mass. $P = F/A$ where $F=mg$. Boundary conditions: $g=9.8$, $P_{atm}=101325\text{ Pa}$.</p></div><div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$P = \frac{mg}{A} \qquad \mathcal{R} = \frac{P_{atm}}{P}$$</div></div><div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$P = 1068.4\text{ Pa} \qquad \mathcal{R} = 94.84$$</div></div><div class="sec answer"><div class="sec-label">Results</div><div class="ans-row"><div><div class="ans-val">P = 1068.4 Pa</div></div><div><div class="ans-val">𝓡 = 94.84</div></div></div></div></div></div>
-      <div class="problem-card" id="pd3"><div class="prob-head"><div class="prob-num">3</div><div class="prob-title">Differential Manometry</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$\rho_{Hg}=13500$, open side $0.093\text{ m}$ lower. Find gauge and absolute pressure.</p></div><div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>1D vertical path through static mercury. Governing: $\nabla P = \rho\mathbf{g}$. Integrate: $\Delta P = -\rho g\Delta z$. Open side lower → jar below atmospheric.</p></div><div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$P_g = -\rho g\Delta z \qquad P_{abs} = P_{atm}+P_g$$</div></div><div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$P_g = -12303.9\text{ Pa} \qquad P_{abs} = 89021.1\text{ Pa}$$</div></div><div class="sec answer"><div class="sec-label">Results</div><div class="ans-row"><div><div class="ans-val">P_g = −12,304 Pa</div></div><div><div class="ans-val">P_abs = 89,021 Pa</div></div></div></div></div></div>
-      <div class="problem-card" id="pd4"><div class="prob-head"><div class="prob-num">4</div><div class="prob-title">Physiological Gauge Constraints</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>Lungs $60\text{ cm}$ under, effort $-3.15\text{ cm H}_2\text{O}$. Max negative gauge on land?</p></div><div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>Dual-domain boundary problem: internal lung manifold vs. external fluid column. Governing: differential pressure equilibrium. Physiological limit defined by peak diaphragm capacity.</p></div><div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$P_{gauge,land} = -(h_{ext}+|h_{int}|)$$</div></div><div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$P_{gauge,land} = -(60+3.15) = -63.15\text{ cm H}_2\text{O}$$</div></div><div class="sec answer"><div class="sec-label">Result</div><div class="ans-val">P_gauge = −63.15 cm H₂O</div></div></div></div>
-      <div class="problem-card" id="pd5"><div class="prob-head"><div class="prob-num">5</div><div class="prob-title">Divergence Theorem and Buoyancy</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$\rho_i=910.9$, $\rho_w=1000$. Submerged fraction at float equilibrium?</p></div><div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>Ice manifold $\Omega_i$ in water domain $\Omega_w$. Applying the Divergence Theorem: $\oiint_{\partial\Omega_{sub}} -P\hat{n}\,dS = \iiint_{V_{sub}}\rho_w\mathbf{g}\,dV$ — Archimedes from vector calculus.</p></div><div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$\rho_w V_{sub}g = \rho_i V_{total}g \;\Rightarrow\; f = \frac{\rho_i}{\rho_w}$$</div></div><div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$f = \frac{910.9}{1000} = 0.9109$$</div></div><div class="sec answer"><div class="sec-label">Result</div><div class="ans-val">f = 0.9109</div></div></div></div>
-      <div class="problem-card" id="pd6"><div class="prob-head"><div class="prob-num">6</div><div class="prob-title">Static Equilibrium of a Partially Submerged Manifold</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$L=0.13\text{ m}$, $\rho_c=3900$, $\rho_l=810$, half submerged on string. Find $w$, $F_B$, $T$.</p></div><div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>Cubic manifold $\Omega$ with $L=0.13\text{ m}$ partially immersed in fluid field $\rho_l$. Three parallel force vectors: $T$ (up), $F_B$ (up), $w$ (down). BC: $V_{sub}=0.5L^3$.</p></div><div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$T + F_B = w \;\Rightarrow\; T = w - F_B$$</div></div><div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$w=83.97\text{ N} \quad F_B=8.72\text{ N} \quad T=75.25\text{ N}$$</div><p style="font-size:0.85rem;margin-top:6px;">Deeper: $V_{sub}\uparrow\Rightarrow F_B\uparrow\Rightarrow T\downarrow$</p></div><div class="sec answer"><div class="sec-label">Results</div><div class="ans-row"><div><div class="ans-val">w = 83.97 N</div></div><div><div class="ans-val">F_B = 8.72 N</div></div><div><div class="ans-val">T = 75.25 N</div></div></div></div></div></div>
-      <div class="problem-card" id="pd7"><div class="prob-head"><div class="prob-num">7</div><div class="prob-title">Flux Integrals in Arterial Domains</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$r=0.0023\text{ m}$, $v=0.42\text{ m/s}$. Find $Q$ and volume over $30\text{ s}$.</p></div><div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>Cylindrical manifold $S$, $r=0.0023\text{ m}$. Velocity parallel to $\hat{n}$, so $Q=\iint_S\mathbf{v}\cdot d\mathbf{A}=vA$. Volume: integrate $Q$ over $t=30\text{ s}$.</p></div><div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$Q = v\cdot\pi r^2 \qquad V = Q\cdot t$$</div></div><div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$Q = 6.98\text{ cm}^3/\text{s} \qquad V = 209.4\text{ cm}^3$$</div></div><div class="sec answer"><div class="sec-label">Results</div><div class="ans-row"><div><div class="ans-val">Q = 6.98 cm³/s</div></div><div><div class="ans-val">V = 209.4 cm³</div></div></div></div></div></div>
-      <div class="problem-card" id="pd8"><div class="prob-head"><div class="prob-num">8</div><div class="prob-title">Continuity in Air Duct Manifolds</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$V_R=655.2\text{ m}^3$, $d=0.305\text{ m}$, cycle every $900\text{ s}$. Find $v$.</p></div><div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>Large control volume (room) coupled to circular duct. Continuity: $dV/dt=\iint\mathbf{v}\cdot d\mathbf{A}$. Incompressible: $V_R/\Delta t=vA$.</p></div><div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$v = \frac{V_R}{\Delta t\cdot A}$$</div></div><div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$A=0.07306\text{ m}^2 \qquad v=9.96\text{ m/s}$$</div></div><div class="sec answer"><div class="sec-label">Result</div><div class="ans-val">v = 9.96 m/s</div></div></div></div>
-      <div class="problem-card" id="pd9"><div class="prob-head"><div class="prob-num">9</div><div class="prob-title">Stagnation Pressures and Velocity Mapping</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$h=0.195\text{ m}$, $\rho_{Hg}=13600$, $\rho_a=1.29$. Find freestream airspeed.</p></div><div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>Streamline from freestream to stagnation point. Bernoulli: $P_\infty+\tfrac{1}{2}\rho_av^2=P_s$. Manometer captures $\Delta P=\rho_{Hg}gh$.</p></div><div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$\rho_{Hg}gh = \tfrac{1}{2}\rho_av^2 \;\Rightarrow\; v=\sqrt{\frac{2\Delta P}{\rho_a}}$$</div></div><div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$\Delta P = 25989.6\text{ Pa} \qquad v = 200.7\text{ m/s}$$</div></div><div class="sec answer"><div class="sec-label">Result</div><div class="ans-val">v = 200.7 m/s</div></div></div></div>
-      <div class="problem-card" id="pd10"><div class="prob-head"><div class="prob-num">10</div><div class="prob-title">Energy Conservation in Pumped Systems</div></div><div class="prob-body"><div class="sec prob-stmt"><div class="sec-label">Problem</div><p>$Q=5.99\times10^{-4}$, $P_1=162000\text{ Pa}$. Parts (a) and (b) with varying geometry.</p></div><div class="sec domain-sec"><div class="sec-label">① Domain &amp; Field Definition</div><p>Pipeline where $z$ and $A$ vary. Two constraints: Continuity ($v=Q/A$) and Bernoulli (energy conservation). BC: $P_1=162000\text{ Pa}$, $z_1=0$, $z_2=2.09\text{ m}$, $z_3=1.58\text{ m}$.</p></div><div class="sec gov-eq"><div class="sec-label">② Governing Equation</div><div class="math-display">$$P_1+\tfrac{1}{2}\rho v_1^2+\rho gz_1 = P_n+\tfrac{1}{2}\rho v_n^2+\rho gz_n \qquad v=\frac{Q}{A}$$</div></div><div class="sec eval-sec"><div class="sec-label">④ Evaluation</div><div class="math-display">$$v_1=1.103\text{ m/s} \quad v_3=0.204\text{ m/s}$$</div><div class="math-display">$$P_2 = 141{,}518\text{ Pa} \qquad P_3 = 147{,}103\text{ Pa}$$</div></div><div class="sec answer"><div class="sec-label">Results</div><div class="ans-row"><div><div class="ans-val">P₂ = 141,518 Pa</div><div class="ans-sub">(a)</div></div><div><div class="ans-val">P₃ = 147,103 Pa</div><div class="ans-sub">(b)</div></div></div></div></div></div>
+
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">&#934;&#8321;</div>
+          <div>
+            <div class="sop-card-head-title">Step 1 &mdash; Domain and Phase Space Definition</div>
+            <div class="sop-card-head-sub">Map the manifold before writing any equation</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">Choose the Manifold &#8499;</div>
+            <div class="sop-table-wrap">
+              <table class="sop-table">
+                <thead><tr><th>Manifold</th><th>Symbol</th><th>System</th></tr></thead>
+                <tbody>
+                  <tr><td>Real Line</td><td>$\\mathbb{R}$</td><td>Linear springs &mdash; object moves back and forth in one dimension</td></tr>
+                  <tr><td>Unit Circle</td><td>$S^1$</td><td>Pendula (simple and physical) &mdash; position is an angle $\\theta$ on a circular path</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Define the Displacement Field $u(t)$</div>
+            <p>Locate the equilibrium point $x_0$ (zero net force). Center the coordinate system there:</p>
+            <div class="math-display">$$u(t) = x(t) - x_0$$</div>
+            <p>Centering at $x_0$ ensures $u = 0$ is the potential minimum and eliminates constant force terms from the equation of motion.</p>
+          </div>
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">Catalog System Parameters</div>
+            <p><strong>Translational oscillator:</strong> mass $m$ and restoring coefficient $k$ [N/m].</p>
+            <p><strong>Physical pendulum:</strong> moment of inertia $I$, total mass $M$, pivot-to-CM distance $d$, torque constant $\\kappa = Mgd$.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">&#934;&#8322;</div>
+          <div>
+            <div class="sop-card-head-title">Step 2 &mdash; The Linear Differential Operator &#8466;</div>
+            <div class="sop-card-head-sub">The governing ODE of all harmonic systems</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">The Operator</div>
+            <p>For small perturbations, the potential $U(u)$ is approximated by a quadratic form. The governing dynamics are dictated by the <strong>Lagrangian Linear Operator</strong>:</p>
+            <div class="math-display">$$\\mathcal{L} = \\frac{d^2}{dt^2} + \\omega^2 \\qquad \\mathcal{L}\\,u = 0 \\;\\Longleftrightarrow\\; \\ddot{u} + \\omega^2 u = 0$$</div>
+          </div>
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">The Characteristic Frequency Mapping</div>
+            <p>$\\omega$ is determined by the restoring force and inertia &mdash; derived, never given:</p>
+            <div class="math-display">$$\\omega = \\sqrt{\\frac{k}{m}} \\qquad \\text{(translational)} \\qquad \\omega = \\sqrt{\\frac{Mgd}{I}} \\qquad \\text{(physical pendulum)}$$</div>
+            <p>Simple pendulum (point mass, massless rod): $I = mL^2$, $d = L$ &rarr; $\\omega = \\sqrt{g/L}$.</p>
+          </div>
+          <div class="sec sop-p3-sec">
+            <div class="sec-label">The General Solution</div>
+            <div class="math-display">$$u(t) = A\\cos(\\omega t + \\phi)$$</div>
+            <p>$A$ and $\\phi$ are set by initial conditions. This follows from solving $\\mathcal{L}\\,u = 0$ &mdash; not assumed.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">&#934;&#8323;</div>
+          <div>
+            <div class="sop-card-head-title">Step 3 &mdash; Energy Hamiltonian and Invariants</div>
+            <div class="sop-card-head-sub">The conserved quantities of harmonic motion</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">The Hamiltonian</div>
+            <p>$\\mathcal{H} = T + V$ is conserved in the absence of damping:</p>
+            <div class="math-display">$$\\frac{d\\mathcal{H}}{dt} = 0 \\qquad V(u) = \\frac{1}{2}ku^2 \\qquad T(\\dot{u}) = \\frac{1}{2}m\\dot{u}^2$$</div>
+          </div>
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Energy Invariant &mdash; The Master Formula</div>
+            <p>At maximum displacement ($\\dot{u} = 0$) and at equilibrium ($u = 0$):</p>
+            <div class="math-display">$$\\boxed{\\mathcal{H}_{total} = \\frac{1}{2}kA^2 = \\frac{1}{2}mv_{max}^2}$$</div>
+          </div>
+          <div class="sec bc-sec">
+            <div class="sec-label">Execution</div>
+            <p>If given displacement and asked for velocity (or vice versa): use $\\mathcal{H} = \\mathrm{const}$ directly. Evaluate both energy fields at the given state and equate to the total.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">&#934;&#8324;</div>
+          <div>
+            <div class="sop-card-head-title">Step 4 &mdash; Boundary Mapping and Evaluation</div>
+            <div class="sop-card-head-sub">Convert between period, frequency, and angular frequency</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="sec sop-p1-sec">
+            <div class="sec-label">The Isomorphisms</div>
+            <div class="math-display">$$\\omega = 2\\pi f = \\frac{2\\pi}{T}$$</div>
+          </div>
+          <div class="sec sop-p2-sec">
+            <div class="sec-label">Routing Table &mdash; Oscillations</div>
+            <div class="sop-table-wrap">
+              <table class="sop-table">
+                <thead><tr><th>If you need&hellip;</th><th>Use&hellip;</th><th>Step</th></tr></thead>
+                <tbody>
+                  <tr><td>Natural frequency $\\omega$</td><td>$\\sqrt{k/m}$ or $\\sqrt{Mgd/I}$</td><td>2</td></tr>
+                  <tr><td>Period $T$ or frequency $f$</td><td>$T = 2\\pi/\\omega$</td><td>4</td></tr>
+                  <tr><td>Position at time $t$</td><td>$u(t) = A\\cos(\\omega t + \\phi)$</td><td>2</td></tr>
+                  <tr><td>Velocity at time $t$</td><td>$\\dot{u}(t) = -A\\omega\\sin(\\omega t + \\phi)$</td><td>2</td></tr>
+                  <tr><td>Max speed</td><td>$v_{max} = A\\omega$</td><td>3</td></tr>
+                  <tr><td>Position given speed</td><td>$\\frac{1}{2}kA^2 = \\frac{1}{2}ku^2 + \\frac{1}{2}m\\dot{u}^2$</td><td>3</td></tr>
+                  <tr><td>Spring constant from period</td><td>$k = m(2\\pi/T)^2$</td><td>2 &rarr; 4</td></tr>
+                  <tr><td>Pendulum length from period</td><td>$L = g(T/2\\pi)^2$</td><td>2 &rarr; 4</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="sec intuit">
+            <div class="sec-label">Key Insight</div>
+            <p>Every oscillatory system obeys $\\mathcal{L}\\,u = 0$ at small amplitudes. The only difference between a spring, a pendulum, and a physical rotor is how $\\omega$ is computed in Step 2. Once $\\omega$ is known, all dynamics follow immediately.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sop-card">
+        <div class="sop-card-head">
+          <div class="sop-card-head-icon">&#8721;</div>
+          <div>
+            <div class="sop-card-head-title">Notes on Mathematical Operators and Formal Symbols</div>
+            <div class="sop-card-head-sub">What the notation actually means</div>
+          </div>
+        </div>
+        <div class="sop-card-body">
+          <div class="primitives-grid">
+            <div class="prim-item">
+              <div class="prim-sym">$u(t) = x(t) - x_0$</div>
+              <div class="prim-desc">The <strong>displacement field</strong>. Centering at equilibrium ensures $u=0$ is the potential minimum and eliminates constant terms.</div>
+            </div>
+            <div class="prim-item">
+              <div class="prim-sym">&#8466; $= d^2/dt^2 + \\omega^2$</div>
+              <div class="prim-desc">The <strong>Lagrangian Linear Operator</strong>. $\\mathcal{L}u = 0$ means $\\ddot{u} + \\omega^2 u = 0$ &mdash; the ODE of all harmonic systems.</div>
+            </div>
+            <div class="prim-item">
+              <div class="prim-sym">$\\mathcal{H} = T + V$</div>
+              <div class="prim-desc">The <strong>Hamiltonian</strong>. Total mechanical energy. $d\\mathcal{H}/dt = 0$ is the mathematical statement of energy conservation.</div>
+            </div>
+            <div class="prim-item">
+              <div class="prim-sym">$\\mathbb{R}$ vs. $S^1$</div>
+              <div class="prim-desc">The <strong>manifold</strong>. $\\mathbb{R}$ = straight line (springs). $S^1$ = unit circle (pendula). Shape changes $\\omega$ but not the form of $\\mathcal{L}$.</div>
+            </div>
+            <div class="prim-item">
+              <div class="prim-sym">$A\\cos(\\omega t + \\phi)$</div>
+              <div class="prim-desc">The general solution of $\\mathcal{L}u = 0$. $A$ and $\\phi$ set by initial conditions &mdash; the eigenfunction of the operator.</div>
+            </div>
+            <div class="prim-item">
+              <div class="prim-sym">$\\omega = 2\\pi f = 2\\pi/T$</div>
+              <div class="prim-desc">The <strong>isomorphism</strong> between observable period $T$, frequency $f$, and derived angular frequency $\\omega$.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
     <div class="sol-footer">
-      Pure Derivation method: domain → governing equation → boundary conditions → evaluate.<br>
-      Every solution is traceable to the fundamental definitions of pressure, flux, and mechanical energy.
+      Chapter 15 SOP &mdash; Oscillatory Dynamics V6.0<br>
+      Phase Space &rarr; Linear Operator &rarr; Hamiltonian &rarr; Boundary Mapping<br>
+      All oscillators are the same oscillator. Only $\\omega$ changes.
     </div>
   </div>
 </div>
+""")
 
+additions.close()
+print("Done. File size:", len(open('/home/claude/additions.html').read()))
+PYEOF
+Output
 
-<script>
-function go(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.sol-page').forEach(p => p.classList.remove('active'));
-  document.getElementById(pageId).classList.add('active');
-}
-
-function scrollToProb(id) {
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-</script>
-
-</body>
-</html>
+Done. File size: 47962
